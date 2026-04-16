@@ -43,6 +43,11 @@ const nextConfig: NextConfig = {
         hostname: API_HOST,
         pathname: '/storage/**',
       },
+      // Simple Icons CDN — iconos oficiales de tecnologías
+      {
+        protocol: 'https',
+        hostname: 'cdn.simpleicons.org',
+      },
     ],
   },
 
