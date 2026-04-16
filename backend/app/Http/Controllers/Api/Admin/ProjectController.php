@@ -11,7 +11,6 @@ use App\Services\ImageService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Str;
 
 class ProjectController extends Controller
 {
@@ -53,7 +52,7 @@ class ProjectController extends Controller
         $data = $request->validated();
 
         // Slug único generado desde el título
-        $data['slug'] = $this->uniqueSlug($data['title']);
+        $data['slug'] = (new Project)->generateSlug($data['title']);
 
         // Subida de imagen de portada
         if ($request->hasFile('cover_image')) {
@@ -102,7 +101,7 @@ class ProjectController extends Controller
 
         // Regenerar slug si el título cambió
         if (isset($data['title']) && $data['title'] !== $project->title) {
-            $data['slug'] = $this->uniqueSlug($data['title'], $project->id);
+            $data['slug'] = $project->generateSlug($data['title'], $project->id);
         }
 
         // Nueva imagen: borrar la anterior y subir la nueva
@@ -153,23 +152,4 @@ class ProjectController extends Controller
         ]);
     }
 
-    // ── Helpers ───────────────────────────────────────────────
-
-    private function uniqueSlug(string $title, ?int $excludeId = null): string
-    {
-        $base = Str::slug($title);
-        $slug = $base;
-        $i    = 1;
-
-        while (
-            Project::where('slug', $slug)
-                ->when($excludeId, fn ($q) => $q->where('id', '!=', $excludeId))
-                ->exists()
-        ) {
-            $slug = "{$base}-{$i}";
-            $i++;
-        }
-
-        return $slug;
-    }
 }

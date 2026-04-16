@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
+import { SITE } from '@/lib/constants';
 import './globals.css';
 
 const geistSans = Geist({
@@ -14,14 +15,15 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Daniel Sierra — Portafolio',
-    template: '%s | Daniel Sierra',
+    default: `${SITE.author} — Portafolio`,
+    template: `%s | ${SITE.author}`,
   },
-  description:
-    'Portafolio profesional de Daniel Sierra: proyectos, habilidades y experiencia.',
+  description: SITE.description,
+  metadataBase: new URL(SITE.url),
   openGraph: {
-    locale: 'es_CO',
+    locale: SITE.locale,
     type: 'website',
+    siteName: SITE.name,
   },
 };
 

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { ContactForm } from '@/components/portfolio/ContactForm';
+import { SITE, SOCIAL_LINKS } from '@/lib/constants';
 
 export const metadata: Metadata = {
   title: 'Contacto — Daniel Sierra',
@@ -48,10 +49,10 @@ export default function ContactoPage() {
                   Correo
                 </p>
                 <a
-                  href="mailto:desarrollomaicao@uniguajira.edu.co"
+                  href={`mailto:${SITE.email}`}
                   className="text-sm text-indigo-600 hover:underline"
                 >
-                  desarrollomaicao@uniguajira.edu.co
+                  {SITE.email}
                 </a>
               </div>
 
@@ -62,22 +63,17 @@ export default function ContactoPage() {
                   Redes
                 </p>
                 <div className="flex flex-col gap-1.5">
-                  <a
-                    href="https://github.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-slate-600 transition-colors hover:text-indigo-600"
-                  >
-                    GitHub →
-                  </a>
-                  <a
-                    href="https://linkedin.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-slate-600 transition-colors hover:text-indigo-600"
-                  >
-                    LinkedIn →
-                  </a>
+                  {SOCIAL_LINKS.map(({ href, label, rel }) => (
+                    <a
+                      key={href}
+                      href={href}
+                      target="_blank"
+                      rel={rel}
+                      className="text-sm text-slate-600 transition-colors hover:text-indigo-600"
+                    >
+                      {label} →
+                    </a>
+                  ))}
                 </div>
               </div>
 

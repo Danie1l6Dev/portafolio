@@ -9,7 +9,6 @@ use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -33,15 +32,7 @@ class CategoryController extends Controller
     public function store(StoreCategoryRequest $request): JsonResponse
     {
         $data         = $request->validated();
-        $data['slug'] = Str::slug($data['name']);
-
-        // Garantizar unicidad del slug
-        $base = $data['slug'];
-        $i    = 1;
-        while (Category::where('slug', $data['slug'])->exists()) {
-            $data['slug'] = "{$base}-{$i}";
-            $i++;
-        }
+        $data['slug'] = (new Category)->generateSlug($data['name']);
 
         $category = Category::create($data);
 
@@ -72,14 +63,7 @@ class CategoryController extends Controller
 
         // Regenerar slug si el nombre cambió
         if (isset($data['name']) && $data['name'] !== $category->name) {
-            $base = Str::slug($data['name']);
-            $slug = $base;
-            $i    = 1;
-            while (Category::where('slug', $slug)->where('id', '!=', $category->id)->exists()) {
-                $slug = "{$base}-{$i}";
-                $i++;
-            }
-            $data['slug'] = $slug;
+            $data['slug'] = $category->generateSlug($data['name'], $category->id);
         }
 
         $category->update($data);

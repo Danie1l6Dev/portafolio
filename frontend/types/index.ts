@@ -40,7 +40,10 @@ export interface Category {
   description: string | null;
   color: string | null;
   sort_order: number;
+  /** Solo presente en endpoints admin */
   projects_count?: number;
+  /** Solo presente en el endpoint público /categories */
+  published_projects_count?: number;
 }
 
 export interface Skill {
@@ -73,7 +76,8 @@ export interface Project {
   title: string;
   slug: string;
   summary: string;
-  description?: string | null; // Solo en show y rutas admin
+  /** Solo presente en show y rutas admin */
+  description?: string | null;
   demo_url: string | null;
   repo_url: string | null;
   cover_image: string | null;
@@ -99,16 +103,26 @@ export interface Experience {
   started_at: string; // ISO date
   finished_at: string | null;
   is_current: boolean;
-  duration: string; // "2021 – Presente"
+  duration: string; // "ene. 2021 – Presente"
   media?: Media[];
 }
 
 // ── Autenticación ─────────────────────────────────────────────
 
+/**
+ * Roles disponibles en el sistema.
+ * Sincronizado con User::ROLES en el backend.
+ *
+ * admin  → acceso total (gestión de usuarios, configuración)
+ * editor → solo gestión de contenido (proyectos, skills, experiencias)
+ */
+export type UserRole = 'admin' | 'editor';
+
 export interface AuthUser {
   id: number;
   name: string;
   email: string;
+  role: UserRole;
 }
 
 export interface LoginCredentials {
@@ -177,4 +191,50 @@ export interface SkillsResponse {
   meta: {
     groups: string[];
   };
+}
+
+// ── Blog (preparado para fase futura) ─────────────────────────
+
+/**
+ * Tipo base para entradas de blog.
+ *
+ * Para activar el blog:
+ * 1. Backend: php artisan make:model Post -mrc (seguir el patrón de Project)
+ * 2. Backend: registrar rutas GET /v1/posts y /v1/admin/posts
+ * 3. Frontend: crear services/posts.ts con getPost / adminCreatePost
+ * 4. Frontend: crear app/(public)/blog/page.tsx y [slug]/page.tsx
+ *
+ * El modelo Post debería usar:
+ *   - HasSlug trait (slug único desde title)
+ *   - status: 'draft' | 'published' | 'archived'
+ *   - MorphMany media (para imágenes en el cuerpo)
+ *   - BelongsToMany tags o BelongsTo category
+ */
+export type PostStatus = 'draft' | 'published' | 'archived';
+
+export interface BlogPost {
+  id: number;
+  title: string;
+  slug: string;
+  excerpt: string;
+  /** Contenido completo en Markdown, solo en show */
+  content?: string | null;
+  cover_image: string | null;
+  status: PostStatus;
+  is_featured: boolean;
+  published_at: string | null; // ISO datetime
+  reading_time_minutes: number | null;
+  category?: Category | null;
+  media?: Media[];
+}
+
+export interface BlogPostPayload {
+  title?: string;
+  excerpt?: string;
+  content?: string | null;
+  cover_image?: File | null;
+  status?: PostStatus;
+  is_featured?: boolean;
+  category_id?: number | null;
+  published_at?: string | null;
 }

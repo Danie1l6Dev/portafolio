@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ExperienceController;
 use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\ProjectController;
@@ -18,15 +19,25 @@ Route::prefix('v1')->name('api.')->group(function () {
     | GET  /api/v1/projects                → lista paginada (publicados)
     | GET  /api/v1/projects/{project}      → detalle con skills y media
     | GET  /api/v1/skills                  → lista + meta grupos
+    | GET  /api/v1/categories              → categorías con proyectos publicados
     | GET  /api/v1/experiences             → cronológica inversa
+    | POST /api/v1/contact                 → enviar mensaje (throttle: contact)
+    |
+    | Los rate limiters están definidos en AppServiceProvider::configureRateLimiting()
     |
     */
 
-    Route::get('projects',          [ProjectController::class,   'index'])->name('projects.index');
-    Route::get('projects/{project}',[ProjectController::class,   'show'])->name('projects.show');
-    Route::get('skills',            [SkillController::class,     'index'])->name('skills.index');
-    Route::get('experiences',       [ExperienceController::class,'index'])->name('experiences.index');
-    Route::post('contact',          [MessageController::class,   'store'])->name('contact')->middleware('throttle:5,1');
+    Route::middleware('throttle:api')->group(function () {
+        Route::get('projects',           [ProjectController::class,   'index'])->name('projects.index');
+        Route::get('projects/{project}', [ProjectController::class,   'show'])->name('projects.show');
+        Route::get('skills',             [SkillController::class,     'index'])->name('skills.index');
+        Route::get('categories',         [CategoryController::class,  'index'])->name('categories.index');
+        Route::get('experiences',        [ExperienceController::class,'index'])->name('experiences.index');
+    });
+
+    Route::post('contact', [MessageController::class, 'store'])
+        ->name('contact')
+        ->middleware('throttle:contact');
 
     /*
     |----------------------------------------------------------------------
@@ -43,7 +54,7 @@ Route::prefix('v1')->name('api.')->group(function () {
 
         Route::post('login', [AuthController::class, 'login'])
             ->name('login')
-            ->middleware('throttle:5,1');
+            ->middleware('throttle:login');
 
         Route::middleware('auth:sanctum')->group(function () {
             Route::post('logout', [AuthController::class, 'logout'])->name('logout');
@@ -58,33 +69,27 @@ Route::prefix('v1')->name('api.')->group(function () {
     |
     | Todas las rutas bajo /api/v1/admin requieren: Authorization: Bearer {token}
     |
-    | Categorías:
-    |   GET    /api/v1/admin/categories          → lista + projects_count
-    |   POST   /api/v1/admin/categories          → crear
-    |   GET    /api/v1/admin/categories/{id}     → detalle
-    |   PUT    /api/v1/admin/categories/{id}     → actualizar
-    |   DELETE /api/v1/admin/categories/{id}     → eliminar (falla si tiene proyectos)
+    | ── Escalabilidad: múltiples usuarios ──────────────────────────────
     |
-    | Proyectos:
-    |   GET    /api/v1/admin/projects            → lista todos (draft/pub/archived)
-    |   POST   /api/v1/admin/projects            → crear + imagen + skill_ids[]
-    |   GET    /api/v1/admin/projects/{id}       → detalle completo
-    |   PUT    /api/v1/admin/projects/{id}       → actualizar + nueva imagen
-    |   DELETE /api/v1/admin/projects/{id}       → eliminar + borrar archivos
+    | Para añadir roles/permisos granulares cuando el proyecto crezca:
     |
-    | Habilidades:
-    |   GET    /api/v1/admin/skills              → lista + projects_count
-    |   POST   /api/v1/admin/skills              → crear
-    |   GET    /api/v1/admin/skills/{id}         → detalle
-    |   PUT    /api/v1/admin/skills/{id}         → actualizar
-    |   DELETE /api/v1/admin/skills/{id}         → eliminar
+    | 1. Añade un middleware 'role:admin' usando $user->isAdmin()
+    | 2. Usa Sanctum abilities: $user->currentAccessToken()->can('admin')
+    | 3. Para permisos complejos, instala spatie/laravel-permission
     |
-    | Experiencias:
-    |   GET    /api/v1/admin/experiences         → lista cronológica
-    |   POST   /api/v1/admin/experiences         → crear + logo
-    |   GET    /api/v1/admin/experiences/{id}    → detalle
-    |   PUT    /api/v1/admin/experiences/{id}    → actualizar + nuevo logo
-    |   DELETE /api/v1/admin/experiences/{id}    → eliminar + borrar archivos
+    | ── Escalabilidad: blog ─────────────────────────────────────────────
+    |
+    | Para añadir un blog, registra aquí:
+    |   Route::apiResource('posts', Admin\PostController::class)
+    | Y añade el endpoint público:
+    |   Route::get('posts', [PostController::class, 'index'])
+    |   Route::get('posts/{post:slug}', [PostController::class, 'show'])
+    |
+    | ── Escalabilidad: app móvil ────────────────────────────────────────
+    |
+    | La API ya es 100% consumible por una app móvil (React Native, Flutter).
+    | El token Bearer es el mismo mecanismo de auth.
+    | Para tokens de larga duración, configura SANCTUM_EXPIRATION en .env.
     |
     */
 

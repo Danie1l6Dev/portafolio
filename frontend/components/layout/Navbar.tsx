@@ -4,14 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-
-const NAV_LINKS = [
-  { href: '/', label: 'Inicio' },
-  { href: '/proyectos', label: 'Proyectos' },
-  { href: '/habilidades', label: 'Habilidades' },
-  { href: '/experiencia', label: 'Experiencia' },
-  { href: '/contacto', label: 'Contacto' },
-];
+import { NAV_LINKS, SITE } from '@/lib/constants';
 
 export function Navbar() {
   const pathname = usePathname();
@@ -45,7 +38,7 @@ export function Navbar() {
           <span className="flex h-7 w-7 items-center justify-center rounded-md bg-indigo-600 text-xs font-black text-white shadow-sm transition-transform group-hover:scale-105">
             DS
           </span>
-          <span className="hidden sm:inline">Daniel Sierra</span>
+          <span className="hidden sm:inline">{SITE.author}</span>
         </Link>
 
         {/* Desktop nav */}

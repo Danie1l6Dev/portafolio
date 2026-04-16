@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasSlug;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,6 +11,11 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Project extends Model
 {
+    use HasSlug;
+
+    /** Columna de origen para la generación de slug. */
+    protected string $slugSource = 'title';
+
     protected $fillable = [
         'category_id',
         'title',

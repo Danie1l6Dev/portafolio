@@ -1,17 +1,5 @@
 import Link from 'next/link';
-
-const NAV_LINKS = [
-  { href: '/', label: 'Inicio' },
-  { href: '/proyectos', label: 'Proyectos' },
-  { href: '/habilidades', label: 'Habilidades' },
-  { href: '/experiencia', label: 'Experiencia' },
-  { href: '/contacto', label: 'Contacto' },
-];
-
-const SOCIAL_LINKS = [
-  { href: 'https://github.com', label: 'GitHub' },
-  { href: 'https://linkedin.com', label: 'LinkedIn' },
-];
+import { NAV_LINKS, SITE, SOCIAL_LINKS } from '@/lib/constants';
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -26,10 +14,10 @@ export function Footer() {
               <span className="flex h-7 w-7 items-center justify-center rounded-md bg-indigo-600 text-xs font-black text-white">
                 DS
               </span>
-              <span className="font-bold text-slate-900">Daniel Sierra</span>
+              <span className="font-bold text-slate-900">{SITE.author}</span>
             </div>
             <p className="text-sm text-slate-400 leading-relaxed">
-              Desarrollador de software. Construyendo productos digitales útiles y bien diseñados.
+              {SITE.description}
             </p>
           </div>
 
@@ -58,12 +46,12 @@ export function Footer() {
               Conectar
             </p>
             <ul className="space-y-1.5">
-              {SOCIAL_LINKS.map(({ href, label }) => (
+              {SOCIAL_LINKS.map(({ href, label, rel }) => (
                 <li key={href}>
                   <a
                     href={href}
                     target="_blank"
-                    rel="noopener noreferrer"
+                    rel={rel}
                     className="text-sm text-slate-500 transition-colors hover:text-indigo-600"
                   >
                     {label} →

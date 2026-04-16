@@ -7,15 +7,15 @@ import { ProjectCard } from '@/components/portfolio/ProjectCard';
 import { SkillBadge } from '@/components/portfolio/SkillBadge';
 import { Badge } from '@/components/ui/Badge';
 import { formatDateRange } from '@/lib/utils';
+import { SITE, REVALIDATE } from '@/lib/constants';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Daniel Sierra — Portafolio',
-  description:
-    'Desarrollador de software. Proyectos, habilidades y experiencia profesional.',
+  title: `${SITE.author} — Portafolio`,
+  description: SITE.description,
 };
 
-export const revalidate = 300;
+export const revalidate = REVALIDATE.slow;
 
 export default async function HomePage() {
   const [projectsRes, skillsRes, experiencesRes] = await Promise.allSettled([
