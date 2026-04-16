@@ -6,12 +6,14 @@ import { adminGetProjects } from '@/services/projects';
 import { adminGetSkills } from '@/services/skills';
 import { adminGetExperiences } from '@/services/experiences';
 import { adminGetCategories } from '@/services/categories';
+import { adminGetMessages } from '@/services/messages';
 
 interface Stats {
   projects: { total: number; published: number; draft: number };
   skills: number;
   experiences: { total: number; current: number };
   categories: number;
+  messages: { total: number; unread: number };
 }
 
 const NAV_CARDS = [
@@ -19,6 +21,7 @@ const NAV_CARDS = [
   { href: '/admin/categorias', label: 'Categorías', desc: 'Organiza proyectos por categoría.' },
   { href: '/admin/habilidades', label: 'Habilidades', desc: 'Tecnologías y herramientas.' },
   { href: '/admin/experiencias', label: 'Experiencias', desc: 'Historial de experiencia laboral.' },
+  { href: '/admin/mensajes', label: 'Mensajes', desc: 'Mensajes recibidos del portafolio.' },
 ];
 
 export default function AdminDashboardPage() {
@@ -33,7 +36,9 @@ export default function AdminDashboardPage() {
       adminGetSkills(),
       adminGetExperiences({ page: 1 }),
       adminGetCategories({ page: 1 }),
-    ]).then(([all, pub, draft, skills, exp, cats]) => {
+      adminGetMessages({ filter: 'unread' }),
+      adminGetMessages(),
+    ]).then(([all, pub, draft, skills, exp, cats, unreadMsgs, allMsgs]) => {
       setStats({
         projects: {
           total: all.status === 'fulfilled' ? all.value.meta.total : 0,
@@ -46,6 +51,10 @@ export default function AdminDashboardPage() {
           current: exp.status === 'fulfilled' ? exp.value.data.filter((e) => e.is_current).length : 0,
         },
         categories: cats.status === 'fulfilled' ? cats.value.meta.total : 0,
+        messages: {
+          total: allMsgs.status === 'fulfilled' ? allMsgs.value.meta.total : 0,
+          unread: unreadMsgs.status === 'fulfilled' ? unreadMsgs.value.meta.unread_count : 0,
+        },
       });
     }).finally(() => setLoading(false));
   }, []);
@@ -58,7 +67,7 @@ export default function AdminDashboardPage() {
       </p>
 
       {/* Stats */}
-      <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         <StatCard
           label="Proyectos"
           value={loading ? '…' : String(stats?.projects.total ?? 0)}
@@ -83,6 +92,14 @@ export default function AdminDashboardPage() {
           sub="Para clasificar proyectos"
           color="emerald"
         />
+        <StatCard
+          label="Mensajes"
+          value={loading ? '…' : String(stats?.messages.total ?? 0)}
+          sub={loading ? '' : `${stats?.messages.unread ?? 0} sin leer`}
+          color="amber"
+          href="/admin/mensajes"
+          badge={!loading && (stats?.messages.unread ?? 0) > 0 ? stats!.messages.unread : undefined}
+        />
       </div>
 
       {/* Accesos directos */}
@@ -102,23 +119,48 @@ export default function AdminDashboardPage() {
   );
 }
 
-function StatCard({ label, value, sub, color }: {
+function StatCard({ label, value, sub, color, href, badge }: {
   label: string; value: string; sub: string;
-  color: 'indigo' | 'violet' | 'sky' | 'emerald';
+  color: 'indigo' | 'violet' | 'sky' | 'emerald' | 'amber';
+  href?: string;
+  badge?: number;
 }) {
   const colors = {
     indigo: 'bg-indigo-50 text-indigo-700',
     violet: 'bg-violet-50 text-violet-700',
     sky: 'bg-sky-50 text-sky-700',
     emerald: 'bg-emerald-50 text-emerald-700',
+    amber: 'bg-amber-50 text-amber-700',
   };
-  return (
-    <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-      <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">{label}</p>
+
+  const inner = (
+    <>
+      <div className="flex items-start justify-between">
+        <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">{label}</p>
+        {badge !== undefined && badge > 0 && (
+          <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-amber-500 px-1.5 text-[10px] font-bold text-white">
+            {badge > 99 ? '99+' : badge}
+          </span>
+        )}
+      </div>
       <p className={`my-2 inline-block rounded-lg px-2 py-0.5 text-3xl font-bold ${colors[color]}`}>
         {value}
       </p>
       <p className="text-xs text-gray-400">{sub}</p>
+    </>
+  );
+
+  if (href) {
+    return (
+      <Link href={href} className="block rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
+        {inner}
+      </Link>
+    );
+  }
+
+  return (
+    <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+      {inner}
     </div>
   );
 }

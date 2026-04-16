@@ -2,9 +2,11 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/Button';
+import { adminGetMessages } from '@/services/messages';
 
 const ADMIN_LINKS = [
   {
@@ -53,20 +55,50 @@ const ADMIN_LINKS = [
       </svg>
     ),
   },
+  {
+    href: '/admin/mensajes',
+    label: 'Mensajes',
+    icon: (
+      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+      </svg>
+    ),
+  },
 ];
 
 export function AdminSidebar() {
   const pathname = usePathname();
   const { user, logout, loading } = useAuth();
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  // Carga el conteo de mensajes no leídos al montar y cada 60 segundos
+  useEffect(() => {
+    async function fetchUnread() {
+      try {
+        const res = await adminGetMessages({ filter: 'unread' });
+        setUnreadCount(res.meta.unread_count);
+      } catch {
+        // silencioso — no es crítico
+      }
+    }
+
+    fetchUnread();
+    const interval = setInterval(fetchUnread, 60_000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Resetea el badge al entrar a la página de mensajes
+  useEffect(() => {
+    if (pathname.startsWith('/admin/mensajes')) {
+      setTimeout(() => setUnreadCount(0), 1500);
+    }
+  }, [pathname]);
 
   return (
     <aside className="flex h-screen w-60 flex-col border-r border-slate-200 bg-white">
       {/* Logo / Título */}
       <div className="border-b border-slate-100 px-4 py-4">
-        <Link
-          href="/admin"
-          className="group flex items-center gap-2.5"
-        >
+        <Link href="/admin" className="group flex items-center gap-2.5">
           <span className="flex h-7 w-7 items-center justify-center rounded-md bg-indigo-600 text-xs font-black text-white transition-transform group-hover:scale-105">
             DS
           </span>
@@ -92,6 +124,8 @@ export function AdminSidebar() {
               ? pathname === href
               : pathname.startsWith(href);
 
+            const showBadge = href === '/admin/mensajes' && unreadCount > 0;
+
             return (
               <li key={href}>
                 <Link
@@ -103,12 +137,25 @@ export function AdminSidebar() {
                       : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900',
                   )}
                 >
-                  <span className={cn('flex-shrink-0', isActive ? 'text-indigo-500' : 'text-slate-400')}>
+                  <span className={cn(
+                    'flex-shrink-0',
+                    isActive ? 'text-indigo-500' : 'text-slate-400',
+                  )}>
                     {icon}
                   </span>
-                  {label}
-                  {isActive && (
-                    <span className="ml-auto h-1.5 w-1.5 rounded-full bg-indigo-500" />
+
+                  <span className="flex-1">{label}</span>
+
+                  {/* Badge mensajes no leídos */}
+                  {showBadge && (
+                    <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-indigo-600 px-1.5 text-[10px] font-bold text-white">
+                      {unreadCount > 99 ? '99+' : unreadCount}
+                    </span>
+                  )}
+
+                  {/* Punto activo */}
+                  {isActive && !showBadge && (
+                    <span className="h-1.5 w-1.5 rounded-full bg-indigo-500" />
                   )}
                 </Link>
               </li>
@@ -117,7 +164,7 @@ export function AdminSidebar() {
         </ul>
       </nav>
 
-      {/* Footer del sidebar */}
+      {/* Footer */}
       <div className="border-t border-slate-100 px-3 py-3 space-y-1">
         <Link
           href="/"

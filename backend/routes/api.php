@@ -106,5 +106,14 @@ Route::prefix('v1')->name('api.')->group(function () {
 
         Route::apiResource('experiences', Admin\ExperienceController::class)
             ->names('experiences');
+
+        // Mensajes de contacto — solo lectura + eliminación (no se crean desde el admin)
+        Route::prefix('messages')->name('messages.')->group(function () {
+            Route::get('/',                              [Admin\MessageController::class, 'index'])    ->name('index');
+            Route::get('/{message}',                    [Admin\MessageController::class, 'show'])     ->name('show');
+            Route::patch('/{message}/read',             [Admin\MessageController::class, 'markRead']) ->name('mark-read');
+            Route::post('/mark-all-read',               [Admin\MessageController::class, 'markAllRead'])->name('mark-all-read');
+            Route::delete('/{message}',                 [Admin\MessageController::class, 'destroy'])  ->name('destroy');
+        });
     });
 });
