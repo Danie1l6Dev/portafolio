@@ -12,7 +12,10 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            AdminSeeder::class,
+            AdminSeeder::class,    // Usuario admin (debe ir primero)
+            CategorySeeder::class, // Categorías (requeridas por ProjectSeeder)
+            SkillSeeder::class,    // Habilidades (requeridas por ProjectSeeder)
+            ProjectSeeder::class,  // Proyectos + relación con skills
         ]);
     }
 }
