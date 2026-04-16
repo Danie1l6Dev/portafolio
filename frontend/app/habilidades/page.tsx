@@ -1,77 +1,71 @@
-'use client';
-
-import { useSkills } from '@/hooks/useSkills';
+import type { Metadata } from 'next';
+import { getSkills } from '@/services/skills';
 import { SkillBadge } from '@/components/portfolio/SkillBadge';
 
-export default function HabilidadesPage() {
-  const { skills, groups, loading, error } = useSkills();
+export const metadata: Metadata = {
+  title: 'Habilidades',
+  description: 'Tecnologías y herramientas que manejo en mis proyectos.',
+};
+
+export const revalidate = 300;
+
+export default async function HabilidadesPage() {
+  let skills: Awaited<ReturnType<typeof getSkills>>['data'] = [];
+  let groups: string[] = [];
+
+  try {
+    const res = await getSkills();
+    skills = res.data;
+    groups = res.meta.groups;
+  } catch {
+    // Mostrar estado de error inline
+  }
+
+  const ungrouped = skills.filter((s) => !s.group);
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-10">
       <h1 className="mb-2 text-3xl font-bold text-gray-900">Habilidades</h1>
-      <p className="mb-8 text-gray-500">
+      <p className="mb-10 text-gray-500">
         Tecnologías y herramientas que manejo en mis proyectos.
       </p>
 
-      {loading && (
-        <div className="space-y-6">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="h-24 animate-pulse rounded-xl bg-gray-100" />
-          ))}
+      {skills.length === 0 ? (
+        <p className="text-gray-400">No hay habilidades registradas todavía.</p>
+      ) : (
+        <div className="space-y-10">
+          {groups.map((group) => {
+            const groupSkills = skills.filter((s) => s.group === group);
+            if (!groupSkills.length) return null;
+            return (
+              <section key={group}>
+                <h2 className="mb-1 text-xs font-semibold uppercase tracking-widest text-indigo-500">
+                  {group}
+                </h2>
+                <div className="mb-4 h-px bg-gray-100" />
+                <div className="flex flex-wrap gap-2">
+                  {groupSkills.map((skill) => (
+                    <SkillBadge key={skill.id} skill={skill} showLevel />
+                  ))}
+                </div>
+              </section>
+            );
+          })}
+
+          {ungrouped.length > 0 && (
+            <section>
+              <h2 className="mb-1 text-xs font-semibold uppercase tracking-widest text-gray-400">
+                Otras
+              </h2>
+              <div className="mb-4 h-px bg-gray-100" />
+              <div className="flex flex-wrap gap-2">
+                {ungrouped.map((skill) => (
+                  <SkillBadge key={skill.id} skill={skill} showLevel />
+                ))}
+              </div>
+            </section>
+          )}
         </div>
-      )}
-
-      {error && (
-        <p className="rounded-lg bg-red-50 p-4 text-sm text-red-600">{error}</p>
-      )}
-
-      {!loading && !error && (
-        <>
-          {groups.length > 0 ? (
-            <div className="space-y-8">
-              {groups.map((group) => (
-                <section key={group}>
-                  <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400">
-                    {group}
-                  </h2>
-                  <div className="flex flex-wrap gap-2">
-                    {skills
-                      .filter((s) => s.group === group)
-                      .map((skill) => (
-                        <SkillBadge key={skill.id} skill={skill} showLevel />
-                      ))}
-                  </div>
-                </section>
-              ))}
-
-              {/* Sin grupo */}
-              {skills.filter((s) => !s.group).length > 0 && (
-                <section>
-                  <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400">
-                    Otras
-                  </h2>
-                  <div className="flex flex-wrap gap-2">
-                    {skills
-                      .filter((s) => !s.group)
-                      .map((skill) => (
-                        <SkillBadge key={skill.id} skill={skill} showLevel />
-                      ))}
-                  </div>
-                </section>
-              )}
-            </div>
-          ) : (
-            <div className="flex flex-wrap gap-2">
-              {skills.map((skill) => (
-                <SkillBadge key={skill.id} skill={skill} showLevel />
-              ))}
-            </div>
-          )}
-
-          {skills.length === 0 && (
-            <p className="text-gray-400">No hay habilidades registradas todavía.</p>
-          )}
-        </>
       )}
     </main>
   );

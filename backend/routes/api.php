@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\ExperienceController;
+use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\SkillController;
 use App\Http\Controllers\Api\Admin;
@@ -25,6 +26,7 @@ Route::prefix('v1')->name('api.')->group(function () {
     Route::get('projects/{project}',[ProjectController::class,   'show'])->name('projects.show');
     Route::get('skills',            [SkillController::class,     'index'])->name('skills.index');
     Route::get('experiences',       [ExperienceController::class,'index'])->name('experiences.index');
+    Route::post('contact',          [MessageController::class,   'store'])->name('contact')->middleware('throttle:5,1');
 
     /*
     |----------------------------------------------------------------------
