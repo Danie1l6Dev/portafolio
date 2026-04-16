@@ -30,12 +30,10 @@ class ProjectSeeder extends Seeder
             started_at:  '2025-08-01',
             finished_at: null,
             skills: [
-                'PHP', 'Laravel', 'Livewire', 'Blade', 'Tailwind CSS', 'Alpine.js',
-                'React', 'Recharts', 'JavaScript', 'Vite', 'NPM',
-                'SQLite', 'MySQL', 'Laravel Sanctum', 'FPDI/TFPDF',
-                'simple-qrcode', 'Maatwebsite Excel', 'Eloquent ORM',
-                'PHPUnit', 'Laravel Pint', 'Docker', 'docker-compose',
-                'Nginx', 'Render', 'Git / GitHub',
+                'PHP', 'Laravel', 'Livewire', 'Blade', 'Tailwind CSS',
+                'Alpine.js', 'React', 'JavaScript', 'Vite',
+                'SQLite', 'MySQL', 'Laravel Sanctum', 'Eloquent ORM',
+                'Docker', 'Git / GitHub', 'PHPUnit / PEST',
             ],
         );
 
@@ -58,10 +56,9 @@ class ProjectSeeder extends Seeder
             finished_at: null,
             skills: [
                 'PHP', 'Laravel', 'Livewire', 'Blade', 'Tailwind CSS',
-                'JavaScript', 'Axios', 'Vite',
+                'JavaScript', 'Vite',
                 'MySQL', 'Eloquent ORM',
-                'Laravel Fortify', 'PHPSpreadsheet', 'DomPDF',
-                'PEST PHP', 'Laravel Pint', 'Docker', 'Git / GitHub',
+                'Docker', 'Git / GitHub', 'PHPUnit / PEST',
             ],
         );
     }
