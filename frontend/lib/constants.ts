@@ -17,14 +17,15 @@ export const SITE = {
   url:         process.env.NEXT_PUBLIC_APP_URL  ?? 'http://localhost:3000',
   author:      'Daniel Sierra',
   locale:      'es_CO',
-  email:       'desarrollomaicao@uniguajira.edu.co',
+  email:       'danielsierra103@gmail.com',
 } as const;
 
 // ── Redes sociales ────────────────────────────────────────────
 
 export const SOCIAL_LINKS = [
-  { label: 'GitHub',   href: 'https://github.com',   rel: 'noopener noreferrer' },
-  { label: 'LinkedIn', href: 'https://linkedin.com', rel: 'noopener noreferrer' },
+  { label: 'GitHub',   href: 'https://github.com/Danie1l6Dev',   rel: 'noopener noreferrer' },
+  { label: 'LinkedIn', href: 'https://linkedin.com/in/danielsierra103', rel: 'noopener noreferrer' },
+  { label: 'Instagram', href: 'https://instagram.com/danie1l6', rel: 'noopener noreferrer' },
 ] as const;
 
 // ── Navegación pública ────────────────────────────────────────
