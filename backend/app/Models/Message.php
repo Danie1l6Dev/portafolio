@@ -41,9 +41,8 @@ class Message extends Model
 
     public function markAsRead(): void
     {
-        $this->update([
-            'is_read' => true,
-            'read_at' => now(),
-        ]);
+        $this->is_read = true;
+        $this->read_at = now();
+        $this->save();
     }
 }

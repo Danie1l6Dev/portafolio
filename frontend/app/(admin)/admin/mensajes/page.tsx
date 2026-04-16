@@ -322,7 +322,9 @@ export default function MensajesPage() {
                 {/* Acciones */}
                 <div className="ml-4 flex flex-shrink-0 items-center gap-2">
                   <a
-                    href={`mailto:${selected.email}?subject=Re: ${encodeURIComponent(selected.subject ?? '')}`}
+                    href={`https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(selected.email)}&su=${encodeURIComponent(`Re: ${selected.subject ?? ''}`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 text-xs font-medium text-slate-700 shadow-sm transition-all hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-700"
                   >
                     <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
