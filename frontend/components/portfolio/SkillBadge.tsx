@@ -6,16 +6,15 @@ interface SkillBadgeProps {
   showLevel?: boolean;
 }
 
-/** Rellena N de 5 barras según el nivel de la habilidad */
-function LevelBars({ level }: { level: number }) {
+function LevelDots({ level }: { level: number }) {
   return (
     <span className="flex gap-0.5" aria-label={`Nivel ${level} de 5`}>
       {Array.from({ length: 5 }).map((_, i) => (
         <span
           key={i}
           className={cn(
-            'h-1.5 w-2 rounded-full',
-            i < level ? 'bg-indigo-500' : 'bg-gray-200',
+            'h-1.5 w-1.5 rounded-full transition-colors',
+            i < level ? 'bg-indigo-500' : 'bg-slate-200',
           )}
         />
       ))}
@@ -25,19 +24,19 @@ function LevelBars({ level }: { level: number }) {
 
 export function SkillBadge({ skill, showLevel = false }: SkillBadgeProps) {
   return (
-    <div className="flex flex-col items-start gap-1 rounded-lg border border-gray-200 bg-white px-3 py-2 shadow-sm">
+    <div className="flex flex-col items-start gap-1.5 rounded-lg border border-slate-200 bg-white px-3.5 py-2.5 shadow-[0_1px_2px_0_rgb(0_0_0_/_0.05)] transition-all duration-150 hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-[0_4px_8px_-2px_rgb(99_102_241_/_0.15)]">
       <div className="flex items-center gap-2">
         {skill.icon && (
-          <span className="text-base leading-none" aria-hidden>
+          <span className="flex h-6 w-6 items-center justify-center rounded-md bg-slate-50 text-sm leading-none" aria-hidden>
             {skill.icon}
           </span>
         )}
-        <span className="text-sm font-medium text-gray-800">{skill.name}</span>
+        <span className="text-sm font-semibold text-slate-800">{skill.name}</span>
       </div>
       {showLevel && (
         <div className="flex items-center gap-2">
-          <LevelBars level={skill.level} />
-          <span className="text-xs text-gray-400">{skillLevelLabel(skill.level)}</span>
+          <LevelDots level={skill.level} />
+          <span className="text-xs text-slate-400">{skillLevelLabel(skill.level)}</span>
         </div>
       )}
     </div>

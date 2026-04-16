@@ -1,10 +1,90 @@
+import Link from 'next/link';
+
+const NAV_LINKS = [
+  { href: '/', label: 'Inicio' },
+  { href: '/proyectos', label: 'Proyectos' },
+  { href: '/habilidades', label: 'Habilidades' },
+  { href: '/experiencia', label: 'Experiencia' },
+  { href: '/contacto', label: 'Contacto' },
+];
+
+const SOCIAL_LINKS = [
+  { href: 'https://github.com', label: 'GitHub' },
+  { href: 'https://linkedin.com', label: 'LinkedIn' },
+];
+
 export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-gray-200 bg-white">
-      <div className="mx-auto max-w-5xl px-4 py-6 text-center text-sm text-gray-500">
-        © {year} Daniel Sierra. Todos los derechos reservados.
+    <footer className="border-t border-slate-100 bg-white">
+      <div className="mx-auto max-w-5xl px-4 py-10">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
+          {/* Marca */}
+          <div>
+            <div className="mb-3 flex items-center gap-2">
+              <span className="flex h-7 w-7 items-center justify-center rounded-md bg-indigo-600 text-xs font-black text-white">
+                DS
+              </span>
+              <span className="font-bold text-slate-900">Daniel Sierra</span>
+            </div>
+            <p className="text-sm text-slate-400 leading-relaxed">
+              Desarrollador de software. Construyendo productos digitales útiles y bien diseñados.
+            </p>
+          </div>
+
+          {/* Navegación */}
+          <div>
+            <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-slate-400">
+              Navegación
+            </p>
+            <ul className="space-y-1.5">
+              {NAV_LINKS.map(({ href, label }) => (
+                <li key={href}>
+                  <Link
+                    href={href}
+                    className="text-sm text-slate-500 transition-colors hover:text-indigo-600"
+                  >
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contacto */}
+          <div>
+            <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-slate-400">
+              Conectar
+            </p>
+            <ul className="space-y-1.5">
+              {SOCIAL_LINKS.map(({ href, label }) => (
+                <li key={href}>
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-slate-500 transition-colors hover:text-indigo-600"
+                  >
+                    {label} →
+                  </a>
+                </li>
+              ))}
+              <li>
+                <Link
+                  href="/contacto"
+                  className="text-sm text-slate-500 transition-colors hover:text-indigo-600"
+                >
+                  Enviar mensaje →
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="mt-8 border-t border-slate-100 pt-6 text-center text-xs text-slate-400">
+          © {year} Daniel Sierra. Todos los derechos reservados.
+        </div>
       </div>
     </footer>
   );

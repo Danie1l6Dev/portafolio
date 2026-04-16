@@ -34,7 +34,6 @@ export function ContactForm() {
     } catch (err) {
       setState('error');
       if (err instanceof ApiError && err.errors) {
-        // Mapear los primeros errores de cada campo
         const mapped: Record<string, string> = {};
         for (const [key, msgs] of Object.entries(err.errors)) {
           mapped[key] = msgs[0];
@@ -53,15 +52,17 @@ export function ContactForm() {
 
   if (state === 'success') {
     return (
-      <div className="rounded-xl border border-green-200 bg-green-50 p-8 text-center">
-        <div className="mb-3 text-3xl">✓</div>
-        <h3 className="mb-1 text-lg font-semibold text-green-800">
-          Mensaje enviado
+      <div className="animate-fade-in rounded-2xl border border-emerald-200 bg-emerald-50 p-10 text-center">
+        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-2xl">
+          ✓
+        </div>
+        <h3 className="mb-1 text-lg font-semibold text-emerald-800">
+          ¡Mensaje enviado!
         </h3>
-        <p className="text-sm text-green-700">{serverMessage}</p>
+        <p className="mb-5 text-sm text-emerald-700">{serverMessage}</p>
         <button
           onClick={() => setState('idle')}
-          className="mt-4 text-sm text-green-600 underline hover:text-green-800"
+          className="text-sm font-medium text-emerald-600 underline underline-offset-2 hover:text-emerald-800"
         >
           Enviar otro mensaje
         </button>
@@ -109,10 +110,7 @@ export function ContactForm() {
 
       {/* Mensaje */}
       <div>
-        <label
-          htmlFor="body"
-          className="mb-1 block text-sm font-medium text-gray-700"
-        >
+        <label htmlFor="body" className="mb-1.5 block text-sm font-medium text-slate-700">
           Mensaje <span className="text-red-500">*</span>
         </label>
         <textarea
@@ -122,32 +120,28 @@ export function ContactForm() {
           value={form.body}
           onChange={(e) => set('body', e.target.value)}
           placeholder="Escribe tu mensaje aquí..."
-          className={`w-full resize-y rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+          className={`w-full resize-y rounded-lg border px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 ${
             fieldErrors.body
-              ? 'border-red-400 focus:ring-red-400'
-              : 'border-gray-300'
+              ? 'border-red-400 bg-red-50 focus:ring-red-400'
+              : 'border-slate-200 bg-white hover:border-slate-300'
           }`}
         />
         {fieldErrors.body && (
-          <p className="mt-1 text-xs text-red-500">{fieldErrors.body}</p>
+          <p className="mt-1.5 text-xs text-red-500">{fieldErrors.body}</p>
         )}
-        <p className="mt-1 text-right text-xs text-gray-400">
+        <p className="mt-1 text-right text-xs text-slate-400">
           {form.body.length} / 3000
         </p>
       </div>
 
       {/* Error global */}
       {state === 'error' && serverMessage && !Object.keys(fieldErrors).length && (
-        <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-600">
+        <p className="rounded-lg bg-red-50 border border-red-100 px-4 py-3 text-sm text-red-600">
           {serverMessage}
         </p>
       )}
 
-      <Button
-        type="submit"
-        loading={state === 'loading'}
-        className="w-full sm:w-auto"
-      >
+      <Button type="submit" loading={state === 'loading'} size="lg" className="w-full sm:w-auto">
         Enviar mensaje
       </Button>
     </form>
@@ -170,7 +164,7 @@ interface FieldProps {
 function Field({ label, id, type, value, onChange, error, placeholder, required }: FieldProps) {
   return (
     <div>
-      <label htmlFor={id} className="mb-1 block text-sm font-medium text-gray-700">
+      <label htmlFor={id} className="mb-1.5 block text-sm font-medium text-slate-700">
         {label} {required && <span className="text-red-500">*</span>}
       </label>
       <input
@@ -180,11 +174,13 @@ function Field({ label, id, type, value, onChange, error, placeholder, required 
         required={required}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
-        className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-          error ? 'border-red-400 focus:ring-red-400' : 'border-gray-300'
+        className={`w-full rounded-lg border px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 ${
+          error
+            ? 'border-red-400 bg-red-50 focus:ring-red-400'
+            : 'border-slate-200 bg-white hover:border-slate-300'
         }`}
       />
-      {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
+      {error && <p className="mt-1.5 text-xs text-red-500">{error}</p>}
     </div>
   );
 }

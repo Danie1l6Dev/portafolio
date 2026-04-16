@@ -7,11 +7,52 @@ import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/Button';
 
 const ADMIN_LINKS = [
-  { href: '/admin', label: 'Dashboard', exact: true },
-  { href: '/admin/proyectos', label: 'Proyectos' },
-  { href: '/admin/categorias', label: 'Categorías' },
-  { href: '/admin/habilidades', label: 'Habilidades' },
-  { href: '/admin/experiencias', label: 'Experiencias' },
+  {
+    href: '/admin',
+    label: 'Dashboard',
+    exact: true,
+    icon: (
+      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+      </svg>
+    ),
+  },
+  {
+    href: '/admin/proyectos',
+    label: 'Proyectos',
+    icon: (
+      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+      </svg>
+    ),
+  },
+  {
+    href: '/admin/categorias',
+    label: 'Categorías',
+    icon: (
+      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z" />
+      </svg>
+    ),
+  },
+  {
+    href: '/admin/habilidades',
+    label: 'Habilidades',
+    icon: (
+      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+      </svg>
+    ),
+  },
+  {
+    href: '/admin/experiencias',
+    label: 'Experiencias',
+    icon: (
+      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+      </svg>
+    ),
+  },
 ];
 
 export function AdminSidebar() {
@@ -19,24 +60,34 @@ export function AdminSidebar() {
   const { user, logout, loading } = useAuth();
 
   return (
-    <aside className="flex h-screen w-56 flex-col border-r border-gray-200 bg-white">
+    <aside className="flex h-screen w-60 flex-col border-r border-slate-200 bg-white">
       {/* Logo / Título */}
-      <div className="border-b border-gray-100 px-4 py-4">
+      <div className="border-b border-slate-100 px-4 py-4">
         <Link
           href="/admin"
-          className="text-sm font-bold text-gray-900 hover:text-indigo-600 transition-colors"
+          className="group flex items-center gap-2.5"
         >
-          Panel Admin
+          <span className="flex h-7 w-7 items-center justify-center rounded-md bg-indigo-600 text-xs font-black text-white transition-transform group-hover:scale-105">
+            DS
+          </span>
+          <div>
+            <p className="text-sm font-bold text-slate-900">Panel Admin</p>
+            {user && (
+              <p className="max-w-[140px] truncate text-xs text-slate-400">
+                {user.email}
+              </p>
+            )}
+          </div>
         </Link>
-        {user && (
-          <p className="mt-0.5 truncate text-xs text-gray-400">{user.email}</p>
-        )}
       </div>
 
       {/* Navegación */}
       <nav className="flex-1 overflow-y-auto px-2 py-3">
+        <p className="mb-1 px-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">
+          Contenido
+        </p>
         <ul className="space-y-0.5">
-          {ADMIN_LINKS.map(({ href, label, exact }) => {
+          {ADMIN_LINKS.map(({ href, label, exact, icon }) => {
             const isActive = exact
               ? pathname === href
               : pathname.startsWith(href);
@@ -46,13 +97,19 @@ export function AdminSidebar() {
                 <Link
                   href={href}
                   className={cn(
-                    'flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors',
+                    'flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-150',
                     isActive
                       ? 'bg-indigo-50 text-indigo-600'
-                      : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900',
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900',
                   )}
                 >
+                  <span className={cn('flex-shrink-0', isActive ? 'text-indigo-500' : 'text-slate-400')}>
+                    {icon}
+                  </span>
                   {label}
+                  {isActive && (
+                    <span className="ml-auto h-1.5 w-1.5 rounded-full bg-indigo-500" />
+                  )}
                 </Link>
               </li>
             );
@@ -61,21 +118,27 @@ export function AdminSidebar() {
       </nav>
 
       {/* Footer del sidebar */}
-      <div className="border-t border-gray-100 px-4 py-3 space-y-2">
+      <div className="border-t border-slate-100 px-3 py-3 space-y-1">
         <Link
           href="/"
-          className="block text-xs text-gray-400 hover:text-gray-700 transition-colors"
           target="_blank"
+          className="flex items-center gap-2 rounded-lg px-3 py-2 text-xs text-slate-400 transition-colors hover:bg-slate-50 hover:text-slate-700"
         >
-          Ver portafolio →
+          <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
+          Ver portafolio
         </Link>
         <Button
           variant="ghost"
           size="sm"
           onClick={logout}
           loading={loading}
-          className="w-full justify-start text-red-500 hover:bg-red-50 hover:text-red-600"
+          className="w-full justify-start gap-2 text-red-500 hover:bg-red-50 hover:text-red-600"
         >
+          <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
           Cerrar sesión
         </Button>
       </div>

@@ -1,8 +1,33 @@
 @import "tailwindcss";
 
+/* ── Design tokens ─────────────────────────────────────────── */
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #0f172a;
+
+  /* Accent */
+  --accent: #4f46e5;
+  --accent-light: #eef2ff;
+  --accent-hover: #4338ca;
+
+  /* Surfaces */
+  --surface-subtle: #f8fafc;
+  --surface-muted:  #f1f5f9;
+
+  /* Borders */
+  --border: #e2e8f0;
+  --border-muted: #f1f5f9;
+
+  /* Shadows */
+  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / .07), 0 1px 2px -1px rgb(0 0 0 / .07);
+  --shadow-card-hover: 0 4px 12px -2px rgb(0 0 0 / .1), 0 2px 6px -2px rgb(0 0 0 / .07);
+  --shadow-dropdown: 0 10px 25px -5px rgb(0 0 0 / .1), 0 4px 10px -5px rgb(0 0 0 / .05);
+
+  /* Radii */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.875rem;
+  --radius-xl: 1.25rem;
 }
 
 @theme inline {
@@ -12,15 +37,101 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ── Base ───────────────────────────────────────────────────── */
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans, ui-sans-serif, system-ui, sans-serif);
+  font-feature-settings: "kern" 1, "liga" 1;
+  line-height: 1.6;
+}
+
+/* ── Custom scrollbar ───────────────────────────────────────── */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* ── Focus visible ──────────────────────────────────────────── */
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ── Selection ──────────────────────────────────────────────── */
+
+::selection {
+  background: #c7d2fe;
+  color: #1e1b4b;
+}
+
+/* ── Animations ─────────────────────────────────────────────── */
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in   { animation: fade-in  0.3s ease-out both; }
+.animate-slide-up  { animation: slide-up 0.4s ease-out both; }
+.animate-slide-down { animation: slide-down 0.2s ease-out both; }
+
+/* Delay utilities */
+.animation-delay-100 { animation-delay: 100ms; }
+.animation-delay-200 { animation-delay: 200ms; }
+.animation-delay-300 { animation-delay: 300ms; }
+.animation-delay-400 { animation-delay: 400ms; }
+
+/* ── Hero dot grid background ───────────────────────────────── */
+
+.bg-dot-grid {
+  background-image: radial-gradient(circle, #e2e8f0 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* ── Prose-like content ─────────────────────────────────────── */
+
+.content-prose {
+  line-height: 1.75;
+  color: #374151;
+}
+.content-prose p + p {
+  margin-top: 1em;
+}
+
+/* ── Dialog / Modal backdrop ────────────────────────────────── */
+
+dialog::backdrop {
+  background: rgb(15 23 42 / 0.5);
+  backdrop-filter: blur(4px);
 }

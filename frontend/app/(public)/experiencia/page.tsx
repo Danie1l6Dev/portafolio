@@ -3,7 +3,7 @@ import { getExperiences } from '@/services/experiences';
 import { ExperienceItem } from '@/components/portfolio/ExperienceItem';
 
 export const metadata: Metadata = {
-  title: 'Experiencia',
+  title: 'Experiencia — Daniel Sierra',
   description: 'Trayectoria profesional y académica de Daniel Sierra.',
 };
 
@@ -15,31 +15,41 @@ export default async function ExperienciaPage() {
   try {
     experiences = await getExperiences();
   } catch {
-    // Mostrar estado de error inline
+    // fallback silencioso
   }
 
   const current = experiences.filter((e) => e.is_current);
   const past = experiences.filter((e) => !e.is_current);
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-10">
-      <h1 className="mb-2 text-3xl font-bold text-gray-900">Experiencia</h1>
-      <p className="mb-10 text-gray-500">
-        Mi trayectoria profesional y académica.
-      </p>
+    <main className="mx-auto max-w-3xl px-4 py-14">
+      {/* Header */}
+      <div className="mb-12">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-indigo-500">
+          Trayectoria
+        </p>
+        <h1 className="mb-3 text-3xl font-bold tracking-tight text-slate-900">
+          Experiencia
+        </h1>
+        <p className="text-slate-500">Mi trayectoria profesional y académica.</p>
+      </div>
 
       {experiences.length === 0 ? (
-        <p className="text-gray-400">No hay experiencias registradas todavía.</p>
+        <div className="rounded-xl border border-slate-100 bg-slate-50 p-10 text-center">
+          <p className="text-sm text-slate-400">No hay experiencias registradas todavía.</p>
+        </div>
       ) : (
         <div className="space-y-12">
           {/* Posición actual primero */}
           {current.length > 0 && (
             <section>
-              <h2 className="mb-1 text-xs font-semibold uppercase tracking-widest text-green-500">
-                Actualmente
-              </h2>
-              <div className="mb-6 h-px bg-gray-100" />
-              <div className="space-y-8">
+              <div className="mb-6 flex items-center gap-3">
+                <h2 className="text-xs font-bold uppercase tracking-widest text-emerald-500">
+                  Actualmente
+                </h2>
+                <div className="h-px flex-1 bg-slate-100" />
+              </div>
+              <div>
                 {current.map((exp) => (
                   <ExperienceItem key={exp.id} experience={exp} />
                 ))}
@@ -50,11 +60,13 @@ export default async function ExperienciaPage() {
           {/* Historial */}
           {past.length > 0 && (
             <section>
-              <h2 className="mb-1 text-xs font-semibold uppercase tracking-widest text-gray-400">
-                Experiencia anterior
-              </h2>
-              <div className="mb-6 h-px bg-gray-100" />
-              <div className="space-y-8">
+              <div className="mb-6 flex items-center gap-3">
+                <h2 className="text-xs font-bold uppercase tracking-widest text-slate-400">
+                  Experiencia anterior
+                </h2>
+                <div className="h-px flex-1 bg-slate-100" />
+              </div>
+              <div>
                 {past.map((exp) => (
                   <ExperienceItem key={exp.id} experience={exp} />
                 ))}

@@ -10,11 +10,11 @@ interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 }
 
 const variantClasses: Record<Exclude<BadgeVariant, 'custom'>, string> = {
-  default: 'bg-gray-100 text-gray-700',
-  primary: 'bg-indigo-100 text-indigo-700',
-  success: 'bg-green-100 text-green-700',
-  warning: 'bg-yellow-100 text-yellow-800',
-  danger: 'bg-red-100 text-red-700',
+  default: 'bg-slate-100 text-slate-600',
+  primary: 'bg-indigo-50 text-indigo-700 ring-1 ring-indigo-100',
+  success: 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100',
+  warning: 'bg-amber-50 text-amber-700 ring-1 ring-amber-100',
+  danger:  'bg-red-50 text-red-700 ring-1 ring-red-100',
 };
 
 export function Badge({
@@ -32,7 +32,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium',
+        'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium tracking-wide',
         color,
         className,
       )}

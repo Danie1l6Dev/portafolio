@@ -15,22 +15,27 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="w-full max-w-sm rounded-xl border border-gray-200 bg-white p-8 shadow-sm">
-        <h1 className="mb-1 text-xl font-bold text-gray-900">Panel Admin</h1>
-        <p className="mb-6 text-sm text-gray-400">Inicia sesión para continuar</p>
+    <div className="w-full max-w-sm animate-slide-up">
+      {/* Card */}
+      <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-[0_4px_24px_-4px_rgb(0_0_0_/_0.1)]">
+        {/* Logo + título */}
+        <div className="mb-6 flex flex-col items-center text-center">
+          <span className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-600 text-sm font-black text-white shadow-sm">
+            DS
+          </span>
+          <h1 className="text-lg font-bold text-slate-900">Panel Admin</h1>
+          <p className="mt-0.5 text-sm text-slate-400">Inicia sesión para continuar</p>
+        </div>
 
         {error && (
-          <p className="mb-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-600">
+          <div className="mb-5 rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-600">
             {error}
-          </p>
+          </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label
-              htmlFor="email"
-              className="mb-1 block text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-slate-700">
               Correo electrónico
             </label>
             <input
@@ -40,15 +45,13 @@ export default function LoginPage() {
               autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              className="w-full rounded-lg border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 transition-colors hover:border-slate-300 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1"
+              placeholder="admin@ejemplo.com"
             />
           </div>
 
           <div>
-            <label
-              htmlFor="password"
-              className="mb-1 block text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-slate-700">
               Contraseña
             </label>
             <input
@@ -58,14 +61,20 @@ export default function LoginPage() {
               autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              className="w-full rounded-lg border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 transition-colors hover:border-slate-300 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1"
+              placeholder="••••••••"
             />
           </div>
 
-          <Button type="submit" loading={loading} className="w-full">
+          <Button type="submit" loading={loading} size="lg" className="w-full">
             Ingresar
           </Button>
         </form>
+      </div>
+
+      <p className="mt-4 text-center text-xs text-slate-400">
+        Acceso restringido solo a administradores.
+      </p>
     </div>
   );
 }
