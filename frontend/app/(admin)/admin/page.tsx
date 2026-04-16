@@ -41,19 +41,19 @@ export default function AdminDashboardPage() {
     ]).then(([all, pub, draft, skills, exp, cats, unreadMsgs, allMsgs]) => {
       setStats({
         projects: {
-          total: all.status === 'fulfilled' ? all.value.meta.total : 0,
-          published: pub.status === 'fulfilled' ? pub.value.meta.total : 0,
-          draft: draft.status === 'fulfilled' ? draft.value.meta.total : 0,
+          total: all.status === 'fulfilled' ? (all.value.meta?.total ?? 0) : 0,
+          published: pub.status === 'fulfilled' ? (pub.value.meta?.total ?? 0) : 0,
+          draft: draft.status === 'fulfilled' ? (draft.value.meta?.total ?? 0) : 0,
         },
-        skills: skills.status === 'fulfilled' ? skills.value.length : 0,
+        skills: skills.status === 'fulfilled' ? (skills.value.length ?? 0) : 0,
         experiences: {
-          total: exp.status === 'fulfilled' ? exp.value.meta.total : 0,
-          current: exp.status === 'fulfilled' ? exp.value.data.filter((e) => e.is_current).length : 0,
+          total: exp.status === 'fulfilled' ? (exp.value.meta?.total ?? exp.value.data?.length ?? 0) : 0,
+          current: exp.status === 'fulfilled' ? (exp.value.data?.filter((e) => e.is_current).length ?? 0) : 0,
         },
-        categories: cats.status === 'fulfilled' ? cats.value.meta.total : 0,
+        categories: cats.status === 'fulfilled' ? (cats.value.meta?.total ?? 0) : 0,
         messages: {
-          total: allMsgs.status === 'fulfilled' ? allMsgs.value.meta.total : 0,
-          unread: unreadMsgs.status === 'fulfilled' ? unreadMsgs.value.meta.unread_count : 0,
+          total: allMsgs.status === 'fulfilled' ? (allMsgs.value.meta?.total ?? 0) : 0,
+          unread: unreadMsgs.status === 'fulfilled' ? (unreadMsgs.value.meta?.unread_count ?? 0) : 0,
         },
       });
     }).finally(() => setLoading(false));

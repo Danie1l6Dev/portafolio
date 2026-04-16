@@ -17,10 +17,9 @@ class MessageController extends Controller
      */
     public function store(StoreMessageRequest $request): JsonResponse
     {
-        $message = Message::create([
-            ...$request->validated(),
-            'ip_address' => $request->ip(),
-        ]);
+        $message = Message::create($request->validated());
+        $message->ip_address = $request->ip();
+        $message->save();
 
         return response()->json([
             'message' => 'Mensaje enviado correctamente. Me pondré en contacto contigo pronto.',
