@@ -19,6 +19,11 @@ interface SlideConfig {
   visibleSide: number; // cuántas tarjetas se muestran a cada lado
 }
 
+const CAROUSEL_SCALE = 2;
+const SIDE_OVERLAP_FACTOR = 0.5;
+const TRACK_HEIGHT = 560;
+const NAV_TOP = 270;
+
 // ── Helpers ───────────────────────────────────────────────────
 
 /** Distancia circular más corta desde activeIndex hasta index */
@@ -47,7 +52,7 @@ function slideTransform(absOffset: number, translateX: number) {
 
 export function ProjectCarousel({ projects }: ProjectCarouselProps) {
   const [activeIndex, setActiveIndex]   = useState(0);
-  const [config, setConfig]             = useState<SlideConfig>({ step: 350, visibleSide: 2 });
+  const [config, setConfig]             = useState<SlideConfig>({ step: 350 * CAROUSEL_SCALE, visibleSide: 2 });
   const containerRef                    = useRef<HTMLDivElement>(null);
   const touchStartX                     = useRef<number | null>(null);
   const router                          = useRouter();
@@ -57,13 +62,13 @@ export function ProjectCarousel({ projects }: ProjectCarouselProps) {
     const update = () => {
       const w = containerRef.current?.clientWidth ?? window.innerWidth;
       if (w < 480) {
-        setConfig({ step: 230, visibleSide: 1 });
+        setConfig({ step: 230 * CAROUSEL_SCALE, visibleSide: 1 });
       } else if (w < 768) {
-        setConfig({ step: 285, visibleSide: 1 });
+        setConfig({ step: 285 * CAROUSEL_SCALE, visibleSide: 1 });
       } else if (w < 1024) {
-        setConfig({ step: 320, visibleSide: 2 });
+        setConfig({ step: 320 * CAROUSEL_SCALE, visibleSide: 2 });
       } else {
-        setConfig({ step: 360, visibleSide: 2 });
+        setConfig({ step: 360 * CAROUSEL_SCALE, visibleSide: 2 });
       }
     };
 
@@ -115,7 +120,7 @@ export function ProjectCarousel({ projects }: ProjectCarouselProps) {
       {/* ── Pista del carrusel ─────────────────────────────── */}
       <div
         className="relative overflow-hidden"
-        style={{ height: 440 }}
+        style={{ height: TRACK_HEIGHT }}
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
         aria-label="Carrusel de proyectos"
@@ -138,8 +143,8 @@ export function ProjectCarousel({ projects }: ProjectCarouselProps) {
               role="button"
               tabIndex={isActive ? 0 : -1}
               aria-label={isActive ? `Ver detalle: ${project.title}` : `Ir a ${project.title}`}
-              className="absolute left-1/2 top-6 w-64 cursor-pointer sm:w-72 md:w-80"
-              style={slideTransform(absOffset, offset * step)}
+              className="absolute left-1/2 top-6 w-[32rem] cursor-pointer sm:w-[36rem] md:w-[40rem]"
+              style={slideTransform(absOffset, offset * step * SIDE_OVERLAP_FACTOR)}
               onClick={() => {
                 if (isActive) {
                   router.push(`/proyectos/${project.slug}`);
@@ -167,7 +172,8 @@ export function ProjectCarousel({ projects }: ProjectCarouselProps) {
           <button
             onClick={prev}
             aria-label="Proyecto anterior"
-            className="absolute left-3 top-[210px] z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 shadow-md transition-all hover:border-sky-200 hover:bg-sky-50 hover:text-sky-600"
+            className="absolute left-3 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 shadow-md transition-all hover:border-sky-200 hover:bg-sky-50 hover:text-sky-600"
+            style={{ top: NAV_TOP }}
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -177,7 +183,8 @@ export function ProjectCarousel({ projects }: ProjectCarouselProps) {
           <button
             onClick={next}
             aria-label="Siguiente proyecto"
-            className="absolute right-3 top-[210px] z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 shadow-md transition-all hover:border-sky-200 hover:bg-sky-50 hover:text-sky-600"
+            className="absolute right-3 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 shadow-md transition-all hover:border-sky-200 hover:bg-sky-50 hover:text-sky-600"
+            style={{ top: NAV_TOP }}
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
@@ -300,12 +307,12 @@ function ProjectSlide({
         )}
 
         {/* Título */}
-        <h3 className="mt-2 line-clamp-1 text-sm font-semibold leading-snug text-slate-900">
+        <h3 className="mt-2 line-clamp-1 text-base font-semibold leading-snug text-slate-900">
           {project.title}
         </h3>
 
         {/* Resumen */}
-        <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-slate-500">
+        <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-slate-500">
           {project.summary}
         </p>
 
@@ -313,13 +320,13 @@ function ProjectSlide({
         {isActive && project.skills && project.skills.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-1">
             {project.skills.slice(0, 3).map((skill) => (
-              <Badge key={skill.id} variant="default" className="text-[11px]">
+              <Badge key={skill.id} variant="default" className="text-xs">
                 {skill.icon && <SkillIcon icon={skill.icon} name={skill.name} size="sm" className="mr-1" />}
                 {skill.name}
               </Badge>
             ))}
             {project.skills.length > 3 && (
-              <Badge variant="default" className="text-[11px] text-slate-400">
+              <Badge variant="default" className="text-xs text-slate-400">
                 +{project.skills.length - 3}
               </Badge>
             )}
