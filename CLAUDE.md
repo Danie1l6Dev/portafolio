@@ -4,11 +4,11 @@ Actúa como un desarrollador senior trabajando directamente sobre este repositor
 Tu tarea es modificar los archivos del proyecto en el entorno actual, no generarme código para copiar y pegar.
 Antes de cambiar nada, revisa la estructura existente y adapta tu trabajo a lo que ya hay.
 
-## Rama de trabajo
+<!-- ## Rama de trabajo
 
 - Siempre trabajar sobre la rama `develop`.
 - Nunca hacer cambios directamente sobre `main`.
-- Antes de cualquier acción, verificar que estamos en `develop` con `git branch`.
+- Antes de cualquier acción, verificar que estamos en `develop` con `git branch`. -->
 
 ## Reglas
 
