@@ -1,43 +1,11 @@
-import Image from 'next/image';
 import { cn, skillLevelLabel } from '@/lib/utils';
+import { SkillIcon } from '@/components/portfolio/SkillIcon';
 import type { Skill } from '@/types';
 
 interface SkillBadgeProps {
   skill: Skill;
   showLevel?: boolean;
 }
-
-// ── Icono ─────────────────────────────────────────────────────
-
-/**
- * Si el icono tiene el prefijo "si:" se renderiza desde Simple Icons CDN.
- * De lo contrario se trata como emoji o texto plano.
- */
-function SkillIcon({ icon, name }: { icon: string; name: string }) {
-  if (icon.startsWith('si:')) {
-    const slug = icon.slice(3);
-    return (
-      <span className="flex h-6 w-6 items-center justify-center rounded-md bg-slate-50" aria-hidden>
-        <Image
-          src={`https://cdn.simpleicons.org/${slug}`}
-          alt={name}
-          width={16}
-          height={16}
-          className="h-4 w-4 object-contain"
-          unoptimized
-        />
-      </span>
-    );
-  }
-
-  return (
-    <span className="flex h-6 w-6 items-center justify-center rounded-md bg-slate-50 text-sm leading-none" aria-hidden>
-      {icon}
-    </span>
-  );
-}
-
-// ── Puntos de nivel ───────────────────────────────────────────
 
 function LevelDots({ level }: { level: number }) {
   return (
@@ -54,8 +22,6 @@ function LevelDots({ level }: { level: number }) {
     </span>
   );
 }
-
-// ── Badge ─────────────────────────────────────────────────────
 
 export function SkillBadge({ skill, showLevel = false }: SkillBadgeProps) {
   return (

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/Badge';
+import { SkillIcon } from '@/components/portfolio/SkillIcon';
 import { truncate } from '@/lib/utils';
 import type { Project } from '@/types';
 
@@ -107,7 +108,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
           <div className="flex flex-wrap gap-1">
             {project.skills.slice(0, 4).map((skill) => (
               <Badge key={skill.id} variant="default" className="text-xs">
-                {skill.icon && <span className="mr-1">{skill.icon}</span>}
+                {skill.icon && <SkillIcon icon={skill.icon} name={skill.name} size="sm" className="mr-1" />}
                 {skill.name}
               </Badge>
             ))}

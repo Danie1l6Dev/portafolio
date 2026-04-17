@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Badge } from '@/components/ui/Badge';
+import { SkillIcon } from '@/components/portfolio/SkillIcon';
 import { cn } from '@/lib/utils';
 import type { Project } from '@/types';
 
@@ -313,7 +314,7 @@ function ProjectSlide({
           <div className="mt-3 flex flex-wrap gap-1">
             {project.skills.slice(0, 3).map((skill) => (
               <Badge key={skill.id} variant="default" className="text-[11px]">
-                {skill.icon && <span className="mr-1">{skill.icon}</span>}
+                {skill.icon && <SkillIcon icon={skill.icon} name={skill.name} size="sm" className="mr-1" />}
                 {skill.name}
               </Badge>
             ))}
