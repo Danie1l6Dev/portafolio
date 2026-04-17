@@ -1,0 +1,100 @@
+import type { Metadata } from 'next';
+import { ContactForm } from '@/components/portfolio/ContactForm';
+import { SITE, SOCIAL_LINKS } from '@/lib/constants';
+import { SocialIcon } from '@/components/ui/SocialIcon';
+
+export const metadata: Metadata = {
+  title: 'Contacto — Daniel Sierra',
+  description: 'Envíame un mensaje, respondo a la mayor brevedad posible.',
+};
+
+export default function ContactoPage() {
+  return (
+    <main className="mx-auto max-w-5xl px-4 py-14">
+      {/* Header */}
+      <div className="mb-12">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-sky-500">
+          Hablemos
+        </p>
+        <h1 className="mb-3 text-3xl font-bold tracking-tight text-slate-900">
+          Contacto
+        </h1>
+        <p className="text-slate-500">
+          ¿Tienes un proyecto en mente o quieres ponerte en contacto? Escríbeme.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 gap-12 lg:grid-cols-5">
+        {/* Form — 3/5 */}
+        <div className="lg:col-span-3">
+          <ContactForm />
+        </div>
+
+        {/* Info panel — 2/5 */}
+        <aside className="lg:col-span-2">
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-6">
+            {/* Disponibilidad */}
+            <div className="mb-6">
+              <p className="mb-1 flex items-center gap-2 text-sm font-semibold text-slate-900">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
+                Disponible
+              </p>
+              <p className="text-sm text-slate-500">
+                Actualmente acepto proyectos freelance y colaboraciones.
+              </p>
+            </div>
+
+            <div className="space-y-5">
+              <div>
+                <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-slate-400">
+                  Correo
+                </p>
+                <a
+                  href={`mailto:${SITE.email}`}
+                  className="text-sm text-sky-600 hover:underline"
+                >
+                  {SITE.email}
+                </a>
+              </div>
+
+              <div className="h-px bg-slate-200" />
+
+              <div>
+                <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-slate-400">
+                  Redes
+                </p>
+                <div className="flex flex-col gap-2">
+                  {SOCIAL_LINKS.map(({ href, label, rel, icon }) => (
+                    <a
+                      key={href}
+                      href={href}
+                      target="_blank"
+                      rel={rel}
+                      className="flex items-center gap-2.5 text-sm text-slate-600 transition-colors hover:text-sky-600"
+                    >
+                      <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 bg-white shadow-sm transition-colors group-hover:border-sky-200">
+                        <SocialIcon name={icon} className="h-3.5 w-3.5" />
+                      </span>
+                      {label}
+                    </a>
+                  ))}
+                </div>
+              </div>
+
+              <div className="h-px bg-slate-200" />
+
+              <div>
+                <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-slate-400">
+                  Respuesta
+                </p>
+                <p className="text-sm text-slate-500">
+                  Generalmente respondo en menos de 48 horas.
+                </p>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </main>
+  );
+}

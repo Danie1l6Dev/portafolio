@@ -1,0 +1,68 @@
+import type { Metadata } from 'next';
+import { getExperiences } from '@/services/experiences';
+import { ExperienceItem } from '@/components/portfolio/ExperienceItem';
+
+export const metadata: Metadata = {
+  title: 'Experiencia',
+  description: 'Trayectoria profesional y académica de Daniel Sierra.',
+};
+
+export const revalidate = 300;
+
+export default async function ExperienciaPage() {
+  let experiences: Awaited<ReturnType<typeof getExperiences>> = [];
+
+  try {
+    experiences = await getExperiences();
+  } catch {
+    // Mostrar estado de error inline
+  }
+
+  const current = experiences.filter((e) => e.is_current);
+  const past = experiences.filter((e) => !e.is_current);
+
+  return (
+    <main className="mx-auto max-w-3xl px-4 py-10">
+      <h1 className="mb-2 text-3xl font-bold text-gray-900">Experiencia</h1>
+      <p className="mb-10 text-gray-500">
+        Mi trayectoria profesional y académica.
+      </p>
+
+      {experiences.length === 0 ? (
+        <p className="text-gray-400">No hay experiencias registradas todavía.</p>
+      ) : (
+        <div className="space-y-12">
+          {/* Posición actual primero */}
+          {current.length > 0 && (
+            <section>
+              <h2 className="mb-1 text-xs font-semibold uppercase tracking-widest text-green-500">
+                Actualmente
+              </h2>
+              <div className="mb-6 h-px bg-gray-100" />
+              <div className="space-y-8">
+                {current.map((exp) => (
+                  <ExperienceItem key={exp.id} experience={exp} />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Historial */}
+          {past.length > 0 && (
+            <section>
+              <h2 className="mb-1 text-xs font-semibold uppercase tracking-widest text-gray-400">
+                Experiencia anterior
+              </h2>
+              <div className="mb-6 h-px bg-gray-100" />
+              <div className="space-y-8">
+                {past.map((exp) => (
+                  <ExperienceItem key={exp.id} experience={exp} />
+                ))}
+              </div>
+            </section>
+          )}
+        </div>
+      )}
+    </main>
+  );
+}
