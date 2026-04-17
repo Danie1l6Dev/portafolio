@@ -76,7 +76,7 @@ export const REVALIDATE = {
 
 export const API = {
   /** Tiempo máximo de espera de la API en ms. */
-  timeoutMs: 10_000,
+  timeoutMs: 5_000,
 } as const;
 
 /*

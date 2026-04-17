@@ -87,27 +87,39 @@ export default function ProyectosPage() {
 
       {/* ── Error ─────────────────────────────────────────── */}
       {error && !loading && (
-        <div className="rounded-xl border border-red-100 bg-red-50 p-5 text-center text-sm text-red-600">
-          {error}
+        <div className="rounded-xl border border-red-100 bg-red-50 p-6 text-center">
+          <p className="text-sm font-medium text-red-700">No se pudo cargar los proyectos</p>
+          <p className="mt-1 text-xs text-red-500">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-4 rounded-lg border border-red-200 bg-white px-4 py-1.5 text-xs font-medium text-red-600 transition hover:bg-red-50"
+          >
+            Reintentar
+          </button>
         </div>
       )}
 
       {/* ── Carrusel ──────────────────────────────────────── */}
       {!loading && !error && (
         projects.length === 0 ? (
-          <div className="py-20 text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-2xl text-slate-400">
-              ◻
+          <div className="rounded-2xl border border-slate-100 bg-slate-50 py-20 text-center">
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-white text-3xl shadow-sm ring-1 ring-slate-100">
+              🗂️
             </div>
-            <p className="text-slate-400">
+            <p className="font-medium text-slate-600">
               {activeCategory
-                ? 'No hay proyectos en esta categoría.'
-                : 'No hay proyectos publicados todavía.'}
+                ? 'No hay proyectos en esta categoría'
+                : 'Aún no hay proyectos publicados'}
+            </p>
+            <p className="mt-1 text-sm text-slate-400">
+              {activeCategory
+                ? 'Prueba con otra categoría o mira todos los proyectos.'
+                : 'Pronto habrá contenido aquí.'}
             </p>
             {activeCategory && (
               <button
                 onClick={() => selectCategory(undefined)}
-                className="mt-3 text-sm font-medium text-sky-600 hover:underline"
+                className="mt-4 rounded-lg bg-sky-600 px-5 py-1.5 text-sm font-medium text-white transition hover:bg-sky-700"
               >
                 Ver todos los proyectos
               </button>

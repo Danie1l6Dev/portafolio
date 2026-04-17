@@ -18,12 +18,12 @@ class SkillSeeder extends Seeder
             // ── Backend ───────────────────────────────────────
             ['PHP',             'Backend',       5, 'si:php',          true,  10],
             ['Laravel',         'Backend',       5, 'si:laravel',      true,  11],
-            ['Livewire',        'Backend',       4, 'si:livewire',     true,  12],
-            ['Eloquent ORM',    'Backend',       4, 'si:laravel',      false, 13],
+            ['Livewire',        'Backend',       3, 'si:livewire',     true,  12],
+            ['Eloquent ORM',    'Backend',       3, 'si:laravel',      false, 13],
             ['Laravel Sanctum', 'Backend',       3, 'si:laravel',      false, 14],
 
             // ── Frontend ──────────────────────────────────────
-            ['Tailwind CSS',    'Frontend',      5, 'si:tailwindcss',  true,  30],
+            ['Tailwind CSS',    'Frontend',      4, 'si:tailwindcss',  true,  30],
             ['Blade',           'Frontend',      4, 'si:laravel',      false, 31],
             ['JavaScript',      'Frontend',      3, 'si:javascript',   false, 32],
             ['Alpine.js',       'Frontend',      3, 'si:alpinedotjs',  false, 33],
@@ -31,7 +31,7 @@ class SkillSeeder extends Seeder
 
             // ── Base de datos ──────────────────────────────────
             ['MySQL',           'Base de datos', 4, 'si:mysql',        true,  50],
-            ['SQLite',          'Base de datos', 3, 'si:sqlite',       false, 51],
+            ['SQLite',          'Base de datos', 2, 'si:sqlite',       false, 51],
 
             // ── DevOps ────────────────────────────────────────
             ['Docker',          'DevOps',        3, 'si:docker',       false, 70],
