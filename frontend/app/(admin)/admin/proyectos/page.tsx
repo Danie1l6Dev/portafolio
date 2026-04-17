@@ -96,7 +96,7 @@ export default function AdminProyectosPage() {
         {STATUS_FILTERS.map(({ label, value }) => (
           <button key={value} onClick={() => { setFilterStatus(value); setPage(1); }}
             className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
-              filterStatus === value ? 'border-indigo-600 bg-indigo-600 text-white' : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+              filterStatus === value ? 'border-sky-600 bg-sky-600 text-white' : 'border-gray-200 text-gray-600 hover:bg-gray-50'
             }`}>
             {label}
           </button>

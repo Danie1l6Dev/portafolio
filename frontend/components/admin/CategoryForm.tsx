@@ -125,7 +125,7 @@ export function CategoryForm({ initial, onSubmit, onCancel }: CategoryFormProps)
 }
 
 function inputCls(hasError: boolean) {
-  return `w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 ${
+  return `w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-sky-500 ${
     hasError ? 'border-red-400' : 'border-gray-300'
   }`;
 }

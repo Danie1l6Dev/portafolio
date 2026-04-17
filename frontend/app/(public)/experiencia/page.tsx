@@ -25,7 +25,7 @@ export default async function ExperienciaPage() {
     <main className="mx-auto max-w-3xl px-4 py-14">
       {/* Header */}
       <div className="mb-12">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-indigo-500">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-sky-500">
           Trayectoria
         </p>
         <h1 className="mb-3 text-3xl font-bold tracking-tight text-slate-900">

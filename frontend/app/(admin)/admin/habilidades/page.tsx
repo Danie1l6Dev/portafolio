@@ -73,12 +73,12 @@ export default function AdminHabilidadesPage() {
       {groups.length > 0 && (
         <div className="mb-4 flex flex-wrap gap-2">
           <button onClick={() => setFilterGroup('')}
-            className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${!filterGroup ? 'border-indigo-600 bg-indigo-600 text-white' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}`}>
+            className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${!filterGroup ? 'border-sky-600 bg-sky-600 text-white' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}`}>
             Todos
           </button>
           {groups.map((g) => (
             <button key={g} onClick={() => setFilterGroup(g)}
-              className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${filterGroup === g ? 'border-indigo-600 bg-indigo-600 text-white' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}`}>
+              className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${filterGroup === g ? 'border-sky-600 bg-sky-600 text-white' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}`}>
               {g}
             </button>
           ))}

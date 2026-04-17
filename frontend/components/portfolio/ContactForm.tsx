@@ -120,7 +120,7 @@ export function ContactForm() {
           value={form.body}
           onChange={(e) => set('body', e.target.value)}
           placeholder="Escribe tu mensaje aquí..."
-          className={`w-full resize-y rounded-lg border px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 ${
+          className={`w-full resize-y rounded-lg border px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-1 ${
             fieldErrors.body
               ? 'border-red-400 bg-red-50 focus:ring-red-400'
               : 'border-slate-200 bg-white hover:border-slate-300'
@@ -174,7 +174,7 @@ function Field({ label, id, type, value, onChange, error, placeholder, required 
         required={required}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
-        className={`w-full rounded-lg border px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 ${
+        className={`w-full rounded-lg border px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-1 ${
           error
             ? 'border-red-400 bg-red-50 focus:ring-red-400'
             : 'border-slate-200 bg-white hover:border-slate-300'

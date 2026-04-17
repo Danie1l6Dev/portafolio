@@ -39,10 +39,12 @@ export default async function HomePage() {
     <main>
       {/* ── Hero ─────────────────────────────────────────── */}
       <section className="relative overflow-hidden">
-        {/* Dot grid background */}
-        <div className="bg-dot-grid absolute inset-0 opacity-60" />
-        {/* Radial fade */}
-        <div className="absolute inset-0 bg-gradient-to-b from-white/0 via-white/60 to-white" />
+        {/* Malla radial superior */}
+        <div className="bg-hero-mesh absolute inset-0" />
+        {/* Dot grid */}
+        <div className="bg-dot-grid absolute inset-0 opacity-40" />
+        {/* Fade hacia el fondo de la sección */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#F0F7FF]" />
 
         <div className="relative mx-auto max-w-5xl px-4 py-24 sm:py-32">
           <div className="max-w-2xl animate-slide-up">
@@ -55,7 +57,7 @@ export default async function HomePage() {
 
             <h1 className="mb-5 text-4xl font-bold leading-tight tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
               Hola, soy{' '}
-              <span className="bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-sky-500 to-blue-600 bg-clip-text text-transparent">
                 Daniel Sierra
               </span>
             </h1>
@@ -69,7 +71,7 @@ export default async function HomePage() {
             <div className="flex flex-wrap gap-3">
               <Link
                 href="/proyectos"
-                className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:bg-indigo-700 hover:shadow-md active:scale-95"
+                className="inline-flex items-center gap-2 rounded-lg bg-sky-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:bg-sky-700 hover:shadow-md active:scale-95"
               >
                 Ver proyectos
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -78,7 +80,7 @@ export default async function HomePage() {
               </Link>
               <Link
                 href="/contacto"
-                className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 shadow-sm transition-all duration-150 hover:border-slate-300 hover:bg-slate-50 active:scale-95"
+                className="inline-flex items-center gap-2 rounded-lg border border-sky-200 bg-white px-6 py-3 text-sm font-semibold text-sky-700 shadow-sm transition-all duration-150 hover:border-sky-300 hover:bg-sky-50 active:scale-95"
               >
                 Contactar
               </Link>
@@ -89,11 +91,11 @@ export default async function HomePage() {
 
       {/* ── Proyectos destacados ──────────────────────────── */}
       {featuredProjects.length > 0 && (
-        <section className="border-t border-slate-100 py-20">
+        <section className="border-t border-blue-100 py-20">
           <div className="mx-auto max-w-5xl px-4">
             <div className="mb-10 flex items-end justify-between">
               <div>
-                <p className="mb-1.5 text-xs font-semibold uppercase tracking-widest text-indigo-500">
+                <p className="mb-1.5 text-xs font-semibold uppercase tracking-widest text-sky-500">
                   Trabajo reciente
                 </p>
                 <h2 className="text-2xl font-bold tracking-tight text-slate-900">
@@ -102,7 +104,7 @@ export default async function HomePage() {
               </div>
               <Link
                 href="/proyectos"
-                className="hidden items-center gap-1 text-sm font-medium text-indigo-600 transition-colors hover:text-indigo-800 sm:flex"
+                className="hidden items-center gap-1 text-sm font-medium text-sky-600 transition-colors hover:text-sky-800 sm:flex"
               >
                 Ver todos
                 <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -118,7 +120,7 @@ export default async function HomePage() {
             </div>
 
             <div className="mt-8 sm:hidden">
-              <Link href="/proyectos" className="text-sm font-medium text-indigo-600 hover:underline">
+              <Link href="/proyectos" className="text-sm font-medium text-sky-600 hover:underline">
                 Ver todos los proyectos →
               </Link>
             </div>
@@ -128,11 +130,11 @@ export default async function HomePage() {
 
       {/* ── Habilidades destacadas ────────────────────────── */}
       {featuredSkills.length > 0 && (
-        <section className="border-t border-slate-100 bg-slate-50/60 py-20">
+        <section className="border-t border-blue-100 bg-[#e8f1fa] py-20">
           <div className="mx-auto max-w-5xl px-4">
             <div className="mb-10 flex items-end justify-between">
               <div>
-                <p className="mb-1.5 text-xs font-semibold uppercase tracking-widest text-indigo-500">
+                <p className="mb-1.5 text-xs font-semibold uppercase tracking-widest text-sky-500">
                   Stack técnico
                 </p>
                 <h2 className="text-2xl font-bold tracking-tight text-slate-900">
@@ -141,7 +143,7 @@ export default async function HomePage() {
               </div>
               <Link
                 href="/habilidades"
-                className="hidden items-center gap-1 text-sm font-medium text-indigo-600 transition-colors hover:text-indigo-800 sm:flex"
+                className="hidden items-center gap-1 text-sm font-medium text-sky-600 transition-colors hover:text-sky-800 sm:flex"
               >
                 Ver todas
                 <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -161,7 +163,7 @@ export default async function HomePage() {
 
       {/* ── Experiencia actual ────────────────────────────── */}
       {currentJob && (
-        <section className="border-t border-slate-100 py-20">
+        <section className="border-t border-blue-100 py-20">
           <div className="mx-auto max-w-5xl px-4">
             <div className="mb-10 flex items-end justify-between">
               <div>
@@ -174,7 +176,7 @@ export default async function HomePage() {
               </div>
               <Link
                 href="/experiencia"
-                className="hidden items-center gap-1 text-sm font-medium text-indigo-600 transition-colors hover:text-indigo-800 sm:flex"
+                className="hidden items-center gap-1 text-sm font-medium text-sky-600 transition-colors hover:text-sky-800 sm:flex"
               >
                 Ver trayectoria
                 <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -183,10 +185,9 @@ export default async function HomePage() {
               </Link>
             </div>
 
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-[0_1px_3px_0_rgb(0_0_0_/_0.07)]">
+            <div className="rounded-2xl border border-blue-100 bg-white p-6 shadow-[0_1px_3px_0_rgb(2_132_199_/_0.08)]">
               <div className="flex items-start gap-5">
-                {/* Logo */}
-                <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
+                <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-xl border border-blue-100 bg-sky-50">
                   {currentJob.company_logo ? (
                     <Image
                       src={currentJob.company_logo}
@@ -196,13 +197,12 @@ export default async function HomePage() {
                       sizes="48px"
                     />
                   ) : (
-                    <div className="flex h-full items-center justify-center text-xl font-bold text-slate-300">
+                    <div className="flex h-full items-center justify-center text-xl font-bold text-sky-300">
                       {currentJob.company.charAt(0).toUpperCase()}
                     </div>
                   )}
                 </div>
 
-                {/* Info */}
                 <div className="flex-1">
                   <div className="mb-1 flex flex-wrap items-center gap-2">
                     <h3 className="font-semibold text-slate-900">
@@ -210,7 +210,7 @@ export default async function HomePage() {
                     </h3>
                     <Badge variant="success">Actual</Badge>
                   </div>
-                  <p className="text-sm text-indigo-600">
+                  <p className="text-sm text-sky-600">
                     {currentJob.company_url ? (
                       <a
                         href={currentJob.company_url}
@@ -247,23 +247,24 @@ export default async function HomePage() {
       )}
 
       {/* ── CTA Contacto ──────────────────────────────────── */}
-      <section className="border-t border-slate-100">
-        <div className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-indigo-700 to-violet-700 py-20">
-          {/* Decorative blobs */}
-          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-white/5 blur-3xl" />
-          <div className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-white/5 blur-3xl" />
+      <section className="border-t border-blue-100">
+        <div className="relative overflow-hidden bg-gradient-to-br from-sky-600 via-sky-700 to-blue-800 py-20">
+          {/* Blobs decorativos */}
+          <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-white/5 blur-3xl" />
+          <div className="absolute -bottom-20 -left-20 h-72 w-72 rounded-full bg-sky-400/10 blur-3xl" />
+          <div className="absolute left-1/2 top-0 h-40 w-96 -translate-x-1/2 rounded-full bg-blue-400/10 blur-2xl" />
 
           <div className="relative mx-auto max-w-2xl px-4 text-center">
             <h2 className="mb-4 text-2xl font-bold tracking-tight text-white sm:text-3xl">
               ¿Tienes un proyecto en mente?
             </h2>
-            <p className="mb-8 text-indigo-200">
+            <p className="mb-8 text-sky-200">
               Estoy disponible para proyectos freelance, colaboraciones y nuevas
               oportunidades. Hablemos.
             </p>
             <Link
               href="/contacto"
-              className="inline-flex items-center gap-2 rounded-lg bg-white px-8 py-3 text-sm font-semibold text-indigo-700 shadow-lg transition-all duration-150 hover:bg-indigo-50 hover:shadow-xl active:scale-95"
+              className="inline-flex items-center gap-2 rounded-lg bg-white px-8 py-3 text-sm font-semibold text-sky-700 shadow-lg transition-all duration-150 hover:bg-sky-50 hover:shadow-xl active:scale-95"
             >
               Enviar mensaje
               <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

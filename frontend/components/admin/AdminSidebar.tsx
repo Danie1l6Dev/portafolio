@@ -99,7 +99,7 @@ export function AdminSidebar() {
       {/* Logo / Título */}
       <div className="border-b border-slate-100 px-4 py-4">
         <Link href="/admin" className="group flex items-center gap-2.5">
-          <span className="flex h-7 w-7 items-center justify-center rounded-md bg-indigo-600 text-xs font-black text-white transition-transform group-hover:scale-105">
+          <span className="flex h-7 w-7 items-center justify-center rounded-md bg-sky-600 text-xs font-black text-white transition-transform group-hover:scale-105">
             DS
           </span>
           <div>
@@ -133,13 +133,13 @@ export function AdminSidebar() {
                   className={cn(
                     'flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-150',
                     isActive
-                      ? 'bg-indigo-50 text-indigo-600'
+                      ? 'bg-sky-50 text-sky-600'
                       : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900',
                   )}
                 >
                   <span className={cn(
                     'flex-shrink-0',
-                    isActive ? 'text-indigo-500' : 'text-slate-400',
+                    isActive ? 'text-sky-500' : 'text-slate-400',
                   )}>
                     {icon}
                   </span>
@@ -148,14 +148,14 @@ export function AdminSidebar() {
 
                   {/* Badge mensajes no leídos */}
                   {showBadge && (
-                    <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-indigo-600 px-1.5 text-[10px] font-bold text-white">
+                    <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-sky-600 px-1.5 text-[10px] font-bold text-white">
                       {unreadCount > 99 ? '99+' : unreadCount}
                     </span>
                   )}
 
                   {/* Punto activo */}
                   {isActive && !showBadge && (
-                    <span className="h-1.5 w-1.5 rounded-full bg-indigo-500" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-sky-500" />
                   )}
                 </Link>
               </li>

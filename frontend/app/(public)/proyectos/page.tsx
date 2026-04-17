@@ -34,7 +34,7 @@ export default function ProyectosPage() {
 
       {/* ── Header ────────────────────────────────────────── */}
       <div className="mb-10 text-center">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-indigo-500">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-sky-500">
           Portafolio
         </p>
         <h1 className="text-3xl font-bold tracking-tight text-slate-900">
@@ -58,7 +58,7 @@ export default function ProyectosPage() {
             className={cn(
               'rounded-full border px-4 py-1.5 text-sm font-medium transition-all duration-150',
               !activeCategory
-                ? 'border-indigo-600 bg-indigo-600 text-white shadow-sm'
+                ? 'border-sky-600 bg-sky-600 text-white shadow-sm'
                 : 'border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50',
             )}
           >
@@ -72,7 +72,7 @@ export default function ProyectosPage() {
               className={cn(
                 'rounded-full border px-4 py-1.5 text-sm font-medium transition-all duration-150',
                 activeCategory === slug
-                  ? 'border-indigo-600 bg-indigo-600 text-white shadow-sm'
+                  ? 'border-sky-600 bg-sky-600 text-white shadow-sm'
                   : 'border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50',
               )}
             >
@@ -107,7 +107,7 @@ export default function ProyectosPage() {
             {activeCategory && (
               <button
                 onClick={() => selectCategory(undefined)}
-                className="mt-3 text-sm font-medium text-indigo-600 hover:underline"
+                className="mt-3 text-sm font-medium text-sky-600 hover:underline"
               >
                 Ver todos los proyectos
               </button>

@@ -107,7 +107,7 @@ export function SkillForm({ initial, onSubmit, onCancel }: SkillFormProps) {
           <label className="mt-2 flex cursor-pointer items-center gap-2">
             <input type="checkbox" checked={Boolean(form.is_featured)}
               onChange={(e) => set('is_featured', e.target.checked)}
-              className="h-4 w-4 rounded border-gray-300 text-indigo-600" />
+              className="h-4 w-4 rounded border-gray-300 text-sky-600" />
             <span className="text-sm text-gray-700">Mostrar en portada</span>
           </label>
         </Field>
@@ -122,7 +122,7 @@ export function SkillForm({ initial, onSubmit, onCancel }: SkillFormProps) {
 }
 
 function inputCls(hasError: boolean) {
-  return `w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 ${hasError ? 'border-red-400' : 'border-gray-300'}`;
+  return `w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-sky-500 ${hasError ? 'border-red-400' : 'border-gray-300'}`;
 }
 
 function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {

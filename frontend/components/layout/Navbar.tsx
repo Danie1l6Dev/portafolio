@@ -33,9 +33,9 @@ export function Navbar() {
         {/* Logo */}
         <Link
           href="/"
-          className="group flex items-center gap-2 font-bold tracking-tight text-slate-900 transition-colors hover:text-indigo-600"
+          className="group flex items-center gap-2 font-bold tracking-tight text-slate-900 transition-colors hover:text-sky-600"
         >
-          <span className="flex h-7 w-7 items-center justify-center rounded-md bg-indigo-600 text-xs font-black text-white shadow-sm transition-transform group-hover:scale-105">
+          <span className="flex h-7 w-7 items-center justify-center rounded-md bg-sky-600 text-xs font-black text-white shadow-sm transition-transform group-hover:scale-105">
             DS
           </span>
           <span className="hidden sm:inline">{SITE.author}</span>
@@ -53,13 +53,13 @@ export function Navbar() {
                   className={cn(
                     'relative rounded-md px-3 py-2 text-sm font-medium transition-colors',
                     isActive
-                      ? 'text-indigo-600'
+                      ? 'text-sky-600'
                       : 'text-slate-500 hover:text-slate-900',
                   )}
                 >
                   {label}
                   {isActive && (
-                    <span className="absolute inset-x-2 -bottom-[13px] h-0.5 rounded-full bg-indigo-500" />
+                    <span className="absolute inset-x-2 -bottom-[13px] h-0.5 rounded-full bg-sky-500" />
                   )}
                 </Link>
               </li>
@@ -109,7 +109,7 @@ export function Navbar() {
                     className={cn(
                       'block rounded-md px-3 py-2 text-sm font-medium transition-colors',
                       isActive
-                        ? 'bg-indigo-50 text-indigo-600'
+                        ? 'bg-indigo-50 text-sky-600'
                         : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900',
                     )}
                   >

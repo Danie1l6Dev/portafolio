@@ -13,7 +13,7 @@ export default function ContactoPage() {
     <main className="mx-auto max-w-5xl px-4 py-14">
       {/* Header */}
       <div className="mb-12">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-indigo-500">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-sky-500">
           Hablemos
         </p>
         <h1 className="mb-3 text-3xl font-bold tracking-tight text-slate-900">
@@ -51,7 +51,7 @@ export default function ContactoPage() {
                 </p>
                 <a
                   href={`mailto:${SITE.email}`}
-                  className="text-sm text-indigo-600 hover:underline"
+                  className="text-sm text-sky-600 hover:underline"
                 >
                   {SITE.email}
                 </a>
@@ -70,9 +70,9 @@ export default function ContactoPage() {
                       href={href}
                       target="_blank"
                       rel={rel}
-                      className="flex items-center gap-2.5 text-sm text-slate-600 transition-colors hover:text-indigo-600"
+                      className="flex items-center gap-2.5 text-sm text-slate-600 transition-colors hover:text-sky-600"
                     >
-                      <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 bg-white shadow-sm transition-colors group-hover:border-indigo-200">
+                      <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 bg-white shadow-sm transition-colors group-hover:border-sky-200">
                         <SocialIcon name={icon} className="h-3.5 w-3.5" />
                       </span>
                       {label}

@@ -27,7 +27,7 @@ export default async function HabilidadesPage() {
     <main className="mx-auto max-w-3xl px-4 py-14">
       {/* Header */}
       <div className="mb-12">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-indigo-500">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-sky-500">
           Stack técnico
         </p>
         <h1 className="mb-3 text-3xl font-bold tracking-tight text-slate-900">
@@ -50,7 +50,7 @@ export default async function HabilidadesPage() {
             return (
               <section key={group}>
                 <div className="mb-4 flex items-center gap-3">
-                  <h2 className="text-xs font-bold uppercase tracking-widest text-indigo-500">
+                  <h2 className="text-xs font-bold uppercase tracking-widest text-sky-500">
                     {group}
                   </h2>
                   <div className="h-px flex-1 bg-slate-100" />

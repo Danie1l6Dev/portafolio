@@ -126,8 +126,8 @@ function StatCard({ label, value, sub, color, href, badge }: {
   badge?: number;
 }) {
   const colors = {
-    indigo: 'bg-indigo-50 text-indigo-700',
-    violet: 'bg-violet-50 text-violet-700',
+    indigo: 'bg-sky-50 text-sky-700',
+    violet: 'bg-violet-50 text-blue-700',
     sky: 'bg-sky-50 text-sky-700',
     emerald: 'bg-emerald-50 text-emerald-700',
     amber: 'bg-amber-50 text-amber-700',

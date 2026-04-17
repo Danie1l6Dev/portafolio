@@ -198,19 +198,19 @@ export function ProjectForm({ initial, onSubmit, onCancel }: ProjectFormProps) {
       <div className="flex flex-wrap gap-6">
         <label className="flex cursor-pointer items-center gap-2">
           <input type="checkbox" checked={form.in_progress} onChange={(e) => set('in_progress', e.target.checked)}
-            className="h-4 w-4 rounded border-gray-300 text-indigo-600" />
+            className="h-4 w-4 rounded border-gray-300 text-sky-600" />
           <span className="text-sm text-gray-700">En progreso</span>
         </label>
         <label className="flex cursor-pointer items-center gap-2">
           <input type="checkbox" checked={form.is_featured} onChange={(e) => set('is_featured', e.target.checked)}
-            className="h-4 w-4 rounded border-gray-300 text-indigo-600" />
+            className="h-4 w-4 rounded border-gray-300 text-sky-600" />
           <span className="text-sm text-gray-700">Proyecto destacado</span>
         </label>
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-700">Orden:</span>
           <input type="number" min={0} value={form.sort_order}
             onChange={(e) => set('sort_order', parseInt(e.target.value) || 0)}
-            className="w-20 rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500" />
+            className="w-20 rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-sky-500" />
         </div>
       </div>
 
@@ -243,7 +243,7 @@ export function ProjectForm({ initial, onSubmit, onCancel }: ProjectFormProps) {
                     return (
                       <label key={skill.id}
                         className={`flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
-                          checked ? 'border-indigo-500 bg-indigo-50 text-indigo-700' : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                          checked ? 'border-sky-500 bg-sky-50 text-sky-700' : 'border-gray-200 text-gray-600 hover:border-gray-300'
                         }`}>
                         <input type="checkbox" checked={checked} onChange={() => toggleSkill(skill.id)} className="sr-only" />
                         {skill.icon && <span>{skill.icon}</span>}
@@ -268,7 +268,7 @@ export function ProjectForm({ initial, onSubmit, onCancel }: ProjectFormProps) {
 }
 
 function inputCls(hasError: boolean) {
-  return `w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 ${hasError ? 'border-red-400' : 'border-gray-300'}`;
+  return `w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-sky-500 ${hasError ? 'border-red-400' : 'border-gray-300'}`;
 }
 
 function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {

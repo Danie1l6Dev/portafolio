@@ -56,7 +56,7 @@ export function ExperienceItem({ experience }: ExperienceItemProps) {
           {experience.is_current && <Badge variant="success">Actual</Badge>}
         </div>
 
-        <p className="text-sm text-indigo-600">
+        <p className="text-sm text-sky-600">
           {experience.company_url ? (
             <a
               href={experience.company_url}

@@ -137,7 +137,7 @@ export function ExperienceForm({ initial, onSubmit, onCancel }: ExperienceFormPr
 
       <label className="flex cursor-pointer items-center gap-2">
         <input type="checkbox" checked={form.is_current} onChange={(e) => set('is_current', e.target.checked)}
-          className="h-4 w-4 rounded border-gray-300 text-indigo-600" />
+          className="h-4 w-4 rounded border-gray-300 text-sky-600" />
         <span className="text-sm text-gray-700">Posición actual (sin fecha de fin)</span>
       </label>
 
@@ -166,7 +166,7 @@ export function ExperienceForm({ initial, onSubmit, onCancel }: ExperienceFormPr
 }
 
 function inputCls(hasError: boolean) {
-  return `w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 ${hasError ? 'border-red-400' : 'border-gray-300'}`;
+  return `w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-sky-500 ${hasError ? 'border-red-400' : 'border-gray-300'}`;
 }
 
 function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {

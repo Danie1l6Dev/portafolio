@@ -93,7 +93,7 @@ export default async function ProjectDetailPage({ params }: Props) {
           {project.category && (
             <Badge
               variant="custom"
-              colorClass={project.category.color ? undefined : 'bg-indigo-100 text-indigo-700'}
+              colorClass={project.category.color ? undefined : 'bg-sky-100 text-sky-700'}
               style={
                 project.category.color
                   ? {
@@ -125,7 +125,7 @@ export default async function ProjectDetailPage({ params }: Props) {
               href={project.demo_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 transition-colors"
+              className="inline-flex items-center gap-2 rounded-lg bg-sky-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-sky-700 transition-colors"
             >
               Ver demo →
             </a>
@@ -144,7 +144,7 @@ export default async function ProjectDetailPage({ params }: Props) {
       )}
 
       {/* Resumen */}
-      <p className="mb-8 text-lg text-gray-600 leading-relaxed border-l-4 border-indigo-200 pl-4 italic">
+      <p className="mb-8 text-lg text-gray-600 leading-relaxed border-l-4 border-sky-200 pl-4 italic">
         {project.summary}
       </p>
 
@@ -206,7 +206,7 @@ export default async function ProjectDetailPage({ params }: Props) {
       <div className="border-t border-gray-100 pt-8">
         <Link
           href="/proyectos"
-          className="text-sm font-medium text-indigo-600 hover:underline"
+          className="text-sm font-medium text-sky-600 hover:underline"
         >
           ← Volver a proyectos
         </Link>
