@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\SkillGroup;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SkillResource;
 use App\Models\Skill;
@@ -34,11 +35,7 @@ class SkillController extends Controller
         return SkillResource::collection($skills)
             ->additional([
                 'meta' => [
-                    'groups' => Skill::query()
-                        ->whereNotNull('group')
-                        ->distinct()
-                        ->orderBy('group')
-                        ->pluck('group'),
+                    'groups' => SkillGroup::values(),
                 ],
             ]);
     }

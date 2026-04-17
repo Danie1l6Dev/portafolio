@@ -42,7 +42,7 @@ export function ProjectForm({ initial, onSubmit, onCancel }: ProjectFormProps) {
   // Cargar categorías y skills para los selectores
   useEffect(() => {
     adminGetCategories().then((r) => setCategories(r.data)).catch(() => {});
-    adminGetSkills().then((data) => setSkills(data)).catch(() => {});
+    adminGetSkills().then((res) => setSkills(res.data)).catch(() => {});
   }, []);
 
   useEffect(() => {

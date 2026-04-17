@@ -21,14 +21,13 @@ export interface AdminSkillsParams {
 
 export async function adminGetSkills(
   params: AdminSkillsParams = {},
-): Promise<Skill[]> {
+): Promise<SkillsResponse> {
   const qs = new URLSearchParams();
   if (params.page)  qs.set('page', String(params.page));
   if (params.group) qs.set('group', params.group);
 
   const query = qs.toString() ? `?${qs}` : '';
-  const res = await api.get<{ data: Skill[] }>(`/admin/skills${query}`);
-  return res.data;
+  return api.get<SkillsResponse>(`/admin/skills${query}`);
 }
 
 export async function adminGetSkill(id: number): Promise<Skill> {

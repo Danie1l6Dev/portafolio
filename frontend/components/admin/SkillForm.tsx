@@ -8,13 +8,14 @@ import type { Skill, SkillPayload } from '@/types';
 
 interface SkillFormProps {
   initial?: Skill;
+  groups: string[];
   onSubmit: (payload: SkillPayload) => Promise<void>;
   onCancel: () => void;
 }
 
 const EMPTY: SkillPayload = { name: '', group: '', icon: '', level: 3, sort_order: 0, is_featured: false };
 
-export function SkillForm({ initial, onSubmit, onCancel }: SkillFormProps) {
+export function SkillForm({ initial, groups, onSubmit, onCancel }: SkillFormProps) {
   const [form, setForm] = useState<SkillPayload>(EMPTY);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -72,9 +73,14 @@ export function SkillForm({ initial, onSubmit, onCancel }: SkillFormProps) {
         </Field>
 
         <Field label="Grupo" error={errors.group}>
-          <input type="text" value={form.group as string}
+          <select value={(form.group as string) ?? ''}
             onChange={(e) => set('group', e.target.value)}
-            className={inputCls(!!errors.group)} placeholder="Ej: Frontend" />
+            className={inputCls(!!errors.group)}>
+            <option value="">Sin grupo</option>
+            {groups.map((group) => (
+              <option key={group} value={group}>{group}</option>
+            ))}
+          </select>
         </Field>
       </div>
 

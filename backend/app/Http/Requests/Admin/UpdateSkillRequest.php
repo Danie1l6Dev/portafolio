@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Enums\SkillGroup;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateSkillRequest extends FormRequest
 {
@@ -17,7 +19,7 @@ class UpdateSkillRequest extends FormRequest
 
         return [
             'name'        => ['sometimes', 'string', 'max:100', "unique:skills,name,{$id}"],
-            'group'       => ['sometimes', 'nullable', 'string', 'max:80'],
+            'group'       => ['sometimes', 'nullable', Rule::enum(SkillGroup::class)],
             'level'       => ['sometimes', 'integer', 'min:1', 'max:5'],
             'icon'        => ['sometimes', 'nullable', 'string', 'max:255'],
             'sort_order'  => ['sometimes', 'integer', 'min:0'],

@@ -11,6 +11,7 @@ import type { Skill, SkillPayload } from '@/types';
 
 export default function AdminHabilidadesPage() {
   const [skills, setSkills] = useState<Skill[]>([]);
+  const [groupOptions, setGroupOptions] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -21,8 +22,9 @@ export default function AdminHabilidadesPage() {
     setLoading(true);
     setError(null);
     try {
-      const data = await adminGetSkills();
-      setSkills(data);
+      const res = await adminGetSkills();
+      setSkills(res.data);
+      setGroupOptions(res.meta.groups ?? []);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al cargar');
     } finally {
@@ -32,7 +34,7 @@ export default function AdminHabilidadesPage() {
 
   useEffect(() => { load(); }, [load]);
 
-  const groups = [...new Set(skills.map((s) => s.group).filter(Boolean))] as string[];
+  const groups = groupOptions.length ? groupOptions : ([...new Set(skills.map((s) => s.group).filter(Boolean))] as string[]);
   const filtered = filterGroup ? skills.filter((s) => s.group === filterGroup) : skills;
 
   function openCreate() { setEditing(undefined); setModalOpen(true); }
@@ -132,7 +134,7 @@ export default function AdminHabilidadesPage() {
       )}
 
       <Modal open={modalOpen} onClose={closeModal} title={editing ? 'Editar habilidad' : 'Nueva habilidad'}>
-        <SkillForm initial={editing} onSubmit={handleSubmit} onCancel={closeModal} />
+        <SkillForm initial={editing} groups={groups} onSubmit={handleSubmit} onCancel={closeModal} />
       </Modal>
     </div>
   );

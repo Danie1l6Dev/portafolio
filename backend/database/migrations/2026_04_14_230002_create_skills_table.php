@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\SkillGroup;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,7 +13,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
-            $table->string('group')->nullable()->comment('Frontend, Backend, DevOps, Tools, etc.');
+            $table->enum('group', SkillGroup::values())->nullable()->comment('Grupo permitido de la habilidad');
             $table->unsignedTinyInteger('level')->default(1)->comment('1-5: nivel de dominio');
             $table->string('icon')->nullable()->comment('Nombre de icono o ruta SVG');
             $table->unsignedSmallInteger('sort_order')->default(0);

@@ -45,7 +45,7 @@ export default function AdminDashboardPage() {
           published: pub.status === 'fulfilled' ? (pub.value.meta?.total ?? 0) : 0,
           draft: draft.status === 'fulfilled' ? (draft.value.meta?.total ?? 0) : 0,
         },
-        skills: skills.status === 'fulfilled' ? (skills.value.length ?? 0) : 0,
+        skills: skills.status === 'fulfilled' ? (skills.value.data.length ?? 0) : 0,
         experiences: {
           total: exp.status === 'fulfilled' ? (exp.value.meta?.total ?? exp.value.data?.length ?? 0) : 0,
           current: exp.status === 'fulfilled' ? (exp.value.data?.filter((e) => e.is_current).length ?? 0) : 0,
