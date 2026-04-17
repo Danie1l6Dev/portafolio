@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { NAV_LINKS, SITE, SOCIAL_LINKS } from '@/lib/constants';
+import { SocialIcon } from '@/components/ui/SocialIcon';
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -46,24 +47,26 @@ export function Footer() {
               Conectar
             </p>
             <ul className="space-y-1.5">
-              {SOCIAL_LINKS.map(({ href, label, rel }) => (
+              {SOCIAL_LINKS.map(({ href, label, rel, icon }) => (
                 <li key={href}>
                   <a
                     href={href}
                     target="_blank"
                     rel={rel}
-                    className="text-sm text-slate-500 transition-colors hover:text-indigo-600"
+                    className="flex items-center gap-2 text-sm text-slate-500 transition-colors hover:text-indigo-600"
                   >
-                    {label} →
+                    <SocialIcon name={icon} className="h-3.5 w-3.5 flex-shrink-0" />
+                    {label}
                   </a>
                 </li>
               ))}
               <li>
                 <Link
                   href="/contacto"
-                  className="text-sm text-slate-500 transition-colors hover:text-indigo-600"
+                  className="flex items-center gap-2 text-sm text-slate-500 transition-colors hover:text-indigo-600"
                 >
-                  Enviar mensaje →
+                  <SocialIcon name="email" className="h-3.5 w-3.5 flex-shrink-0" />
+                  Enviar mensaje
                 </Link>
               </li>
             </ul>

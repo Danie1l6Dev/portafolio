@@ -23,9 +23,9 @@ export const SITE = {
 // ── Redes sociales ────────────────────────────────────────────
 
 export const SOCIAL_LINKS = [
-  { label: 'GitHub',   href: 'https://github.com/Danie1l6Dev',   rel: 'noopener noreferrer' },
-  { label: 'LinkedIn', href: 'https://linkedin.com/in/danielsierra103', rel: 'noopener noreferrer' },
-  { label: 'Instagram', href: 'https://instagram.com/danie1l6', rel: 'noopener noreferrer' },
+  { label: 'GitHub',    icon: 'github',    href: 'https://github.com/Danie1l6Dev',        rel: 'noopener noreferrer' },
+  { label: 'LinkedIn',  icon: 'linkedin',  href: 'https://linkedin.com/in/danielsierra103', rel: 'noopener noreferrer' },
+  { label: 'Instagram', icon: 'instagram', href: 'https://instagram.com/danie1l6',         rel: 'noopener noreferrer' },
 ] as const;
 
 // ── Navegación pública ────────────────────────────────────────

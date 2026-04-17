@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { ContactForm } from '@/components/portfolio/ContactForm';
 import { SITE, SOCIAL_LINKS } from '@/lib/constants';
+import { SocialIcon } from '@/components/ui/SocialIcon';
 
 export const metadata: Metadata = {
   title: 'Contacto — Daniel Sierra',
@@ -62,16 +63,19 @@ export default function ContactoPage() {
                 <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-slate-400">
                   Redes
                 </p>
-                <div className="flex flex-col gap-1.5">
-                  {SOCIAL_LINKS.map(({ href, label, rel }) => (
+                <div className="flex flex-col gap-2">
+                  {SOCIAL_LINKS.map(({ href, label, rel, icon }) => (
                     <a
                       key={href}
                       href={href}
                       target="_blank"
                       rel={rel}
-                      className="text-sm text-slate-600 transition-colors hover:text-indigo-600"
+                      className="flex items-center gap-2.5 text-sm text-slate-600 transition-colors hover:text-indigo-600"
                     >
-                      {label} →
+                      <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 bg-white shadow-sm transition-colors group-hover:border-indigo-200">
+                        <SocialIcon name={icon} className="h-3.5 w-3.5" />
+                      </span>
+                      {label}
                     </a>
                   ))}
                 </div>
