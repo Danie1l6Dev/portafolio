@@ -8,8 +8,9 @@ import type {
 
 // ── API pública ───────────────────────────────────────────────
 
-export interface ProjectsParams {
+interface ProjectsParams {
   page?: number;
+  per_page?: number;
   category?: string;
   featured?: boolean;
 }
@@ -19,6 +20,7 @@ export async function getProjects(
 ): Promise<PaginatedResponse<Project>> {
   const qs = new URLSearchParams();
   if (params.page)     qs.set('page', String(params.page));
+  if (params.per_page) qs.set('per_page', String(params.per_page));
   if (params.category) qs.set('category', params.category);
   if (params.featured) qs.set('featured', '1');
 

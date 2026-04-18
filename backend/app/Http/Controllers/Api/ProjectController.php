@@ -34,7 +34,7 @@ class ProjectController extends Controller
                 fn ($q) => $q->featured()
             )
             ->ordered()
-            ->paginate(perPage: 9, page: $request->integer('page', 1))
+            ->paginate(perPage: $request->integer('per_page', 9), page: $request->integer('page', 1))
             ->withQueryString();
 
         return ProjectResource::collection($projects);

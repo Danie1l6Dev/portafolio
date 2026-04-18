@@ -9,7 +9,7 @@ import { formatDateRange } from '@/lib/utils';
 import type { Project } from '@/types';
 
 interface Props {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 export const revalidate = 60;
@@ -18,8 +18,9 @@ export const revalidate = 60;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   try {
-    const { data } = await getProjects();
-    const found = data.find((p) => p.slug === params.slug);
+    const { slug } = await params;  // ← await
+    const { data } = await getProjects({ per_page: 100 });
+    const found = data.find((p) => p.slug === slug);
     if (!found) return {};
     return {
       title: found.title,
@@ -33,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export async function generateStaticParams() {
   try {
-    const { data } = await getProjects({ page: 1 });
+    const { data } = await getProjects({ per_page: 100 });
     return data.map((p) => ({ slug: p.slug }));
   } catch {
     return [];
@@ -43,11 +44,13 @@ export async function generateStaticParams() {
 // ── Página ────────────────────────────────────────────────────
 
 export default async function ProjectDetailPage({ params }: Props) {
+  const { slug } = await params;  // ← await
+
   let project: Project;
 
   try {
-    const { data } = await getProjects();
-    const found = data.find((p) => p.slug === params.slug);
+    const { data } = await getProjects({ per_page: 100 });
+    const found = data.find((p) => p.slug === slug);
     if (!found) notFound();
     project = await getProject(found.id);
   } catch {
