@@ -50,7 +50,7 @@ export default function AdminDashboardPage() {
           total: exp.status === 'fulfilled' ? (exp.value.meta?.total ?? exp.value.data?.length ?? 0) : 0,
           current: exp.status === 'fulfilled' ? (exp.value.data?.filter((e) => e.is_current).length ?? 0) : 0,
         },
-        categories: cats.status === 'fulfilled' ? (cats.value.meta?.total ?? 0) : 0,
+        categories: cats.status === 'fulfilled' ? (cats.value.data?.length ?? 0) : 0,
         messages: {
           total: allMsgs.status === 'fulfilled' ? (allMsgs.value.meta?.total ?? 0) : 0,
           unread: unreadMsgs.status === 'fulfilled' ? (unreadMsgs.value.meta?.unread_count ?? 0) : 0,

@@ -66,7 +66,7 @@ export default function AdminExperienciasPage() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Experiencias</h1>
-          {meta && <p className="mt-0.5 text-sm text-gray-400">{meta.total} en total</p>}
+          <p className="mt-0.5 text-sm text-gray-400">{experiences.length} en total</p>
         </div>
         <Button size="sm" onClick={openCreate}>+ Nueva experiencia</Button>
       </div>

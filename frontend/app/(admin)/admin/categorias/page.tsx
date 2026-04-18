@@ -10,12 +10,10 @@ import {
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/admin/Modal';
 import { CategoryForm } from '@/components/admin/CategoryForm';
-import type { Category, CategoryPayload, PaginationMeta } from '@/types';
+import type { Category, CategoryPayload } from '@/types';
 
 export default function AdminCategoriasPage() {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [meta, setMeta] = useState<PaginationMeta | null>(null);
-  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -23,19 +21,18 @@ export default function AdminCategoriasPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Category | undefined>();
 
-  const load = useCallback(async (p = page) => {
+  const load = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await adminGetCategories({ page: p });
+      const res = await adminGetCategories();
       setCategories(res.data);
-      setMeta(res.meta);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al cargar');
     } finally {
       setLoading(false);
     }
-  }, [page]);
+  }, []);
 
   useEffect(() => { load(); }, [load]);
 
@@ -68,7 +65,7 @@ export default function AdminCategoriasPage() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Categorías</h1>
-          {meta && <p className="mt-0.5 text-sm text-gray-400">{meta.total} en total</p>}
+          <p className="mt-0.5 text-sm text-gray-400">{categories.length} en total</p>
         </div>
         <Button size="sm" onClick={openCreate}>+ Nueva categoría</Button>
       </div>
@@ -119,8 +116,6 @@ export default function AdminCategoriasPage() {
         </div>
       )}
 
-      <Pagination page={page} meta={meta} onChange={setPage} />
-
       <Modal
         open={modalOpen}
         onClose={closeModal}
@@ -152,15 +147,3 @@ function Skeleton({ rows, cols }: { rows: number; cols: number }) {
   );
 }
 
-function Pagination({ page, meta, onChange }: {
-  page: number; meta: PaginationMeta | null; onChange: (p: number) => void;
-}) {
-  if (!meta || meta.last_page <= 1) return null;
-  return (
-    <div className="mt-4 flex justify-end gap-2">
-      <Button variant="secondary" size="sm" onClick={() => onChange(page - 1)} disabled={page === 1}>← Anterior</Button>
-      <span className="flex items-center px-2 text-sm text-gray-400">{page} / {meta.last_page}</span>
-      <Button variant="secondary" size="sm" onClick={() => onChange(page + 1)} disabled={page === meta.last_page}>Siguiente →</Button>
-    </div>
-  );
-}

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { Modal } from '@/components/admin/Modal';
 import { SkillForm } from '@/components/admin/SkillForm';
+import { SkillIcon } from '@/components/portfolio/SkillIcon';
 import { skillLevelLabel } from '@/lib/utils';
 import type { Skill, SkillPayload } from '@/types';
 
@@ -109,7 +110,7 @@ export default function AdminHabilidadesPage() {
                 <tr key={skill.id} className="hover:bg-gray-50">
                   <td className="px-4 py-3 font-medium text-gray-900">
                     <span className="flex items-center gap-2">
-                      {skill.icon && <span>{skill.icon}</span>}
+                      {skill.icon && <SkillIcon icon={skill.icon} name={skill.name} size="sm" />}
                       {skill.name}
                     </span>
                   </td>
