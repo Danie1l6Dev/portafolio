@@ -113,12 +113,15 @@ class ProjectController extends Controller
             );
         }
 
-        $skillIds = $data['skill_ids'] ?? null;
+        // Filtra IDs vacíos que pueden llegar del FormData cuando skill_ids es []
+        $skillIds = isset($data['skill_ids'])
+            ? array_values(array_filter($data['skill_ids'], fn ($v) => $v !== '' && $v !== null))
+            : null;
         unset($data['skill_ids']);
 
         $project->update($data);
 
-        // Sincronizar habilidades si se enviaron
+        // Sincronizar habilidades si se enviaron (incluso array vacío = quitar todas)
         if (! is_null($skillIds)) {
             $project->skills()->sync($skillIds);
         }

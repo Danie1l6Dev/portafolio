@@ -90,11 +90,21 @@ function toFormData(payload: ProjectPayload): FormData {
     if (val === undefined) return;
 
     if (key === 'skill_ids' && Array.isArray(val)) {
-      val.forEach((id) => form.append('skill_ids[]', String(id)));
+      // Siempre incluye la clave aunque sea vacía para que el backend
+      // pueda sincronizar y eliminar todas las habilidades si es necesario
+      if (val.length === 0) {
+        form.append('skill_ids[]', '');
+      } else {
+        val.forEach((id) => form.append('skill_ids[]', String(id)));
+      }
     } else if (val instanceof File) {
       form.append(key, val);
     } else if (val === null) {
       form.append(key, '');
+    } else if (typeof val === 'boolean') {
+      // FormData no tiene tipo booleano: Laravel solo acepta '0' y '1'
+      // para la regla `boolean`. 'true'/'false' son rechazados.
+      form.append(key, val ? '1' : '0');
     } else {
       form.append(key, String(val));
     }
