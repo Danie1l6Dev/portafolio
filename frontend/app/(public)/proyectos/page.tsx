@@ -83,7 +83,11 @@ export default function ProyectosPage() {
       )}
 
       {/* ── Skeleton ──────────────────────────────────────── */}
-      {loading && <CarouselSkeleton />}
+      {loading && (
+        <div className="relative left-1/2 w-screen max-w-[82rem] -translate-x-1/2 px-4">
+          <CarouselSkeleton />
+        </div>
+      )}
 
       {/* ── Error ─────────────────────────────────────────── */}
       {error && !loading && (
@@ -126,8 +130,10 @@ export default function ProyectosPage() {
             )}
           </div>
         ) : (
-          /* key fuerza el reset de activeIndex al cambiar de categoría */
-          <ProjectCarousel key={activeCategory ?? 'all'} projects={projects} />
+          <div className="relative left-1/2 w-screen max-w-[82rem] -translate-x-1/2 px-4">
+            {/* key fuerza el reset de activeIndex al cambiar de categoría */}
+            <ProjectCarousel key={activeCategory ?? 'all'} projects={projects} />
+          </div>
         )
       )}
     </main>
@@ -135,6 +141,10 @@ export default function ProyectosPage() {
 }
 
 // ── Skeleton ──────────────────────────────────────────────────
+// Dimensiones sincronizadas con ProjectCarousel:
+//   TRACK_HEIGHT = 560, NAV_TOP = 270
+//   slide width  = w-[32rem] → 512px (mismo que ProjectCarousel)
+//   step visible = 340px entre centros laterales
 
 function CarouselSkeleton() {
   const items = [
@@ -144,26 +154,46 @@ function CarouselSkeleton() {
   ];
 
   return (
-    <div className="relative overflow-hidden" style={{ height: 440 }}>
-      {items.map(({ offset, scale, opacity }) => (
-        <div
-          key={offset}
-          className="absolute left-1/2 top-6 w-64 animate-pulse overflow-hidden rounded-2xl bg-slate-100 sm:w-72 md:w-80"
-          style={{
-            transform: `translateX(calc(-50% + ${offset * 340}px)) scale(${scale})`,
-            opacity,
-            transformOrigin: 'top center',
-          }}
-        >
-          <div className="aspect-video bg-slate-200" />
-          <div className="space-y-3 p-4">
-            <div className="h-3 w-1/3 rounded-full bg-slate-200" />
-            <div className="h-4 w-3/4 rounded bg-slate-200" />
-            <div className="h-3 w-full rounded bg-slate-200" />
-            <div className="h-3 w-2/3 rounded bg-slate-200" />
+    <div className="relative w-full select-none">
+      {/* Pista — misma altura que TRACK_HEIGHT */}
+      <div className="relative overflow-hidden" style={{ height: 560 }}>
+        {items.map(({ offset, scale, opacity }) => (
+          <div
+            key={offset}
+            className="absolute left-1/2 top-6 w-[32rem] animate-pulse overflow-hidden rounded-2xl bg-slate-100 sm:w-[36rem] md:w-[40rem]"
+            style={{
+              transform: `translateX(calc(-50% + ${offset * 340}px)) scale(${scale})`,
+              opacity,
+              transformOrigin: 'top center',
+            }}
+          >
+            <div className="aspect-video bg-slate-200" />
+            <div className="space-y-3 p-4">
+              <div className="h-3 w-1/4 rounded-full bg-slate-200" />
+              <div className="h-5 w-3/4 rounded bg-slate-200" />
+              <div className="h-4 w-full rounded bg-slate-200" />
+              <div className="h-4 w-2/3 rounded bg-slate-200" />
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
+
+      {/* Botones de navegación — misma posición que NAV_TOP */}
+      <div
+        className="pointer-events-none absolute left-3 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-slate-100"
+        style={{ top: 270 }}
+      />
+      <div
+        className="pointer-events-none absolute right-3 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-slate-100"
+        style={{ top: 270 }}
+      />
+
+      {/* Puntos indicadores */}
+      <div className="mt-3 flex items-center justify-center gap-2">
+        <div className="h-1.5 w-6 animate-pulse rounded-full bg-slate-300" />
+        <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-slate-200" />
+        <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-slate-200" />
+      </div>
     </div>
   );
 }

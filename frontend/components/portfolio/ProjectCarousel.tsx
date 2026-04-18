@@ -125,10 +125,6 @@ export function ProjectCarousel({ projects }: ProjectCarouselProps) {
         onTouchEnd={onTouchEnd}
         aria-label="Carrusel de proyectos"
       >
-        {/* Máscaras de fade lateral para dar profundidad */}
-        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-slate-200/55 via-slate-100/20 to-transparent" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-slate-200/55 via-slate-100/20 to-transparent" />
-
         {projects.map((project, index) => {
           const offset    = circularOffset(index, activeIndex, projects.length);
           const absOffset = Math.abs(offset);
