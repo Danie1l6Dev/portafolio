@@ -15,12 +15,13 @@ return [
     |
     */
 
-    'paths' => ['api/*'],
+    'paths' => ['api/*', 'v1/*'],
 
     'allowed_methods' => ['*'],
 
     'allowed_origins' => [
-        env('FRONTEND_URL', 'http://localhost:3000'),
+        'http://localhost:3000',
+        'https://portafoliodaniel-two.vercel.app',
     ],
 
     'allowed_origins_patterns' => [],
