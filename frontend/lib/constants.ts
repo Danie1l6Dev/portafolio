@@ -80,10 +80,6 @@ export const API = {
 } as const;
 
 
-// ── Auth ──────────────────────────────────────────────────────
-
-export const TOKEN_COOKIE = 'token';
-
 /*
  * ── Escalabilidad ────────────────────────────────────────────
  *
