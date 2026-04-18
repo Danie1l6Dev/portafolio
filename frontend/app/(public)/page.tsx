@@ -113,9 +113,11 @@ export default async function HomePage() {
               </Link>
             </div>
 
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="flex flex-wrap justify-center gap-6">
               {featuredProjects.map((project) => (
-                <ProjectCard key={project.id} project={project} />
+                <div key={project.id} className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]">
+                  <ProjectCard project={project} />
+                </div>
               ))}
             </div>
 
