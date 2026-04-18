@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { ApiError } from '@/services/api';
 import { adminGetCategories } from '@/services/categories';
 import { adminGetSkills } from '@/services/skills';
+import { SkillIcon } from '@/components/portfolio/SkillIcon';
 import type { Category, Project, ProjectPayload, ProjectStatus, Skill } from '@/types';
 
 interface ProjectFormProps {
@@ -246,7 +247,7 @@ export function ProjectForm({ initial, onSubmit, onCancel }: ProjectFormProps) {
                           checked ? 'border-sky-500 bg-sky-50 text-sky-700' : 'border-gray-200 text-gray-600 hover:border-gray-300'
                         }`}>
                         <input type="checkbox" checked={checked} onChange={() => toggleSkill(skill.id)} className="sr-only" />
-                        {skill.icon && <span>{skill.icon}</span>}
+                        {skill.icon && <SkillIcon icon={skill.icon} name={skill.name} size="sm" />}
                         {skill.name}
                       </label>
                     );
