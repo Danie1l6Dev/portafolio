@@ -7,7 +7,7 @@ import { ProjectCard } from '@/components/portfolio/ProjectCard';
 import { SkillBadge } from '@/components/portfolio/SkillBadge';
 import { Badge } from '@/components/ui/Badge';
 import { formatDateRange, cn } from '@/lib/utils';
-import { SITE, REVALIDATE } from '@/lib/constants';
+import { SITE } from '@/lib/constants';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   description: SITE.description,
 };
 
-export const revalidate = REVALIDATE.slow;
+export const revalidate = 300;
 
 export default async function HomePage() {
   const [projectsRes, skillsRes, experiencesRes] = await Promise.allSettled([
