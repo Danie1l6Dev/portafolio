@@ -18,6 +18,10 @@ interface AuthState {
   error: string | null;
 }
 
+interface LoginOptions {
+  redirectTo?: string;
+}
+
 export function useAuth() {
   const router = useRouter();
   const [state, setState] = useState<AuthState>({
@@ -43,16 +47,21 @@ export function useAuth() {
   }, []);
 
   const login = useCallback(
-    async (credentials: LoginCredentials) => {
+    async (credentials: LoginCredentials, options?: LoginOptions) => {
       setState((s) => ({ ...s, loading: true, error: null }));
       try {
         const { user, token } = await apiLogin(credentials);
         saveToken(token);
         setState({ user, loading: false, error: null });
-        router.push('/admin');
+
+        const redirectTo = options?.redirectTo?.startsWith('/admin')
+          ? options.redirectTo
+          : '/admin';
+
+        router.push(redirectTo);
       } catch (err) {
         const message =
-          err instanceof Error ? err.message : 'Error al iniciar sesión';
+          err instanceof Error ? err.message : 'Error al iniciar sesion';
         setState((s) => ({ ...s, loading: false, error: message }));
       }
     },

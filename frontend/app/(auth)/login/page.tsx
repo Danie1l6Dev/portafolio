@@ -1,17 +1,30 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/Button';
 
 export default function LoginPage() {
-  const { login, loading, error } = useAuth();
+  const router = useRouter();
+  const { user, login, loading, error } = useAuth();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  useEffect(() => {
+    if (user) {
+      const next = searchParams.get('next');
+      router.replace(next?.startsWith('/admin') ? next : '/admin');
+    }
+  }, [user, searchParams, router]);
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    await login({ email, password });
+    await login(
+      { email, password },
+      { redirectTo: searchParams.get('next') ?? undefined },
+    );
   }
 
   return (

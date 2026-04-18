@@ -5,9 +5,12 @@
 
 import { API } from '@/lib/constants';
 
-const API_BASE =
-  (process.env.NEXT_PUBLIC_API_URL ??
-    'http://localhost:8000') + '/api/v1';
+const rawApiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
+const normalizedApiUrl = rawApiUrl.replace(/\/+$/, '');
+const API_ROOT = normalizedApiUrl.endsWith('/api')
+  ? normalizedApiUrl
+  : `${normalizedApiUrl}/api`;
+const API_BASE = `${API_ROOT}/v1`;
 // ── Token ─────────────────────────────────────────────────────
 
 /** Lee el token Bearer desde localStorage (solo cliente). */

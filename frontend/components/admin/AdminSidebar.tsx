@@ -4,9 +4,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/Button';
 import { adminGetMessages } from '@/services/messages';
+import type { AuthUser } from '@/types';
 
 const ADMIN_LINKS = [
   {
@@ -66,9 +66,14 @@ const ADMIN_LINKS = [
   },
 ];
 
-export function AdminSidebar() {
+interface AdminSidebarProps {
+  user: AuthUser;
+  onLogout: () => Promise<void>;
+  logoutLoading: boolean;
+}
+
+export function AdminSidebar({ user, onLogout, logoutLoading }: AdminSidebarProps) {
   const pathname = usePathname();
-  const { user, logout, loading } = useAuth();
   const [unreadCount, setUnreadCount] = useState(0);
 
   // Carga el conteo de mensajes no leídos al montar y cada 60 segundos
@@ -104,11 +109,9 @@ export function AdminSidebar() {
           </span>
           <div>
             <p className="text-sm font-bold text-slate-900">Panel Admin</p>
-            {user && (
-              <p className="max-w-[140px] truncate text-xs text-slate-400">
-                {user.email}
-              </p>
-            )}
+            <p className="max-w-[140px] truncate text-xs text-slate-400">
+              {user.email}
+            </p>
           </div>
         </Link>
       </div>
@@ -179,8 +182,8 @@ export function AdminSidebar() {
         <Button
           variant="ghost"
           size="sm"
-          onClick={logout}
-          loading={loading}
+          onClick={onLogout}
+          loading={logoutLoading}
           className="w-full justify-start gap-2 text-red-500 hover:bg-red-50 hover:text-red-600"
         >
           <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
