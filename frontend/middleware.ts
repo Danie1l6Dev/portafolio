@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { TOKEN_COOKIE } from '@/services/auth';
+import { TOKEN_COOKIE } from '@/lib/constants';
 
 // Rutas que requieren autenticación
 const PROTECTED_PREFIXES = ['/admin'];

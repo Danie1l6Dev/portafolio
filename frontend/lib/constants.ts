@@ -79,6 +79,11 @@ export const API = {
   timeoutMs: 5_000,
 } as const;
 
+
+// ── Auth ──────────────────────────────────────────────────────
+
+export const TOKEN_COOKIE = 'token';
+
 /*
  * ── Escalabilidad ────────────────────────────────────────────
  *
