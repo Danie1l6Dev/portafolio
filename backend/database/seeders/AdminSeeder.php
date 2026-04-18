@@ -22,17 +22,16 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
-        $email = env('ADMIN_EMAIL', 'admin@portafolio.test');
+        $config = config('admin');
 
         User::firstOrCreate(
-            ['email' => $email],
+            ['email' => $config['email']],
             [
-                'name'     => env('ADMIN_NAME', 'Administrador'),
-                'email'    => $email,
-                'password' => Hash::make(env('ADMIN_PASSWORD', 'password')),
+                'name' => $config['name'],
+                'password' => Hash::make($config['password']),
             ]
         );
 
-        $this->command->info("Usuario admin listo: {$email}");
+        $this->command->info("Usuario admin listo: {$config['email']}");
     }
 }
