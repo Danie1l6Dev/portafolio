@@ -6,7 +6,7 @@ import { getExperiences } from '@/services/experiences';
 import { ProjectCard } from '@/components/portfolio/ProjectCard';
 import { SkillBadge } from '@/components/portfolio/SkillBadge';
 import { Badge } from '@/components/ui/Badge';
-import { formatDateRange } from '@/lib/utils';
+import { formatDateRange, cn } from '@/lib/utils';
 import { SITE, REVALIDATE } from '@/lib/constants';
 import type { Metadata } from 'next';
 
@@ -115,8 +115,17 @@ export default async function HomePage() {
 
             <div className="flex flex-wrap justify-center gap-6">
               {featuredProjects.map((project) => (
-                // Cambia el flex del grid padre a items-stretch, o simplemente:
-                <div key={project.id} className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] flex">
+                <div
+                  key={project.id}
+                  className={cn(
+                    'flex',
+                    featuredProjects.length === 1
+                      ? 'w-full max-w-2xl'          // 1 proyecto: ancho generoso centrado
+                      : featuredProjects.length === 2
+                      ? 'w-full sm:w-[calc(50%-12px)]'  // 2 proyectos: mitad
+                      : 'w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]' // 3+
+                  )}
+                >
                   <ProjectCard project={project} />
                 </div>
               ))}
