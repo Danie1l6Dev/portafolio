@@ -37,6 +37,30 @@ class ProjectSeeder extends Seeder
             ],
         );
 
+        // ── Proyecto 3: Portafolio ───────────────────────────
+        $this->upsertProject(
+            title:       'Portafolio Personal',
+            category:    'portafolio',
+            summary:     'Portafolio personal fullstack con panel de administración, carrusel de proyectos, sección de habilidades, experiencia laboral y formulario de contacto.',
+            description: <<<TEXT
+            Sitio web personal diseñado para mostrar proyectos, habilidades y experiencia profesional de forma dinámica. Construido como un monorepo con un backend API REST en Laravel 13 y un frontend en Next.js 16 con React 19, totalmente desacoplados.
+
+            El área pública presenta un carrusel interactivo de proyectos con filtro por categoría, una sección de habilidades agrupadas por tecnología, el historial de experiencia laboral y un formulario de contacto con notificación por correo. Todo el contenido es gestionable desde un panel de administración privado que incluye CRUD completo para proyectos (con subida de imágenes), habilidades, categorías, experiencias y mensajes recibidos. La autenticación del panel usa Laravel Sanctum con tokens de sesión. El frontend aprovecha el App Router de Next.js con Server Components, streaming y revalidación ISR para un rendimiento óptimo.
+            TEXT,
+            demo_url:    null,
+            repo_url:    'https://github.com/Danie1l6Dev/portafolio',
+            status:      'published',
+            is_featured: true,
+            sort_order:  3,
+            started_at:  '2025-01-01',
+            finished_at: null,
+            skills: [
+                'PHP', 'Laravel', 'Laravel Sanctum', 'Eloquent ORM',
+                'React', 'Tailwind CSS', 'JavaScript',
+                'MySQL', 'Docker', 'Git / GitHub',
+            ],
+        );
+
         // ── Proyecto 2: Inventario Uniguajira ────────────────
         $this->upsertProject(
             title:       'Inventario Uniguajira',
