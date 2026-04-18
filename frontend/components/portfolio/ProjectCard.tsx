@@ -13,7 +13,7 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project }: ProjectCardProps) {
   return (
-    <article className="group flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-[0_1px_3px_0_rgb(0_0_0_/_0.07)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_8px_20px_-4px_rgb(0_0_0_/_0.12)]">
+    <article className="group flex flex-col h-full overflow-hidden rounded-xl border border-slate-200 bg-white shadow-[0_1px_3px_0_rgb(0_0_0_/_0.07)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_8px_20px_-4px_rgb(0_0_0_/_0.12)]">
       {/* Cover */}
       <div className="relative aspect-video w-full overflow-hidden bg-slate-100">
         {project.cover_image ? (
@@ -113,9 +113,29 @@ export function ProjectCard({ project }: ProjectCardProps) {
               </Badge>
             ))}
             {project.skills.length > 4 && (
-              <Badge variant="default" className="text-xs text-slate-400">
-                +{project.skills.length - 4}
-              </Badge>
+              <div className="relative flex items-center">
+                <Badge
+                  variant="default"
+                  className="cursor-default text-xs text-slate-400 peer"
+                >
+                  +{project.skills.length - 4}
+                </Badge>
+
+                {/* Tooltip */}
+                <div className="pointer-events-none absolute bottom-full left-0 z-50 mb-1.5 hidden w-max max-w-[180px] flex-wrap gap-1 rounded-lg border border-slate-200 bg-white p-2 shadow-md peer-hover:flex">
+                  {project.skills.slice(4).map((skill) => (
+                    <span
+                      key={skill.id}
+                      className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600"
+                    >
+                      {skill.icon && (
+                        <SkillIcon icon={skill.icon} name={skill.name} size="sm" />
+                      )}
+                      {skill.name}
+                    </span>
+                  ))}
+                </div>
+              </div>
             )}
           </div>
         )}

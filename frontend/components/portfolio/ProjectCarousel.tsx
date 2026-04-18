@@ -15,14 +15,19 @@ interface ProjectCarouselProps {
 }
 
 interface SlideConfig {
-  step: number;        // px entre centros de tarjetas
-  visibleSide: number; // cuántas tarjetas se muestran a cada lado
+  step: number;
+  visibleSide: number;
+  trackHeight: number;
+  navTop: number;
+  cardWidth: string;
+  slideTop: number;
 }
 
 const CAROUSEL_SCALE = 2;
 const SIDE_OVERLAP_FACTOR = 0.5;
 const TRACK_HEIGHT = 560;
 const NAV_TOP = 270;
+const NAV_TOP_RATIO = 0.48; // proporción de la altura del track
 
 // ── Helpers ───────────────────────────────────────────────────
 
@@ -52,7 +57,7 @@ function slideTransform(absOffset: number, translateX: number) {
 
 export function ProjectCarousel({ projects }: ProjectCarouselProps) {
   const [activeIndex, setActiveIndex]   = useState(0);
-  const [config, setConfig]             = useState<SlideConfig>({ step: 350 * CAROUSEL_SCALE, visibleSide: 2 });
+  const [config, setConfig]             = useState<SlideConfig>({ step: 350 * CAROUSEL_SCALE, visibleSide: 2, trackHeight: 560, navTop: 560 * NAV_TOP_RATIO, cardWidth: '40rem', slideTop: 8});
   const containerRef                    = useRef<HTMLDivElement>(null);
   const touchStartX                     = useRef<number | null>(null);
   const router                          = useRouter();
@@ -61,14 +66,22 @@ export function ProjectCarousel({ projects }: ProjectCarouselProps) {
   useEffect(() => {
     const update = () => {
       const w = containerRef.current?.clientWidth ?? window.innerWidth;
+
       if (w < 480) {
-        setConfig({ step: 230 * CAROUSEL_SCALE, visibleSide: 1 });
+        const trackHeight = 420;  // ← era 340
+        setConfig({ step: 180 * CAROUSEL_SCALE, visibleSide: 1, trackHeight, navTop: trackHeight * NAV_TOP_RATIO, cardWidth: `${w * 0.78}px`, slideTop: 8 });
+      } else if (w < 640) {
+        const trackHeight = 480;  // ← era 400
+        setConfig({ step: 220 * CAROUSEL_SCALE, visibleSide: 1, trackHeight, navTop: trackHeight * NAV_TOP_RATIO, cardWidth: `${w * 0.75}px`, slideTop: 10 });
       } else if (w < 768) {
-        setConfig({ step: 285 * CAROUSEL_SCALE, visibleSide: 1 });
+        const trackHeight = 520;  // ← era 460
+        setConfig({ step: 260 * CAROUSEL_SCALE, visibleSide: 1, trackHeight, navTop: trackHeight * NAV_TOP_RATIO, cardWidth: '32rem', slideTop: 14 });
       } else if (w < 1024) {
-        setConfig({ step: 320 * CAROUSEL_SCALE, visibleSide: 2 });
+        const trackHeight = 520;  // ← era 500
+        setConfig({ step: 300 * CAROUSEL_SCALE, visibleSide: 2, trackHeight, navTop: trackHeight * NAV_TOP_RATIO, cardWidth: '34rem', slideTop: 18 });
       } else {
-        setConfig({ step: 360 * CAROUSEL_SCALE, visibleSide: 2 });
+        const trackHeight = 560;
+        setConfig({ step: 360 * CAROUSEL_SCALE, visibleSide: 2, trackHeight, navTop: trackHeight * NAV_TOP_RATIO, cardWidth: '40rem', slideTop: 24 });
       }
     };
 
@@ -111,7 +124,7 @@ export function ProjectCarousel({ projects }: ProjectCarouselProps) {
 
   if (projects.length === 0) return null;
 
-  const { step, visibleSide } = config;
+  const { step, visibleSide, trackHeight, navTop, cardWidth } = config;
   const showDots = projects.length <= 12;
 
   return (
@@ -120,7 +133,7 @@ export function ProjectCarousel({ projects }: ProjectCarouselProps) {
       {/* ── Pista del carrusel ─────────────────────────────── */}
       <div
         className="relative overflow-hidden"
-        style={{ height: TRACK_HEIGHT }}
+        style={{ height: trackHeight }}
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
         aria-label="Carrusel de proyectos"
@@ -139,8 +152,8 @@ export function ProjectCarousel({ projects }: ProjectCarouselProps) {
               role="button"
               tabIndex={isActive ? 0 : -1}
               aria-label={isActive ? `Ver detalle: ${project.title}` : `Ir a ${project.title}`}
-              className="absolute left-1/2 top-6 w-[32rem] cursor-pointer sm:w-[36rem] md:w-[40rem]"
-              style={slideTransform(absOffset, offset * step * SIDE_OVERLAP_FACTOR)}
+              className="absolute left-1/2 top-6 cursor-pointer"
+              style={{ width: cardWidth, ...slideTransform(absOffset, offset * step * SIDE_OVERLAP_FACTOR) }}
               onClick={() => {
                 if (isActive) {
                   router.push(`/proyectos/${project.slug}`);
@@ -169,7 +182,7 @@ export function ProjectCarousel({ projects }: ProjectCarouselProps) {
             onClick={prev}
             aria-label="Proyecto anterior"
             className="absolute left-3 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 shadow-md transition-all hover:border-sky-200 hover:bg-sky-50 hover:text-sky-600"
-            style={{ top: NAV_TOP }}
+            style={{ top: navTop }}
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -180,7 +193,7 @@ export function ProjectCarousel({ projects }: ProjectCarouselProps) {
             onClick={next}
             aria-label="Siguiente proyecto"
             className="absolute right-3 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 shadow-md transition-all hover:border-sky-200 hover:bg-sky-50 hover:text-sky-600"
-            style={{ top: NAV_TOP }}
+            style={{ top: navTop }}
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
@@ -314,20 +327,30 @@ function ProjectSlide({
 
         {/* Skills — solo en la tarjeta activa */}
         {isActive && project.skills && project.skills.length > 0 && (
-          <div className="mt-3 flex flex-wrap gap-1">
-            {project.skills.slice(0, 3).map((skill) => (
-              <Badge key={skill.id} variant="default" className="text-xs">
-                {skill.icon && <SkillIcon icon={skill.icon} name={skill.name} size="sm" className="mr-1" />}
-                {skill.name}
+        <div className="mt-3 flex flex-wrap gap-1">
+          {project.skills.slice(0, 4).map((skill) => (
+            <Badge key={skill.id} variant="default" className="text-xs">
+              {skill.icon && <SkillIcon icon={skill.icon} name={skill.name} size="sm" className="mr-1" />}
+              {skill.name}
+            </Badge>
+          ))}
+          {project.skills.length > 5 && (
+            <div className="relative flex items-center">
+              <Badge variant="default" className="cursor-default text-xs text-slate-400 peer">
+                +{project.skills.length - 5}
               </Badge>
-            ))}
-            {project.skills.length > 3 && (
-              <Badge variant="default" className="text-xs text-slate-400">
-                +{project.skills.length - 3}
-              </Badge>
-            )}
-          </div>
-        )}
+              <div className="pointer-events-none absolute bottom-full left-0 z-50 mb-1.5 hidden w-max max-w-[180px] flex-wrap gap-1 rounded-lg border border-slate-200 bg-white p-2 shadow-md peer-hover:flex">
+                {project.skills.slice(5).map((skill) => (
+                  <span key={skill.id} className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600">
+                    {skill.icon && <SkillIcon icon={skill.icon} name={skill.name} size="sm" />}
+                    {skill.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
       </div>
     </article>
   );

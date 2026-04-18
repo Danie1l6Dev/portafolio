@@ -115,7 +115,8 @@ export default async function HomePage() {
 
             <div className="flex flex-wrap justify-center gap-6">
               {featuredProjects.map((project) => (
-                <div key={project.id} className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]">
+                // Cambia el flex del grid padre a items-stretch, o simplemente:
+                <div key={project.id} className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] flex">
                   <ProjectCard project={project} />
                 </div>
               ))}

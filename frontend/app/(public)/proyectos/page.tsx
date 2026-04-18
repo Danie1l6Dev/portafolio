@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useProjects } from '@/hooks/useProjects';
 import { ProjectCarousel } from '@/components/portfolio/ProjectCarousel';
 import { cn } from '@/lib/utils';
@@ -153,10 +153,26 @@ function CarouselSkeleton() {
     { offset: 1,  scale: 0.80, opacity: 0.45 },
   ];
 
+  const [height, setHeight] = useState(560);
+  const [navTop, setNavTop] = useState(270);
+
+  useEffect(() => {
+    const update = () => {
+      const w = window.innerWidth;
+      if (w < 480)       { setHeight(340); setNavTop(340 * 0.48); }
+      else if (w < 640)  { setHeight(400); setNavTop(400 * 0.48); }
+      else if (w < 768)  { setHeight(460); setNavTop(460 * 0.48); }
+      else if (w < 1024) { setHeight(500); setNavTop(500 * 0.48); }
+      else               { setHeight(560); setNavTop(560 * 0.48); }
+    };
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
+
   return (
     <div className="relative w-full select-none">
-      {/* Pista — misma altura que TRACK_HEIGHT */}
-      <div className="relative overflow-hidden" style={{ height: 560 }}>
+      <div className="relative overflow-hidden" style={{ height }}>
         {items.map(({ offset, scale, opacity }) => (
           <div
             key={offset}
@@ -181,11 +197,11 @@ function CarouselSkeleton() {
       {/* Botones de navegación — misma posición que NAV_TOP */}
       <div
         className="pointer-events-none absolute left-3 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-slate-100"
-        style={{ top: 270 }}
+        style={{ top: navTop }}
       />
       <div
         className="pointer-events-none absolute right-3 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-slate-100"
-        style={{ top: 270 }}
+        style={{ top: navTop }}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
       />
 
       {/* Puntos indicadores */}
