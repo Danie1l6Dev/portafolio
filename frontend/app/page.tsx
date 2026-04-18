@@ -1,7 +1,5 @@
+import HomePage from './(public)/page';
+
 export default function Page() {
-  return (
-    <main>
-      <h1>Portafolio funcionando 🚀</h1>
-    </main>
-  );
+  return <HomePage />;
 }
