@@ -6,8 +6,8 @@
 import { API } from '@/lib/constants';
 
 const API_BASE =
-  (process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000/api') + '/v1';
-
+  (process.env.NEXT_PUBLIC_API_URL ??
+    'http://localhost:8000') + '/api/v1';
 // ── Token ─────────────────────────────────────────────────────
 
 /** Lee el token Bearer desde localStorage (solo cliente). */
