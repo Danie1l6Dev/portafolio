@@ -5,73 +5,58 @@ namespace App\Http\Controllers\Api\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Resources\UserResource;
-use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
     /**
-     * POST /api/v1/auth/login
+     * POST /login
      *
-     * Verifica las credenciales del administrador y devuelve un token Bearer.
-     * El token debe almacenarse en el cliente (Next.js) y enviarse en cada
-     * petición protegida como: Authorization: Bearer {token}
-     *
-     * Respuesta 200:
-     * {
-     *   "data": {
-     *     "user":  { id, name, email },
-     *     "token": "1|abc123..."
-     *   }
-     * }
-     *
-     * Respuesta 401:
-     * { "message": "Credenciales incorrectas." }
+     * Inicia sesion usando la sesion web de Laravel (cookie HttpOnly).
+     * Requiere haber solicitado previamente /sanctum/csrf-cookie desde el SPA.
      */
     public function login(LoginRequest $request): JsonResponse
     {
-        $user = User::where('email', $request->email)->first();
+        $credentials = $request->validated();
 
-        if (! $user || ! Hash::check($request->password, $user->password)) {
+        if (! Auth::attempt($credentials, $request->boolean('remember'))) {
             return response()->json([
                 'message' => 'Credenciales incorrectas.',
             ], 401);
         }
 
-        // Revocar tokens anteriores del mismo dispositivo/nombre para no acumular
-        $user->tokens()->where('name', 'admin-panel')->delete();
-
-        $token = $user->createToken('admin-panel', ['admin'])->plainTextToken;
+        $request->session()->regenerate();
 
         return response()->json([
             'data' => [
-                'user'  => UserResource::make($user),
-                'token' => $token,
+                'user' => UserResource::make($request->user()),
             ],
         ]);
     }
 
     /**
-     * POST /api/v1/auth/logout
+     * POST /logout
      *
-     * Revoca el token actual. Requiere: Authorization: Bearer {token}
+     * Cierra la sesion actual y regenera la cookie/CSRF token.
      */
     public function logout(Request $request): JsonResponse
     {
-        $request->user()->currentAccessToken()->delete();
+        Auth::guard('web')->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return response()->json([
-            'message' => 'Sesión cerrada correctamente.',
+            'message' => 'Sesion cerrada correctamente.',
         ]);
     }
 
     /**
-     * GET /api/v1/auth/me
+     * GET /api/user
      *
-     * Devuelve los datos del usuario autenticado.
-     * Útil para que Next.js verifique si el token sigue siendo válido.
+     * Devuelve los datos del usuario autenticado por sesion Sanctum.
      */
     public function me(Request $request): JsonResponse
     {

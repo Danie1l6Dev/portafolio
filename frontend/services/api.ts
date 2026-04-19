@@ -1,42 +1,61 @@
-// ─────────────────────────────────────────────────────────────
-// Cliente base de la API Laravel
-// Todos los servicios importan desde aquí.
-// ─────────────────────────────────────────────────────────────
-
 import { API } from '@/lib/constants';
 
 const rawApiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
 const normalizedApiUrl = rawApiUrl.replace(/\/+$/, '');
-const API_ROOT = normalizedApiUrl.endsWith('/api')
-  ? normalizedApiUrl
-  : `${normalizedApiUrl}/api`;
+
+export const BACKEND_ORIGIN = normalizedApiUrl.endsWith('/api')
+  ? normalizedApiUrl.slice(0, -4)
+  : normalizedApiUrl;
+
+export const API_ROOT = `${BACKEND_ORIGIN}/api`;
 const API_BASE = `${API_ROOT}/v1`;
-// ── Token ─────────────────────────────────────────────────────
 
-/** Lee el token Bearer desde localStorage (solo cliente). */
-function getToken(): string | null {
-  if (typeof window === 'undefined') return null;
-  return localStorage.getItem('auth_token');
+const MUTATION_METHODS = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
+
+function getXsrfTokenFromCookie(): string | null {
+  if (typeof document === 'undefined') return null;
+
+  const tokenCookie = document.cookie
+    .split('; ')
+    .find((cookie) => cookie.startsWith('XSRF-TOKEN='));
+
+  if (!tokenCookie) return null;
+
+  return decodeURIComponent(tokenCookie.split('=').slice(1).join('='));
 }
 
-// ── Headers ───────────────────────────────────────────────────
+function mergeHeaders(base: Record<string, string>, extra: HeadersInit = {}): Headers {
+  const headers = new Headers(base);
+  const extraHeaders = new Headers(extra);
 
-function buildHeaders(extra: HeadersInit = {}): HeadersInit {
-  const token = getToken();
-  return {
+  extraHeaders.forEach((value, key) => {
+    headers.set(key, value);
+  });
+
+  return headers;
+}
+
+function buildHeaders(method: string, extra: HeadersInit = {}): Headers {
+  const upperMethod = method.toUpperCase();
+  const baseHeaders: Record<string, string> = {
     Accept: 'application/json',
-    'Content-Type': 'application/json',
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    ...extra,
+    'X-Requested-With': 'XMLHttpRequest',
   };
+
+  if (!['GET', 'HEAD'].includes(upperMethod)) {
+    baseHeaders['Content-Type'] = 'application/json';
+  }
+
+  if (MUTATION_METHODS.has(upperMethod)) {
+    const xsrfToken = getXsrfTokenFromCookie();
+    if (xsrfToken) {
+      baseHeaders['X-XSRF-TOKEN'] = xsrfToken;
+    }
+  }
+
+  return mergeHeaders(baseHeaders, extra);
 }
 
-// ── Errores normalizados ──────────────────────────────────────
-
-/**
- * Error de la API (respuesta HTTP con status >= 400).
- * Incluye los errores de validación de Laravel si los hay.
- */
 export class ApiError extends Error {
   constructor(
     public readonly status: number,
@@ -48,12 +67,8 @@ export class ApiError extends Error {
   }
 }
 
-/**
- * Error de red o timeout (no se recibió respuesta del servidor).
- * Útil para mostrar mensajes distintos en la UI ("Sin conexión" vs "Error del servidor").
- */
 export class NetworkError extends Error {
-  constructor(message = 'No se pudo conectar con el servidor. Verifica tu conexión.') {
+  constructor(message = 'No se pudo conectar con el servidor. Verifica tu conexion.') {
     super(message);
     this.name = 'NetworkError';
   }
@@ -79,67 +94,93 @@ async function handleResponse<T>(res: Response): Promise<T> {
   );
 }
 
-// ── Fetch con timeout ─────────────────────────────────────────
-
-/**
- * Envuelve fetch con un AbortController que cancela la petición
- * si supera API.timeoutMs (por defecto 10 segundos).
- *
- * Lanza NetworkError si la petición se cancela por timeout o error de red.
- */
 async function fetchWithTimeout(
   url: string,
   options: RequestInit,
   timeoutMs = API.timeoutMs,
 ): Promise<Response> {
   const controller = new AbortController();
-  const timerId    = setTimeout(() => controller.abort(), timeoutMs);
+  const timerId = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
-    const res = await fetch(url, { ...options, signal: controller.signal });
+    const res = await fetch(url, {
+      ...options,
+      credentials: options.credentials ?? 'include',
+      signal: controller.signal,
+    });
+
     return res;
   } catch (err) {
     if (err instanceof DOMException && err.name === 'AbortError') {
-      throw new NetworkError(`La petición tardó más de ${timeoutMs / 1000}s y fue cancelada.`);
+      throw new NetworkError(`La peticion tardo mas de ${timeoutMs / 1000}s y fue cancelada.`);
     }
-    // TypeError: failed to fetch (sin conexión, CORS, etc.)
+
     throw new NetworkError();
   } finally {
     clearTimeout(timerId);
   }
 }
 
-// ── Peticiones JSON ───────────────────────────────────────────
+async function requestJson<T>(
+  url: string,
+  options: RequestInit = {},
+): Promise<T> {
+  const method = options.method ?? 'GET';
+  const res = await fetchWithTimeout(url, {
+    ...options,
+    headers: buildHeaders(method, options.headers),
+  });
+
+  return handleResponse<T>(res);
+}
+
+export async function ensureCsrfCookie(): Promise<void> {
+  const res = await fetchWithTimeout(`${BACKEND_ORIGIN}/sanctum/csrf-cookie`, {
+    method: 'GET',
+    headers: mergeHeaders({
+      Accept: 'application/json',
+      'X-Requested-With': 'XMLHttpRequest',
+    }),
+  });
+
+  if (!res.ok && res.status !== 204) {
+    await handleResponse(res);
+  }
+}
+
+export async function backendFetch<T>(
+  endpoint: string,
+  options: RequestInit = {},
+): Promise<T> {
+  return requestJson<T>(`${BACKEND_ORIGIN}${endpoint}`, options);
+}
 
 export async function apiFetch<T>(
   endpoint: string,
   options: RequestInit = {},
 ): Promise<T> {
-  const res = await fetchWithTimeout(`${API_BASE}${endpoint}`, {
-    ...options,
-    headers: buildHeaders(options.headers),
-  });
-  return handleResponse<T>(res);
+  return requestJson<T>(`${API_BASE}${endpoint}`, options);
 }
-
-// ── Petición multipart/form-data (subida de archivos) ─────────
-// No se fija Content-Type — el navegador lo pone con el boundary correcto.
 
 export async function apiUpload<T>(
   endpoint: string,
   formData: FormData,
   method: 'POST' | 'PUT' | 'PATCH' = 'POST',
 ): Promise<T> {
-  const token = getToken();
-  const headers: HeadersInit = {
-    Accept: 'application/json',
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-  };
+  const upperMethod = method.toUpperCase();
 
-  // Laravel no acepta PUT/PATCH con FormData en todos los entornos.
-  // Se usa POST + _method spoofing.
-  if (method !== 'POST') {
-    formData.append('_method', method);
+  if (upperMethod !== 'POST') {
+    formData.append('_method', upperMethod);
+  }
+
+  const headers = mergeHeaders({
+    Accept: 'application/json',
+    'X-Requested-With': 'XMLHttpRequest',
+  });
+
+  const xsrfToken = getXsrfTokenFromCookie();
+  if (xsrfToken) {
+    headers.set('X-XSRF-TOKEN', xsrfToken);
   }
 
   const res = await fetchWithTimeout(`${API_BASE}${endpoint}`, {
@@ -147,10 +188,9 @@ export async function apiUpload<T>(
     headers,
     body: formData,
   });
+
   return handleResponse<T>(res);
 }
-
-// ── Atajos tipados ────────────────────────────────────────────
 
 export const api = {
   get: <T>(url: string, init?: RequestInit) =>
@@ -167,4 +207,12 @@ export const api = {
 
   upload: <T>(url: string, data: FormData, method?: 'POST' | 'PUT' | 'PATCH') =>
     apiUpload<T>(url, data, method),
+};
+
+export const backend = {
+  get: <T>(url: string, init?: RequestInit) =>
+    backendFetch<T>(url, { method: 'GET', ...init }),
+
+  post: <T>(url: string, body: unknown) =>
+    backendFetch<T>(url, { method: 'POST', body: JSON.stringify(body) }),
 };

@@ -2,14 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  login as apiLogin,
-  logout as apiLogout,
-  getMe,
-  saveToken,
-  clearToken,
-  getStoredToken,
-} from '@/services/auth';
+import { login as apiLogin, logout as apiLogout, getMe } from '@/services/auth';
 import type { AuthUser, LoginCredentials } from '@/types';
 
 interface AuthState {
@@ -30,28 +23,20 @@ export function useAuth() {
     error: null,
   });
 
-  // Carga el usuario al montar si hay token almacenado
   useEffect(() => {
-    const token = getStoredToken();
-    if (!token) {
-      setState({ user: null, loading: false, error: null });
-      return;
-    }
-
     getMe()
       .then((user) => setState({ user, loading: false, error: null }))
       .catch(() => {
-        clearToken();
         setState({ user: null, loading: false, error: null });
       });
   }, []);
 
   const login = useCallback(
     async (credentials: LoginCredentials, options?: LoginOptions) => {
-      setState((s) => ({ ...s, loading: true, error: null }));
+      setState((prev) => ({ ...prev, loading: true, error: null }));
+
       try {
-        const { user, token } = await apiLogin(credentials);
-        saveToken(token);
+        const user = await apiLogin(credentials);
         setState({ user, loading: false, error: null });
 
         const redirectTo = options?.redirectTo?.startsWith('/admin')
@@ -62,18 +47,19 @@ export function useAuth() {
       } catch (err) {
         const message =
           err instanceof Error ? err.message : 'Error al iniciar sesion';
-        setState((s) => ({ ...s, loading: false, error: message }));
+
+        setState((prev) => ({ ...prev, loading: false, error: message }));
       }
     },
     [router],
   );
 
   const logout = useCallback(async () => {
-    setState((s) => ({ ...s, loading: true }));
+    setState((prev) => ({ ...prev, loading: true }));
+
     try {
       await apiLogout();
     } finally {
-      clearToken();
       setState({ user: null, loading: false, error: null });
       router.push('/login');
     }

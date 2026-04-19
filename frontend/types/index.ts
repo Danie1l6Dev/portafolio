@@ -133,7 +133,6 @@ export interface LoginCredentials {
 export interface LoginResponse {
   data: {
     user: AuthUser;
-    token: string;
   };
 }
 

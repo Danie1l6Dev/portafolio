@@ -39,7 +39,7 @@ class SkillSeeder extends Seeder
             // ── Tools ─────────────────────────────────────────
             ['Git / GitHub',    'Tools',         4, 'si:github',       true,  90],
             ['Vite',            'Tools',         3, 'si:vite',         false, 91],
-            ['PHPUnit / PEST',  'Tools',         3, 'si:phpunit',      false, 92],
+            ['PHPUnit / PEST',  'Tools',         3, 'si:php',      false, 92],
         ];
 
         // Elimina habilidades que ya no están en la lista
