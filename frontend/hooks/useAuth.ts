@@ -19,14 +19,6 @@ interface UseAuthOptions {
   checkSession?: boolean;
 }
 
-function hasXsrfCookie(): boolean {
-  if (typeof document === 'undefined') return false;
-
-  return document.cookie
-    .split('; ')
-    .some((cookie) => cookie.startsWith('XSRF-TOKEN='));
-}
-
 export function useAuth(options: UseAuthOptions = {}) {
   const { checkSession = true } = options;
   const router = useRouter();
@@ -40,10 +32,6 @@ export function useAuth(options: UseAuthOptions = {}) {
 
   useEffect(() => {
     if (!shouldCheckSession) return;
-    if (!hasXsrfCookie()) {
-      setState({ user: null, loading: false, error: null });
-      return;
-    }
 
     getMe()
       .then((user) => setState({ user, loading: false, error: null }))
