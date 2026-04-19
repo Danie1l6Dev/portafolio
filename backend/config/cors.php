@@ -1,9 +1,19 @@
 <?php
 
-$allowedOrigins = array_values(array_unique(array_filter([
+$extraOrigins = array_filter(array_map(
+    static fn (string $origin) => trim($origin),
+    explode(',', (string) env('CORS_ALLOWED_ORIGINS', '')),
+));
+
+$allowedOrigins = array_values(array_unique(array_filter(array_merge([
     'http://localhost:3000',
     env('FRONTEND_URL'),
-])));
+], $extraOrigins))));
+
+$originPatterns = array_values(array_filter(array_map(
+    static fn (string $pattern) => trim($pattern),
+    explode(',', (string) env('CORS_ALLOWED_ORIGINS_PATTERNS', '#^https://.*\\.vercel\\.app$#')),
+)));
 
 return [
 
@@ -24,10 +34,7 @@ return [
 
     'allowed_origins' => $allowedOrigins,
 
-    // Permite previews de Vercel si se usan subdominios *.vercel.app
-    'allowed_origins_patterns' => [
-        '#^https://.*\\.vercel\\.app$#',
-    ],
+    'allowed_origins_patterns' => $originPatterns,
 
     'allowed_headers' => ['*'],
 
