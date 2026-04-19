@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   description: SITE.description,
 };
 
-export const revalidate = 30;
+export const revalidate = 60;
 
 export default async function HomePage() {
   const [projectsRes, skillsRes, experiencesRes] = await Promise.allSettled([
