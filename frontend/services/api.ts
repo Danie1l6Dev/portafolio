@@ -60,6 +60,10 @@ function buildHeaders(method: string, extra: HeadersInit = {}): Headers {
   return mergeHeaders(baseHeaders, extra);
 }
 
+function hasCsrfHeader(headers: Headers): boolean {
+  return headers.has('X-CSRF-TOKEN') || headers.has('X-XSRF-TOKEN');
+}
+
 export class ApiError extends Error {
   constructor(
     public readonly status: number,
@@ -129,10 +133,20 @@ async function requestJson<T>(
   url: string,
   options: RequestInit = {},
 ): Promise<T> {
-  const method = options.method ?? 'GET';
+  const method = (options.method ?? 'GET').toUpperCase();
+  let headers = buildHeaders(method, options.headers);
+
+  // In cross-domain deployments the token may not be readable from document.cookie.
+  // Ensure we always bootstrap CSRF before any state-changing request.
+  if (MUTATION_METHODS.has(method) && !hasCsrfHeader(headers)) {
+    await ensureCsrfCookie();
+    headers = buildHeaders(method, options.headers);
+  }
+
   const res = await fetchWithTimeout(url, {
     ...options,
-    headers: buildHeaders(method, options.headers),
+    method,
+    headers,
   });
 
   return handleResponse<T>(res);
@@ -192,7 +206,7 @@ export async function apiUpload<T>(
     formData.append('_method', upperMethod);
   }
 
-  const headers = mergeHeaders({
+  let headers = mergeHeaders({
     Accept: 'application/json',
     'X-Requested-With': 'XMLHttpRequest',
   });
@@ -202,6 +216,22 @@ export async function apiUpload<T>(
     headers.set('X-XSRF-TOKEN', xsrfCookieToken);
   } else if (csrfTokenCache) {
     headers.set('X-CSRF-TOKEN', csrfTokenCache);
+  }
+
+  if (!hasCsrfHeader(headers)) {
+    await ensureCsrfCookie();
+
+    headers = mergeHeaders({
+      Accept: 'application/json',
+      'X-Requested-With': 'XMLHttpRequest',
+    });
+
+    const refreshedXsrfCookieToken = getXsrfTokenFromCookie();
+    if (refreshedXsrfCookieToken) {
+      headers.set('X-XSRF-TOKEN', refreshedXsrfCookieToken);
+    } else if (csrfTokenCache) {
+      headers.set('X-CSRF-TOKEN', csrfTokenCache);
+    }
   }
 
   const res = await fetchWithTimeout(`${API_BASE}${endpoint}`, {
