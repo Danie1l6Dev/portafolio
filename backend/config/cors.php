@@ -27,6 +27,7 @@ return [
         'api/*',
         'login',
         'logout',
+        'csrf-token',
         'sanctum/csrf-cookie',
     ],
 

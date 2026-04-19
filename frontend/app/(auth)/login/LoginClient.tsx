@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/Button';
 export default function LoginClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { user, login, loading, error } = useAuth();
+  const { user, login, loading, error } = useAuth({ checkSession: false });
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

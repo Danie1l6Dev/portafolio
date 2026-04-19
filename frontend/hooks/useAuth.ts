@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { login as apiLogin, logout as apiLogout, getMe } from '@/services/auth';
 import type { AuthUser, LoginCredentials } from '@/types';
 
@@ -15,21 +15,30 @@ interface LoginOptions {
   redirectTo?: string;
 }
 
-export function useAuth() {
+interface UseAuthOptions {
+  checkSession?: boolean;
+}
+
+export function useAuth(options: UseAuthOptions = {}) {
+  const { checkSession = true } = options;
   const router = useRouter();
+  const pathname = usePathname();
+  const shouldCheckSession = checkSession && pathname !== '/login';
   const [state, setState] = useState<AuthState>({
     user: null,
-    loading: true,
+    loading: shouldCheckSession,
     error: null,
   });
 
   useEffect(() => {
+    if (!shouldCheckSession) return;
+
     getMe()
       .then((user) => setState({ user, loading: false, error: null }))
       .catch(() => {
         setState({ user: null, loading: false, error: null });
       });
-  }, []);
+  }, [shouldCheckSession]);
 
   const login = useCallback(
     async (credentials: LoginCredentials, options?: LoginOptions) => {

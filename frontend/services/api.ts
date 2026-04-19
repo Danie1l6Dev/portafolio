@@ -11,6 +11,7 @@ export const API_ROOT = `${BACKEND_ORIGIN}/api`;
 const API_BASE = `${API_ROOT}/v1`;
 
 const MUTATION_METHODS = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
+let csrfTokenCache: string | null = null;
 
 function getXsrfTokenFromCookie(): string | null {
   if (typeof document === 'undefined') return null;
@@ -47,9 +48,12 @@ function buildHeaders(method: string, extra: HeadersInit = {}): Headers {
   }
 
   if (MUTATION_METHODS.has(upperMethod)) {
-    const xsrfToken = getXsrfTokenFromCookie();
-    if (xsrfToken) {
-      baseHeaders['X-XSRF-TOKEN'] = xsrfToken;
+    const xsrfCookieToken = getXsrfTokenFromCookie();
+
+    if (xsrfCookieToken) {
+      baseHeaders['X-XSRF-TOKEN'] = xsrfCookieToken;
+    } else if (csrfTokenCache) {
+      baseHeaders['X-CSRF-TOKEN'] = csrfTokenCache;
     }
   }
 
@@ -146,6 +150,21 @@ export async function ensureCsrfCookie(): Promise<void> {
   if (!res.ok && res.status !== 204) {
     await handleResponse(res);
   }
+
+  const tokenResponse = await fetchWithTimeout(`${BACKEND_ORIGIN}/csrf-token`, {
+    method: 'GET',
+    headers: mergeHeaders({
+      Accept: 'application/json',
+      'X-Requested-With': 'XMLHttpRequest',
+    }),
+  });
+
+  if (!tokenResponse.ok) {
+    await handleResponse(tokenResponse);
+  }
+
+  const body = (await tokenResponse.json()) as { csrf_token?: string };
+  csrfTokenCache = body.csrf_token ?? null;
 }
 
 export async function backendFetch<T>(
@@ -178,9 +197,11 @@ export async function apiUpload<T>(
     'X-Requested-With': 'XMLHttpRequest',
   });
 
-  const xsrfToken = getXsrfTokenFromCookie();
-  if (xsrfToken) {
-    headers.set('X-XSRF-TOKEN', xsrfToken);
+  const xsrfCookieToken = getXsrfTokenFromCookie();
+  if (xsrfCookieToken) {
+    headers.set('X-XSRF-TOKEN', xsrfCookieToken);
+  } else if (csrfTokenCache) {
+    headers.set('X-CSRF-TOKEN', csrfTokenCache);
   }
 
   const res = await fetchWithTimeout(`${API_BASE}${endpoint}`, {
