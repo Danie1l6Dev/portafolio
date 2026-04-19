@@ -12,7 +12,7 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
-export const revalidate = 60;
+export const revalidate = 30;
 
 // ── Metadata dinámica ─────────────────────────────────────────
 

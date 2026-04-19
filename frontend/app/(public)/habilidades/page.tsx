@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: 'Tecnologías y herramientas que manejo en mis proyectos.',
 };
 
-export const revalidate = 300;
+export const revalidate = 30;
 
 export default async function HabilidadesPage() {
   let skills: Awaited<ReturnType<typeof getSkills>>['data'] = [];

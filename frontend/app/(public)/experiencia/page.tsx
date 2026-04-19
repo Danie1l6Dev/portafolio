@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: 'Trayectoria profesional y académica de Daniel Sierra.',
 };
 
-export const revalidate = 300;
+export const revalidate = 30;
 
 export default async function ExperienciaPage() {
   let experiences: Awaited<ReturnType<typeof getExperiences>> = [];
