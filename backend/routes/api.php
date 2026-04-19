@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\ExperienceController;
 use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\SkillController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,6 +20,12 @@ use Illuminate\Support\Facades\Route;
 */
 Route::middleware('auth:sanctum')->get('user', [AuthController::class, 'me'])
     ->name('api.user');
+
+Route::get('csrf-token', function (Request $request) {
+    return response()->json([
+        'csrf_token' => $request->session()->token(),
+    ]);
+})->name('api.csrf-token');
 
 Route::prefix('v1')->name('api.')->group(function () {
 

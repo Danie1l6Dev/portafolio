@@ -151,7 +151,7 @@ export async function ensureCsrfCookie(): Promise<void> {
     await handleResponse(res);
   }
 
-  const tokenResponse = await fetchWithTimeout(`${BACKEND_ORIGIN}/csrf-token`, {
+  const tokenResponse = await fetchWithTimeout(`${API_ROOT}/csrf-token`, {
     method: 'GET',
     headers: mergeHeaders({
       Accept: 'application/json',
