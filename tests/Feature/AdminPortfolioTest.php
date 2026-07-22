@@ -44,7 +44,7 @@ it('renders every protected administrative page through Laravel and Livewire', f
     $user = portfolioEditor('editor');
 
     $pages = [
-        'panel.dashboard' => 'Pulso editorial',
+        'panel.dashboard' => 'Dashboard',
         'panel.projects' => 'Proyectos',
         'panel.categories' => 'Categorías',
         'panel.skills' => 'Habilidades',
@@ -103,7 +103,7 @@ it('renders the complete administrative workspace with its real content', functi
     ]);
 
     Livewire::actingAs($user)->test(Dashboard::class)
-        ->assertSee('Pulso editorial')
+        ->assertSee('Dashboard')
         ->assertSee('Portfolio editorial')
         ->assertSee('Proyecto nuevo');
 

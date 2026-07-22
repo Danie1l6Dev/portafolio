@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 @import '../../vendor/livewire/flux/dist/flux.css';
+@import './admin.css';
+@import './auth.css';
 
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -204,11 +206,60 @@
     }
 
     .profile-panel {
-        @apply grid overflow-hidden rounded-[1.75rem] border border-ink-950/8 bg-paper-50 shadow-[0_22px_60px_-42px_rgba(9,18,35,.28)] dark:border-white/10 dark:bg-[#0d1a2b] dark:shadow-[0_28px_80px_-48px_rgba(0,0,0,.9)] lg:grid-cols-[minmax(0,1.08fr)_minmax(22rem,.92fr)];
+        @apply grid overflow-hidden rounded-[1.75rem] border border-ink-950/8 bg-paper-50 shadow-[0_22px_60px_-42px_rgba(9,18,35,.28)] dark:border-white/10 dark:bg-[#0d1a2b] dark:shadow-[0_28px_80px_-48px_rgba(0,0,0,.9)] lg:grid-cols-2;
     }
 
     .profile-panel__intro {
         @apply flex min-w-0 flex-col justify-between p-6 sm:p-8 lg:p-10;
+    }
+
+    .education-mark {
+        @apply flex max-w-md items-center gap-4 rounded-2xl border border-ink-950/8 bg-white/65 p-4 shadow-[0_18px_42px_-32px_rgba(9,18,35,.35)] dark:border-white/10 dark:bg-white/[.06] dark:shadow-[0_22px_50px_-34px_rgba(0,0,0,.75)];
+    }
+
+    .education-mark__logo-shell {
+        @apply grid size-16 shrink-0 place-items-center rounded-xl bg-white/90 p-2 ring-1 ring-ink-950/8 dark:bg-white/[.92] dark:ring-white/10;
+    }
+
+    .education-mark__logo {
+        @apply max-h-12 w-full object-contain;
+    }
+
+    .education-mark__eyebrow {
+        @apply font-mono text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-signal-700 dark:text-signal-300;
+    }
+
+    .profile-panel__intro-top {
+        @apply block;
+    }
+
+    .profile-panel__intro-top .profile-portrait {
+        @apply hidden;
+    }
+
+    .profile-portrait {
+        @apply relative order-first mx-auto flex h-56 w-full max-w-[13rem] items-end justify-center overflow-hidden rounded-[1.5rem] border border-signal-500/20 bg-signal-50/80 shadow-[0_18px_40px_-30px_rgba(19,105,170,.45)] md:order-none md:h-64 dark:border-signal-400/30 dark:bg-[#13263a] dark:shadow-[0_24px_50px_-34px_rgba(0,0,0,.85)];
+    }
+
+    .profile-portrait::after {
+        content: '';
+        @apply absolute inset-x-0 bottom-0 z-20 h-20 bg-gradient-to-t from-black/45 to-transparent;
+    }
+
+    .profile-portrait__image {
+        @apply relative z-10 h-full w-full object-contain object-bottom;
+    }
+
+    .profile-portrait__tag {
+        @apply absolute inset-x-3 bottom-3 z-30 font-mono text-[0.62rem] font-semibold uppercase tracking-[0.13em] text-white;
+    }
+
+    .profile-portrait--feature {
+        @apply m-6 min-h-[24rem] w-[calc(100%-3rem)] max-w-[26rem] self-center justify-self-center rounded-[1.5rem] border border-signal-500/20 bg-signal-100/70 p-4 shadow-[0_20px_46px_-30px_rgba(19,105,170,.5)] dark:border-signal-400/25 dark:bg-[#13263a] dark:shadow-[0_24px_50px_-34px_rgba(0,0,0,.8)] sm:m-8 sm:w-[calc(100%-4rem)] sm:p-5 md:min-h-[28rem];
+    }
+
+    .profile-principles {
+        @apply hidden;
     }
 
     .profile-panel__label {

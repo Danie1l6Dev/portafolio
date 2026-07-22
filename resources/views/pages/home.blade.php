@@ -105,7 +105,7 @@
 
     <section id="sobre-mi" class="portfolio-section border-y border-ink-950/8 bg-[#f4f7fa] py-20 dark:border-white/10 dark:bg-[#0a1728] sm:py-28 lg:py-32">
         <div class="portfolio-container">
-            <div class="grid gap-8 lg:grid-cols-[minmax(0,.78fr)_minmax(22rem,.42fr)] lg:items-end lg:gap-16">
+            <div class="grid gap-8 lg:grid-cols-[minmax(0,.78fr)_minmax(22rem,.42fr)] lg:items-start lg:gap-16">
                 <x-portfolio.section-heading
                     index="01"
                     eyebrow="Perfil"
@@ -114,21 +114,33 @@
                     class="mb-0"
                 />
 
-                <aside class="max-w-md border-l-2 border-signal-500 pl-5 lg:mb-1" aria-label="Formación académica">
+                <aside class="education-mark lg:mb-1" aria-label="Formación académica">
+                    <div class="education-mark__logo-shell" aria-hidden="true">
+                        <img src="{{ asset('images/education/uniguajira-logo.webp') }}" alt="" class="education-mark__logo">
+                    </div>
+                    <div class="min-w-0">
                     <span class="font-mono text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-signal-700 dark:text-signal-300">Formación actual</span>
                     <h3 class="mt-2 text-lg font-semibold tracking-tight text-ink-950 dark:text-white">{{ config('portfolio.education.program') }}</h3>
                     <p class="mt-1 text-sm leading-6 text-ink-600 dark:text-slate-300">{{ config('portfolio.education.institution') }}</p>
                     <p class="mt-2 font-mono text-[0.68rem] uppercase tracking-[0.12em] text-ink-400 dark:text-slate-500">{{ config('portfolio.education.period') }} · {{ config('portfolio.education.location') }}</p>
+                    </div>
                 </aside>
             </div>
 
             <div class="profile-panel mt-12 lg:mt-16" data-reveal>
                 <div class="profile-panel__intro">
-                    <div>
+                    <div class="profile-panel__intro-top">
+                        <div>
                         <span class="profile-panel__label">Enfoque profesional</span>
-                        <p class="mt-5 max-w-2xl text-balance text-2xl font-medium leading-[1.35] tracking-[-0.03em] text-ink-950 dark:text-white sm:text-3xl">
+                        <p class="mt-5 max-w-none text-balance text-2xl font-medium leading-[1.35] tracking-[-0.03em] text-ink-950 dark:text-white sm:text-3xl">
                             {{ config('portfolio.about') }}
                         </p>
+                        </div>
+
+                        <figure class="profile-portrait">
+                            <img src="{{ asset('images/profile/daniel-sierra.webp') }}" alt="Daniel Sierra, desarrollador de software" class="profile-portrait__image">
+                            <figcaption class="profile-portrait__tag">Daniel Sierra <span aria-hidden="true">·</span> Software</figcaption>
+                        </figure>
                     </div>
 
                     <div class="mt-10 border-t border-ink-950/8 pt-6 dark:border-white/10">
@@ -161,6 +173,11 @@
                         </div>
                     </div>
                 </div>
+
+                <figure class="profile-portrait profile-portrait--feature" aria-label="Daniel Sierra">
+                    <img src="{{ asset('images/profile/daniel-sierra.webp') }}" alt="Daniel Sierra, desarrollador de software" class="profile-portrait__image">
+                    <figcaption class="profile-portrait__tag">Daniel Sierra <span aria-hidden="true">·</span> Software</figcaption>
+                </figure>
 
                 <ol class="profile-principles" aria-label="Principios de trabajo">
                     <li class="profile-principle">

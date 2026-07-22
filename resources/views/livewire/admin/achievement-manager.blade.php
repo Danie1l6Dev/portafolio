@@ -1,166 +1,313 @@
-<div class="space-y-6">
-    <header class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-            <flux:heading size="xl" level="1">Logros y reconocimientos</flux:heading>
-            <flux:text variant="subtle">Administra hackathons, certificaciones, premios y la evidencia que los respalda.</flux:text>
+<div class="admin-page">
+    <x-admin.page-header
+        title="Logros y reconocimientos"
+        description="Documenta certificaciones, premios, hackathons y la evidencia que los respalda."
+        :count="$achievements->total()"
+    >
+        <x-slot:actions>
+            <x-admin.button variant="primary" wire:click="create">
+                <flux:icon.plus class="size-4" />
+                Nuevo logro
+            </x-admin.button>
+        </x-slot:actions>
+    </x-admin.page-header>
+
+    <section class="admin-toolbar" aria-label="Filtros de logros">
+        <div class="min-w-0 flex-1 lg:max-w-md">
+            <flux:input
+                wire:model.live.debounce.300ms="search"
+                icon="magnifying-glass"
+                placeholder="Buscar título, organización o resultado"
+                aria-label="Buscar logros"
+            />
         </div>
-        <flux:button variant="primary" icon="plus" wire:click="create">Nuevo logro</flux:button>
-    </header>
+        <div class="w-full sm:w-52">
+            <flux:select wire:model.live="typeFilter" aria-label="Filtrar por tipo">
+                <flux:select.option value="">Todos los tipos</flux:select.option>
+                @foreach ($types as $typeOption)
+                    <flux:select.option value="{{ $typeOption->value }}">{{ $typeOption->label() }}</flux:select.option>
+                @endforeach
+            </flux:select>
+        </div>
+        <div class="admin-filter-chips" role="group" aria-label="Filtrar por visibilidad">
+            @foreach (['all' => 'Todos', 'visible' => 'Visibles', 'hidden' => 'Ocultos'] as $value => $label)
+                <button
+                    type="button"
+                    wire:click="$set('visibilityFilter', '{{ $value }}')"
+                    class="admin-filter-chip {{ $visibilityFilter === $value ? 'is-active' : '' }}"
+                    aria-pressed="{{ $visibilityFilter === $value ? 'true' : 'false' }}"
+                >
+                    {{ $label }}
+                </button>
+            @endforeach
+        </div>
+    </section>
 
-    <div class="grid gap-6 {{ $showForm ? 'xl:grid-cols-[minmax(0,1fr)_34rem]' : '' }}">
-        <section class="min-w-0 space-y-4" aria-label="Listado de logros">
-            <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_12rem_11rem]">
-                <flux:input wire:model.live.debounce.300ms="search" icon="magnifying-glass" placeholder="Buscar título, organización o resultado" aria-label="Buscar logros" />
-                <select wire:model.live="typeFilter" class="min-h-10 rounded-lg border border-zinc-200 bg-white px-3 text-sm dark:border-zinc-700 dark:bg-zinc-900" aria-label="Filtrar por tipo">
-                    <option value="">Todos los tipos</option>
-                    @foreach ($types as $typeOption)
-                        <option value="{{ $typeOption->value }}">{{ $typeOption->label() }}</option>
-                    @endforeach
-                </select>
-                <select wire:model.live="visibilityFilter" class="min-h-10 rounded-lg border border-zinc-200 bg-white px-3 text-sm dark:border-zinc-700 dark:bg-zinc-900" aria-label="Filtrar por visibilidad">
-                    <option value="all">Todos</option>
-                    <option value="visible">Visibles</option>
-                    <option value="hidden">Ocultos</option>
-                </select>
-            </div>
-
-            <div wire:loading.flex wire:target="search,typeFilter,visibilityFilter,save,delete" class="items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-500 dark:border-zinc-700 dark:bg-zinc-900">
-                <flux:icon.loading class="size-4" /> Actualizando logros…
-            </div>
-
-            <div class="grid gap-4 lg:grid-cols-2">
-                @forelse ($achievements as $achievement)
-                    <article wire:key="achievement-{{ $achievement->id }}" class="overflow-hidden rounded-xl border border-zinc-200/80 bg-white dark:border-zinc-700 dark:bg-zinc-900">
-                        @if ($achievement->imageUrl())
-                            <img src="{{ $achievement->imageUrl() }}" alt="Evidencia visual de {{ $achievement->title }}" class="aspect-[16/7] w-full object-cover">
-                        @endif
-                        <div class="p-5">
-                            <div class="flex flex-wrap items-center gap-2">
-                                <span class="rounded-full bg-sky-50 px-2 py-0.5 text-[11px] font-semibold text-sky-700 dark:bg-sky-400/10 dark:text-sky-300">{{ $achievement->type->label() }}</span>
-                                @if ($achievement->is_featured)<span class="rounded-full bg-violet-50 px-2 py-0.5 text-[11px] font-semibold text-violet-700 dark:bg-violet-400/10 dark:text-violet-300">Destacado</span>@endif
-                                @unless ($achievement->is_visible)<span class="rounded-full bg-zinc-100 px-2 py-0.5 text-[11px] font-semibold text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">Oculto</span>@endunless
-                            </div>
-                            <flux:heading size="lg" class="mt-3">{{ $achievement->title }}</flux:heading>
-                            <p class="mt-1 text-sm font-medium text-zinc-600 dark:text-zinc-300">{{ $achievement->organization }}@if($achievement->result) · {{ $achievement->result }}@endif</p>
-                            <p class="mt-3 line-clamp-2 text-sm leading-6 text-zinc-500">{{ $achievement->description ?: 'Sin descripción registrada.' }}</p>
-                            <div class="mt-5 flex items-center justify-between gap-3 border-t border-zinc-200/70 pt-4 dark:border-zinc-700">
-                                <div class="flex items-center gap-2 text-xs text-zinc-500">
-                                    <time datetime="{{ $achievement->achieved_at->toDateString() }}">{{ $achievement->achieved_at->translatedFormat('M Y') }}</time>
-                                    @if ($achievement->certificate_path)<span aria-label="Incluye certificado PDF">· PDF</span>@endif
-                                    @if ($achievement->media->isNotEmpty())<span aria-label="Fotos en la galería">· {{ $achievement->media->count() }} fotos</span>@endif
-                                </div>
-                                <div class="flex items-center gap-1">
-                                    <flux:button size="sm" variant="ghost" icon="pencil-square" wire:click="edit({{ $achievement->id }})" aria-label="Editar {{ $achievement->title }}" />
-                                    <flux:button size="sm" variant="ghost" icon="trash" wire:click="confirmDelete({{ $achievement->id }})" aria-label="Eliminar {{ $achievement->title }}" />
-                                </div>
-                            </div>
-                        </div>
-                    </article>
-                @empty
-                    <div class="rounded-xl border border-dashed border-zinc-300 px-6 py-14 text-center dark:border-zinc-700 lg:col-span-2">
-                        <flux:heading size="lg">Tu vitrina de logros está lista</flux:heading>
-                        <flux:text variant="subtle" class="mt-1">Añade la hackathon, certificación o reconocimiento que quieras respaldar.</flux:text>
-                    </div>
-                @endforelse
-            </div>
-
-            {{ $achievements->links() }}
-        </section>
-
-        @if ($showForm)
-            <aside class="h-fit rounded-xl border border-zinc-200/80 bg-zinc-50/70 p-5 dark:border-zinc-700 dark:bg-zinc-900" aria-label="Formulario de logro">
-                <div class="mb-5">
-                    <flux:heading size="lg">{{ $editingAchievementId ? 'Editar logro' : 'Nuevo logro' }}</flux:heading>
-                    <flux:text variant="subtle" class="text-sm">Registra el resultado, tu aporte y una evidencia verificable.</flux:text>
-                </div>
-
-                <form wire:submit="save" class="space-y-4">
-                    <flux:input wire:model="title" label="Título" required autofocus />
-                    <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-1">
-                        <label class="grid gap-2 text-sm font-medium">
-                            <span>Tipo</span>
-                            <select wire:model="type" class="min-h-10 rounded-lg border border-zinc-200 bg-white px-3 dark:border-zinc-700 dark:bg-zinc-950">
-                                @foreach ($types as $typeOption)
-                                    <option value="{{ $typeOption->value }}">{{ $typeOption->label() }}</option>
-                                @endforeach
-                            </select>
-                            @error('type')<span class="text-xs text-red-600">{{ $message }}</span>@enderror
-                        </label>
-                        <flux:input wire:model="achievedAt" label="Fecha" type="date" required />
-                    </div>
-                    <flux:input wire:model="organization" label="Evento u organización" required />
-                    <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-1">
-                        <flux:input wire:model="result" label="Resultado" placeholder="Ganador, finalista…" />
-                        <flux:input wire:model="role" label="Tu rol" placeholder="Backend, liderazgo…" />
-                    </div>
-                    <flux:textarea wire:model="description" label="Descripción" rows="5" maxlength="3000" />
-                    <flux:input wire:model="externalUrl" label="Enlace de evidencia" type="url" placeholder="https://" />
-
-                    <div class="space-y-3 rounded-lg border border-zinc-200 bg-white p-3 dark:border-zinc-700 dark:bg-zinc-950">
-                        <flux:input wire:model="image" label="Portada" type="file" accept="image/jpeg,image/png,image/webp" />
-                        <div wire:loading wire:target="image" class="text-xs text-zinc-500">Procesando imagen…</div>
-                        @if ($image)
-                            <p class="text-xs text-zinc-500">Nueva imagen: {{ $image->getClientOriginalName() }}</p>
-                        @elseif($editingAchievement?->image_path && ! $removeCurrentImage)
-                            <div class="flex items-center gap-3">
-                                <img src="{{ $editingAchievement->imageUrl() }}" alt="Imagen actual" class="h-14 w-20 rounded-lg object-cover">
-                                <flux:button type="button" size="sm" variant="ghost" wire:click="markImageForRemoval">Quitar</flux:button>
-                            </div>
-                        @elseif($removeCurrentImage)
-                            <p class="text-xs text-amber-600 dark:text-amber-400">La imagen actual se eliminará al guardar.</p>
-                        @endif
-                    </div>
-
-                    <x-admin.media-gallery-editor
-                        id="achievement-media-gallery"
-                        :media="$editingAchievement?->media ?? collect()"
-                        :uploads="$galleryImages"
-                        :limit="$galleryLimit"
-                        title="Fotos del logro"
-                        description="Guarda varias fotos de la hackathon, el equipo, la premiación o la evidencia del certificado."
-                        empty-text="Añade las fotos que ayuden a contar qué ocurrió y cuál fue el resultado."
-                    />
-
-                    <div class="space-y-3 rounded-lg border border-zinc-200 bg-white p-3 dark:border-zinc-700 dark:bg-zinc-950">
-                        <flux:input wire:model="certificate" label="Certificado PDF" type="file" accept="application/pdf" />
-                        <div wire:loading wire:target="certificate" class="text-xs text-zinc-500">Procesando documento…</div>
-                        @if ($certificate)
-                            <p class="text-xs text-zinc-500">Nuevo documento: {{ $certificate->getClientOriginalName() }}</p>
-                        @elseif($editingAchievement?->certificate_path && ! $removeCurrentCertificate)
-                            <div class="flex items-center justify-between gap-3 text-sm">
-                                <a href="{{ $editingAchievement->certificateUrl() }}" target="_blank" rel="noopener noreferrer" class="font-medium text-sky-600 hover:underline">Ver PDF actual</a>
-                                <flux:button type="button" size="sm" variant="ghost" wire:click="markCertificateForRemoval">Quitar</flux:button>
-                            </div>
-                        @elseif($removeCurrentCertificate)
-                            <p class="text-xs text-amber-600 dark:text-amber-400">El PDF actual se eliminará al guardar.</p>
-                        @endif
-                    </div>
-
-                    <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
-                        <label class="flex items-center gap-3 rounded-lg border border-zinc-200 bg-white px-3 py-3 text-sm dark:border-zinc-700 dark:bg-zinc-950"><input type="checkbox" wire:model="isFeatured" class="rounded border-zinc-300 text-zinc-900 focus:ring-zinc-500 dark:border-zinc-600"><span>Destacar primero</span></label>
-                        <label class="flex items-center gap-3 rounded-lg border border-zinc-200 bg-white px-3 py-3 text-sm dark:border-zinc-700 dark:bg-zinc-950"><input type="checkbox" wire:model="isVisible" class="rounded border-zinc-300 text-zinc-900 focus:ring-zinc-500 dark:border-zinc-600"><span>Visible en el portafolio</span></label>
-                    </div>
-                    <flux:input wire:model="sortOrder" label="Orden" type="number" min="0" max="65535" />
-
-                    <div class="flex justify-end gap-2 pt-2">
-                        <flux:button type="button" variant="ghost" wire:click="cancelForm">Cancelar</flux:button>
-                        <flux:button type="submit" variant="primary" wire:loading.attr="disabled" wire:target="save,image,certificate,galleryImages">Guardar</flux:button>
-                    </div>
-                </form>
-            </aside>
-        @endif
+    <div wire:loading.flex wire:target="search,typeFilter,visibilityFilter,save,delete" class="admin-loading">
+        <flux:icon.loading class="size-4" />
+        Actualizando archivo de logros…
     </div>
 
-    <flux:modal name="delete-achievement" wire:model="confirmingDelete" class="max-w-md">
-        <div class="space-y-5">
-            <div><flux:heading size="lg">Eliminar logro</flux:heading><flux:text variant="subtle" class="mt-1">Se eliminará “{{ $deletingAchievementTitle }}” junto con su imagen y certificado.</flux:text></div>
-            <div class="flex justify-end gap-2"><flux:button variant="ghost" wire:click="cancelDelete">Cancelar</flux:button><flux:button variant="danger" wire:click="delete" wire:loading.attr="disabled" wire:target="delete">Eliminar</flux:button></div>
+    <section class="admin-table-shell hidden lg:block" aria-label="Listado de logros">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th scope="col">Logro</th>
+                    <th scope="col">Tipo</th>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Evidencia</th>
+                    <th scope="col">Visibilidad</th>
+                    <th scope="col"><span class="sr-only">Acciones</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($achievements as $achievement)
+                    <tr wire:key="achievement-row-{{ $achievement->id }}">
+                        <td>
+                            <div class="flex min-w-0 items-center gap-3">
+                                <div class="admin-table__thumb">
+                                    @if ($achievement->imageUrl())
+                                        <img src="{{ $achievement->imageUrl() }}" alt="" class="size-full object-cover">
+                                    @else
+                                        <flux:icon.trophy class="size-4" />
+                                    @endif
+                                </div>
+                                <div class="min-w-0">
+                                    <div class="flex items-center gap-2">
+                                        <p class="truncate font-semibold text-slate-900 dark:text-slate-100">{{ $achievement->title }}</p>
+                                        @if ($achievement->is_featured)
+                                            <span class="text-amber-500" title="Logro destacado" aria-label="Logro destacado">★</span>
+                                        @endif
+                                    </div>
+                                    <p class="mt-0.5 max-w-sm truncate text-xs text-slate-500 dark:text-slate-400">
+                                        {{ $achievement->organization }}@if($achievement->result) · {{ $achievement->result }}@endif
+                                    </p>
+                                </div>
+                            </div>
+                        </td>
+                        <td><x-admin.badge variant="info">{{ $achievement->type->label() }}</x-admin.badge></td>
+                        <td>
+                            <time datetime="{{ $achievement->achieved_at->toDateString() }}" class="whitespace-nowrap">
+                                {{ $achievement->achieved_at->translatedFormat('M Y') }}
+                            </time>
+                        </td>
+                        <td>
+                            <div class="flex flex-wrap items-center gap-1.5">
+                                @if ($achievement->media->isNotEmpty())
+                                    <x-admin.badge variant="neutral">{{ $achievement->media->count() }} fotos</x-admin.badge>
+                                @endif
+                                @if ($achievement->certificate_path)
+                                    <x-admin.badge variant="neutral">PDF</x-admin.badge>
+                                @endif
+                                @if ($achievement->media->isEmpty() && ! $achievement->certificate_path)
+                                    <span class="text-xs text-slate-400">Sin adjuntos</span>
+                                @endif
+                            </div>
+                        </td>
+                        <td>
+                            <x-admin.badge :variant="$achievement->is_visible ? 'success' : 'neutral'">
+                                {{ $achievement->is_visible ? 'Visible' : 'Oculto' }}
+                            </x-admin.badge>
+                        </td>
+                        <td>
+                            <div class="admin-table__actions">
+                                <x-admin.button size="sm" variant="ghost" wire:click="edit({{ $achievement->id }})">Editar</x-admin.button>
+                                <x-admin.button size="sm" variant="danger-ghost" wire:click="confirmDelete({{ $achievement->id }})" aria-label="Eliminar {{ $achievement->title }}">Eliminar</x-admin.button>
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="6">
+                            <div class="admin-empty">
+                                <span class="admin-empty__icon"><flux:icon.trophy class="size-5" /></span>
+                                <p class="admin-empty__title">Todavía no hay logros registrados</p>
+                                <p class="admin-empty__copy">Añade una hackathon, certificación o reconocimiento para construir este archivo.</p>
+                            </div>
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </section>
+
+    <section class="grid gap-3 lg:hidden" aria-label="Listado de logros">
+        @forelse ($achievements as $achievement)
+            <article wire:key="achievement-card-{{ $achievement->id }}" class="admin-mobile-card">
+                <div class="flex items-start gap-3">
+                    <div class="admin-mobile-card__thumb">
+                        @if ($achievement->imageUrl())
+                            <img src="{{ $achievement->imageUrl() }}" alt="" class="size-full object-cover">
+                        @else
+                            <flux:icon.trophy class="size-5" />
+                        @endif
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ $achievement->title }}</h2>
+                            @if ($achievement->is_featured)<span class="text-amber-500" aria-label="Logro destacado">★</span>@endif
+                        </div>
+                        <p class="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">{{ $achievement->organization }}</p>
+                    </div>
+                    <x-admin.badge :variant="$achievement->is_visible ? 'success' : 'neutral'">{{ $achievement->is_visible ? 'Visible' : 'Oculto' }}</x-admin.badge>
+                </div>
+                <p class="mt-3 line-clamp-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{{ $achievement->description ?: 'Sin descripción registrada.' }}</p>
+                <div class="mt-3 flex flex-wrap items-center gap-2">
+                    <x-admin.badge variant="info">{{ $achievement->type->label() }}</x-admin.badge>
+                    <span class="text-xs text-slate-500 dark:text-slate-400">{{ $achievement->achieved_at->translatedFormat('M Y') }}</span>
+                    @if ($achievement->media->isNotEmpty())<span class="text-xs text-slate-500 dark:text-slate-400">· {{ $achievement->media->count() }} fotos</span>@endif
+                    @if ($achievement->certificate_path)<span class="text-xs text-slate-500 dark:text-slate-400">· PDF</span>@endif
+                </div>
+                <div class="admin-mobile-card__footer">
+                    <span>Orden {{ $achievement->sort_order }}</span>
+                    <div class="flex items-center gap-1">
+                        <x-admin.button size="sm" variant="ghost" wire:click="edit({{ $achievement->id }})">Editar</x-admin.button>
+                        <x-admin.button size="sm" variant="danger-ghost" wire:click="confirmDelete({{ $achievement->id }})">Eliminar</x-admin.button>
+                    </div>
+                </div>
+            </article>
+        @empty
+            <div class="admin-empty">
+                <span class="admin-empty__icon"><flux:icon.trophy class="size-5" /></span>
+                <p class="admin-empty__title">Todavía no hay logros registrados</p>
+                <p class="admin-empty__copy">Añade una hackathon, certificación o reconocimiento para construir este archivo.</p>
+            </div>
+        @endforelse
+    </section>
+
+    <div class="admin-pagination">{{ $achievements->links() }}</div>
+
+    @if ($showForm)
+        <x-admin.form-modal
+            name="achievement-form"
+            model="showForm"
+            :title="$editingAchievementId ? 'Editar logro' : 'Nuevo logro'"
+            description="Registra el resultado, tu aporte y evidencias verificables."
+            close-action="cancelForm"
+            size="xl"
+        >
+            <form wire:submit="save" class="admin-form">
+                <flux:input wire:model="title" label="Título" required autofocus />
+
+                <div class="admin-form-grid">
+                    <flux:select wire:model="type" label="Tipo">
+                        @foreach ($types as $typeOption)
+                            <flux:select.option value="{{ $typeOption->value }}">{{ $typeOption->label() }}</flux:select.option>
+                        @endforeach
+                    </flux:select>
+                    <flux:input wire:model="achievedAt" label="Fecha" type="date" required />
+                    <flux:input wire:model="organization" label="Evento u organización" required />
+                    <flux:input wire:model="result" label="Resultado" placeholder="Ganador, finalista…" />
+                    <flux:input wire:model="role" label="Tu rol" placeholder="Backend, liderazgo…" />
+                    <flux:input wire:model="externalUrl" label="Enlace de evidencia" type="url" placeholder="https://" />
+                </div>
+
+                <flux:textarea wire:model="description" label="Descripción" rows="5" maxlength="3000" />
+
+                <section class="admin-upload-panel" aria-label="Portada del logro">
+                    <div class="admin-upload-panel__header">
+                        <div>
+                            <h3>Portada principal</h3>
+                            <p>Imagen representativa del logro, máximo 3 MB.</p>
+                        </div>
+                        <flux:input wire:model="image" type="file" accept="image/jpeg,image/png,image/webp" aria-label="Seleccionar portada" />
+                    </div>
+                    <div wire:loading wire:target="image" class="mt-3 text-xs text-slate-500 dark:text-slate-400">Procesando imagen…</div>
+                    @if ($image)
+                        <p class="mt-3 text-xs text-slate-500 dark:text-slate-400">Nueva imagen: {{ $image->getClientOriginalName() }}</p>
+                    @elseif ($editingAchievement?->image_path && ! $removeCurrentImage)
+                        <div class="mt-4 flex items-center gap-3">
+                            <img src="{{ $editingAchievement->imageUrl() }}" alt="Imagen actual" class="h-20 w-32 rounded-lg object-cover ring-1 ring-slate-900/10 dark:ring-white/10">
+                            <x-admin.button type="button" size="sm" variant="danger-ghost" wire:click="markImageForRemoval">Quitar portada</x-admin.button>
+                        </div>
+                    @elseif ($removeCurrentImage)
+                        <p class="mt-3 text-xs font-medium text-amber-600 dark:text-amber-400">La imagen actual se eliminará al guardar.</p>
+                    @endif
+                </section>
+
+                <x-admin.media-gallery-editor
+                    id="achievement-media-gallery"
+                    :media="$editingAchievement?->media ?? collect()"
+                    :uploads="$galleryImages"
+                    :limit="$galleryLimit"
+                    title="Fotos del logro"
+                    description="Guarda varias fotos de la hackathon, el equipo, la premiación o el certificado."
+                    empty-text="Añade fotos que ayuden a contar qué ocurrió y cuál fue el resultado."
+                />
+
+                <section class="admin-upload-panel" aria-label="Certificado PDF">
+                    <div class="admin-upload-panel__header">
+                        <div>
+                            <h3>Certificado PDF</h3>
+                            <p>Documento verificable de máximo 5 MB.</p>
+                        </div>
+                        <flux:input wire:model="certificate" type="file" accept="application/pdf" aria-label="Seleccionar certificado PDF" />
+                    </div>
+                    <div wire:loading wire:target="certificate" class="mt-3 text-xs text-slate-500 dark:text-slate-400">Procesando documento…</div>
+                    @if ($certificate)
+                        <p class="mt-3 text-xs text-slate-500 dark:text-slate-400">Nuevo documento: {{ $certificate->getClientOriginalName() }}</p>
+                    @elseif ($editingAchievement?->certificate_path && ! $removeCurrentCertificate)
+                        <div class="mt-4 flex items-center justify-between gap-3">
+                            <a href="{{ $editingAchievement->certificateUrl() }}" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold text-sky-600 hover:text-sky-700 hover:underline dark:text-sky-400">Ver PDF actual</a>
+                            <x-admin.button type="button" size="sm" variant="danger-ghost" wire:click="markCertificateForRemoval">Quitar PDF</x-admin.button>
+                        </div>
+                    @elseif ($removeCurrentCertificate)
+                        <p class="mt-3 text-xs font-medium text-amber-600 dark:text-amber-400">El PDF actual se eliminará al guardar.</p>
+                    @endif
+                </section>
+
+                <div class="admin-form-grid admin-form-grid--compact">
+                    <flux:input wire:model="sortOrder" label="Orden" type="number" min="0" max="65535" />
+                    <div class="grid gap-3">
+                        <label class="admin-check-card">
+                            <input type="checkbox" wire:model="isFeatured">
+                            <span><strong>Destacar primero</strong><small>Prioriza el logro en la sección pública.</small></span>
+                        </label>
+                        <label class="admin-check-card">
+                            <input type="checkbox" wire:model="isVisible">
+                            <span><strong>Visible en el portafolio</strong><small>Permite preparar contenido antes de publicarlo.</small></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="admin-form__footer">
+                    <x-admin.button type="button" variant="secondary" wire:click="cancelForm">Cancelar</x-admin.button>
+                    <x-admin.button type="submit" variant="primary" wire:loading.attr="disabled" wire:target="save,image,certificate,galleryImages">
+                        <flux:icon.check class="size-4" />
+                        Guardar logro
+                    </x-admin.button>
+                </div>
+            </form>
+        </x-admin.form-modal>
+    @endif
+
+    <x-admin.form-modal
+        name="delete-achievement"
+        model="confirmingDelete"
+        title="Eliminar logro"
+        description="Esta acción no se puede deshacer."
+        close-action="cancelDelete"
+        size="sm"
+    >
+        <p class="text-sm leading-6 text-slate-600 dark:text-slate-300">“{{ $deletingAchievementTitle }}” se eliminará junto con su portada, galería y certificado.</p>
+        <div class="admin-form__footer mt-6">
+            <x-admin.button type="button" variant="secondary" wire:click="cancelDelete">Cancelar</x-admin.button>
+            <x-admin.button type="button" variant="danger" wire:click="delete" wire:loading.attr="disabled" wire:target="delete">Eliminar logro</x-admin.button>
         </div>
-    </flux:modal>
-    <flux:modal name="delete-achievement-media" wire:model="confirmingMediaDelete" class="max-w-md">
-        <div class="space-y-5">
-            <div><flux:heading size="lg">Quitar foto</flux:heading><flux:text variant="subtle" class="mt-1">“{{ $deletingMediaName }}” se eliminará de la galería y del almacenamiento.</flux:text></div>
-            <div class="flex justify-end gap-2"><flux:button variant="ghost" wire:click="cancelMediaDelete">Cancelar</flux:button><flux:button variant="danger" wire:click="deleteMedia" wire:loading.attr="disabled" wire:target="deleteMedia">Quitar foto</flux:button></div>
+    </x-admin.form-modal>
+
+    <x-admin.form-modal
+        name="delete-achievement-media"
+        model="confirmingMediaDelete"
+        title="Quitar foto"
+        description="La foto también se eliminará del almacenamiento."
+        close-action="cancelMediaDelete"
+        size="sm"
+    >
+        <p class="text-sm leading-6 text-slate-600 dark:text-slate-300">“{{ $deletingMediaName }}” se quitará de la galería.</p>
+        <div class="admin-form__footer mt-6">
+            <x-admin.button type="button" variant="secondary" wire:click="cancelMediaDelete">Cancelar</x-admin.button>
+            <x-admin.button type="button" variant="danger" wire:click="deleteMedia" wire:loading.attr="disabled" wire:target="deleteMedia">Quitar foto</x-admin.button>
         </div>
-    </flux:modal>
+    </x-admin.form-modal>
 </div>

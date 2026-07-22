@@ -1,3 +1,3 @@
-<x-layouts::app title="Panel editorial">
+<x-layouts::admin title="Panel editorial">
     <livewire:admin.dashboard />
-</x-layouts::app>
+</x-layouts::admin>

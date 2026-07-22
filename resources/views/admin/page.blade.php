@@ -1,3 +1,3 @@
-<x-layouts::app :title="$title">
+<x-layouts::admin :title="$title">
     @livewire($livewireComponent)
-</x-layouts::app>
+</x-layouts::admin>
