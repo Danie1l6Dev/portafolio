@@ -108,7 +108,13 @@ it('renders the complete administrative workspace with its real content', functi
         ->assertSee('Proyecto nuevo');
 
     Livewire::actingAs($user)->test(CategoryManager::class)->assertSee('Web')->call('create')->assertSee('Nueva categoría');
-    Livewire::actingAs($user)->test(SkillManager::class)->assertSee('Laravel')->call('create')->assertSee('Nueva habilidad');
+    Livewire::actingAs($user)
+        ->test(SkillManager::class)
+        ->assertSee('Laravel')
+        ->assertDontSee('Dominio')
+        ->call('create')
+        ->assertSee('Nueva habilidad')
+        ->assertDontSee('Nivel (1–5)');
     Livewire::actingAs($user)->test(ExperienceManager::class)->assertSee('Acme')->call('create')->assertSee('Nueva experiencia');
     Livewire::actingAs($user)->test(MessageInbox::class)->assertSee('Proyecto nuevo');
     Livewire::actingAs($user)->test(ProjectManager::class)->assertSee('Portfolio editorial')->call('create')->assertSee('Nuevo proyecto');
@@ -174,7 +180,6 @@ it('manages skill metadata and detaches deleted skills from projects', function 
         ->test(SkillManager::class)
         ->set('name', 'Livewire')
         ->set('group', 'Backend')
-        ->set('level', 4)
         ->set('icon', 'si:livewire')
         ->set('sortOrder', 12)
         ->set('isFeatured', true)
@@ -182,6 +187,8 @@ it('manages skill metadata and detaches deleted skills from projects', function 
         ->assertHasNoErrors();
 
     $skill = Skill::where('slug', 'livewire')->firstOrFail();
+    expect($skill->getAttributes())->not->toHaveKey('level');
+
     $project = Project::create([
         'title' => 'Reactive project',
         'slug' => 'reactive-project',

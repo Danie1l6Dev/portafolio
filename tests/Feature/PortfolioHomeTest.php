@@ -60,7 +60,6 @@ it('renders the configured technology icon inside each skill card', function ():
         'name' => 'Laravel',
         'slug' => 'laravel',
         'group' => 'Backend',
-        'level' => 5,
         'icon' => 'si:laravel',
         'is_featured' => true,
         'sort_order' => 1,
@@ -69,7 +68,8 @@ it('renders the configured technology icon inside each skill card', function ():
     $this->get(route('home'))
         ->assertOk()
         ->assertSee('data-skill-icon="laravel"', false)
-        ->assertSee('https://cdn.simpleicons.org/laravel', false);
+        ->assertSee('https://cdn.simpleicons.org/laravel', false)
+        ->assertDontSee('Nivel 5 de 5');
 });
 
 it('renders technology icons inside the featured-project carousel', function (): void {
@@ -78,7 +78,6 @@ it('renders technology icons inside the featured-project carousel', function ():
         'name' => 'Laravel',
         'slug' => 'laravel',
         'group' => 'Backend',
-        'level' => 5,
         'icon' => 'si:laravel',
         'is_featured' => true,
         'sort_order' => 1,

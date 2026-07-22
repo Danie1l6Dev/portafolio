@@ -3,11 +3,14 @@
 use App\Models\Category;
 use App\Models\Experience;
 use App\Models\Project;
+use App\Models\Skill;
 use App\Models\User;
 use App\Services\ImageService;
+use Database\Seeders\SkillSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 
 uses(RefreshDatabase::class);
@@ -110,6 +113,39 @@ it('creates categories for authenticated administrators', function (): void {
         'name' => 'Laravel Backend',
         'slug' => 'laravel-backend',
     ]);
+});
+
+it('stores and exposes technologies without subjective levels', function (): void {
+    $user = User::factory()->create(['role' => 'admin']);
+
+    $response = $this->actingAs($user)
+        ->postJson(route('admin.skills.store'), [
+            'name' => 'Laravel',
+            'group' => 'Backend',
+            'icon' => 'si:laravel',
+            'sort_order' => 1,
+            'is_featured' => true,
+            'level' => 5,
+        ])
+        ->assertCreated();
+
+    $skill = Skill::query()->where('slug', 'laravel')->firstOrFail();
+    $publicResponse = $this->getJson(route('backend.skills.index'))->assertOk();
+
+    expect(Schema::hasColumn('skills', 'level'))->toBeFalse()
+        ->and($skill->getAttributes())->not->toHaveKey('level')
+        ->and($response->json('data'))->not->toHaveKey('level')
+        ->and($publicResponse->json('data.0'))->not->toHaveKey('level');
+});
+
+it('seeds the technology catalog without level metadata', function (): void {
+    $this->seed(SkillSeeder::class);
+
+    $laravel = Skill::query()->where('slug', 'laravel')->firstOrFail();
+
+    expect($laravel->name)->toBe('Laravel')
+        ->and($laravel->icon)->toBe('si:laravel')
+        ->and($laravel->getAttributes())->not->toHaveKey('level');
 });
 
 it('allows editors to manage portfolio content', function (): void {

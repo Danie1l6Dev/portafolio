@@ -12,14 +12,12 @@ class Skill extends Model
         'name',
         'slug',
         'group',
-        'level',
         'icon',
         'sort_order',
         'is_featured',
     ];
 
     protected $casts = [
-        'level' => 'integer',
         'sort_order' => 'integer',
         'is_featured' => 'boolean',
     ];

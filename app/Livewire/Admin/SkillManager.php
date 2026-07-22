@@ -32,8 +32,6 @@ class SkillManager extends Component
 
     public string $group = '';
 
-    public int $level = 1;
-
     public string $icon = '';
 
     public int $sortOrder = 0;
@@ -74,7 +72,6 @@ class SkillManager extends Component
         $this->editingSkillId = $skill->id;
         $this->name = $skill->name;
         $this->group = $skill->group ?? '';
-        $this->level = $skill->level;
         $this->icon = $skill->icon ?? '';
         $this->sortOrder = $skill->sort_order;
         $this->isFeatured = $skill->is_featured;
@@ -89,7 +86,6 @@ class SkillManager extends Component
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:100', Rule::unique('skills', 'name')->ignore($this->editingSkillId)],
             'group' => ['nullable', Rule::enum(SkillGroup::class)],
-            'level' => ['required', 'integer', 'min:1', 'max:5'],
             'icon' => ['nullable', 'string', 'max:255'],
             'sortOrder' => ['required', 'integer', 'min:0'],
             'isFeatured' => ['boolean'],
@@ -100,7 +96,6 @@ class SkillManager extends Component
         $skill->fill([
             'name' => $validated['name'],
             'group' => filled($validated['group']) ? $validated['group'] : null,
-            'level' => $validated['level'],
             'icon' => filled($validated['icon']) ? $validated['icon'] : null,
             'sort_order' => $validated['sortOrder'],
             'is_featured' => $validated['isFeatured'],
@@ -188,7 +183,6 @@ class SkillManager extends Component
     private function resetForm(): void
     {
         $this->reset('showForm', 'editingSkillId', 'name', 'group', 'icon', 'sortOrder', 'isFeatured');
-        $this->level = 1;
         $this->resetErrorBag();
     }
 }

@@ -19,7 +19,6 @@ class StoreSkillRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:100', 'unique:skills,name'],
             'group' => ['nullable', Rule::enum(SkillGroup::class)],
-            'level' => ['nullable', 'integer', 'min:1', 'max:5'],
             'icon' => ['nullable', 'string', 'max:255'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
             'is_featured' => ['nullable', 'boolean'],
@@ -32,8 +31,6 @@ class StoreSkillRequest extends FormRequest
             'name.required' => 'El nombre de la habilidad es obligatorio.',
             'name.unique' => 'Ya existe una habilidad con ese nombre.',
             'group.enum' => 'El grupo seleccionado no es valido.',
-            'level.min' => 'El nivel minimo es 1.',
-            'level.max' => 'El nivel maximo es 5.',
         ];
     }
 }

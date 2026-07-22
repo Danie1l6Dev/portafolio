@@ -151,7 +151,7 @@
 
     <section id="habilidades" class="portfolio-section border-y border-ink-950/8 bg-paper-100 py-20 sm:py-28 lg:py-32">
         <div class="portfolio-container">
-            <x-portfolio.section-heading index="03" eyebrow="Herramientas" title="Un stack pensado como sistema." description="Tecnologías agrupadas por el papel que cumplen, no como una nube de logotipos." />
+            <x-portfolio.section-heading index="03" eyebrow="Herramientas" title="Tecnologías con las que construyo." description="Agrupadas por el papel que cumplen en mis proyectos y conectadas con trabajo real." />
 
             <div class="grid gap-6 lg:grid-cols-2">
                 @foreach ($skills as $group => $groupSkills)

@@ -17,7 +17,6 @@ class SkillResource extends JsonResource
             'name' => $this->name,
             'slug' => $this->slug,
             'group' => $this->group,
-            'level' => $this->level,
             'icon' => $this->icon,
             'sort_order' => $this->sort_order,
             'is_featured' => $this->is_featured,
