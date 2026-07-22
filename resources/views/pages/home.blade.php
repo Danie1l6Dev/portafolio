@@ -114,9 +114,12 @@
                     class="mb-0"
                 />
 
-                <p class="max-w-md border-l-2 border-signal-500 pl-5 text-sm leading-7 text-ink-600 dark:text-slate-300 lg:mb-1">
-                    Mi objetivo es que cada decisión técnica haga el sistema más claro para quien lo usa y más sostenible para quien lo mantiene.
-                </p>
+                <aside class="max-w-md border-l-2 border-signal-500 pl-5 lg:mb-1" aria-label="Formación académica">
+                    <span class="font-mono text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-signal-700 dark:text-signal-300">Formación actual</span>
+                    <h3 class="mt-2 text-lg font-semibold tracking-tight text-ink-950 dark:text-white">{{ config('portfolio.education.program') }}</h3>
+                    <p class="mt-1 text-sm leading-6 text-ink-600 dark:text-slate-300">{{ config('portfolio.education.institution') }}</p>
+                    <p class="mt-2 font-mono text-[0.68rem] uppercase tracking-[0.12em] text-ink-400 dark:text-slate-500">{{ config('portfolio.education.period') }} · {{ config('portfolio.education.location') }}</p>
+                </aside>
             </div>
 
             <div class="profile-panel mt-12 lg:mt-16" data-reveal>
@@ -129,15 +132,32 @@
                     </div>
 
                     <div class="mt-10 border-t border-ink-950/8 pt-6 dark:border-white/10">
-                        <p class="font-mono text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-ink-400 dark:text-slate-500">De la necesidad al producto</p>
-                        <div class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-ink-600 dark:text-slate-300" aria-label="Proceso de trabajo">
-                            <span>Entender</span>
-                            <span class="text-signal-600 dark:text-signal-400" aria-hidden="true">→</span>
-                            <span>Diseñar</span>
-                            <span class="text-signal-600 dark:text-signal-400" aria-hidden="true">→</span>
-                            <span>Construir</span>
-                            <span class="text-signal-600 dark:text-signal-400" aria-hidden="true">→</span>
-                            <span>Validar</span>
+                        <div class="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
+                            <div>
+                                <p class="font-mono text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-ink-400 dark:text-slate-500">De la necesidad al producto</p>
+                                <div class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-ink-600 dark:text-slate-300" aria-label="Proceso de trabajo">
+                                    <span>Entender</span>
+                                    <span class="text-signal-600 dark:text-signal-400" aria-hidden="true">→</span>
+                                    <span>Diseñar</span>
+                                    <span class="text-signal-600 dark:text-signal-400" aria-hidden="true">→</span>
+                                    <span>Construir</span>
+                                    <span class="text-signal-600 dark:text-signal-400" aria-hidden="true">→</span>
+                                    <span>Validar</span>
+                                </div>
+                            </div>
+
+                            <a
+                                href="{{ asset(config('portfolio.resume.path')) }}"
+                                download="{{ config('portfolio.resume.download_name') }}"
+                                type="application/pdf"
+                                class="portfolio-button portfolio-button--secondary portfolio-button--small shrink-0"
+                                data-resume-download
+                            >
+                                Descargar hoja de vida
+                                <svg aria-hidden="true" class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0 0 4-4m-4 4-4-4M5 20h14" />
+                                </svg>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -212,9 +232,9 @@
     </section>
 
     @if ($experiences->isNotEmpty())
-        <section id="experiencia" class="portfolio-section py-20 sm:py-28 lg:py-32">
+        <section id="experiencia" class="portfolio-section bg-paper-50 py-20 dark:bg-[#07111f] sm:py-28 lg:py-32">
             <div class="portfolio-container grid gap-12 lg:grid-cols-[.72fr_1.28fr] lg:gap-20">
-                <x-portfolio.section-heading index="04" eyebrow="Trayectoria" title="Experiencia profesional." />
+                <x-portfolio.section-heading index="04" eyebrow="Trayectoria" title="Experiencia y acompañamiento académico." description="Trabajo aplicado en desarrollo de software y formación en fundamentos de programación." />
                 <div class="lg:pt-10" data-reveal>
                     @foreach ($experiences as $experience)
                         <x-portfolio.experience-item :experience="$experience" :index="$loop->iteration" />
@@ -224,7 +244,7 @@
         </section>
     @endif
 
-    <section id="contacto" class="portfolio-section bg-paper-50 py-20 text-ink-950 dark:bg-[#07111f] dark:text-white sm:py-28 lg:py-32">
+    <section id="contacto" class="portfolio-section bg-paper-100 py-20 text-ink-950 dark:bg-[#0a1525] dark:text-white sm:py-28 lg:py-32">
         <div class="portfolio-container grid gap-14 lg:grid-cols-[.82fr_1.18fr] lg:gap-24">
             <div>
                 <div class="mb-5 flex items-center gap-3">

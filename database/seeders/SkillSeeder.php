@@ -20,6 +20,8 @@ class SkillSeeder extends Seeder
             ['Livewire',        'Backend',       'si:livewire',     true,  12],
             ['Eloquent ORM',    'Backend',       'si:laravel',      false, 13],
             ['Laravel Sanctum', 'Backend',       'si:laravel',      false, 14],
+            ['Python',           'Backend',       'si:python',       false, 15],
+            ['Java',             'Backend',       'si:openjdk',      false, 16],
 
             // ── Frontend ──────────────────────────────────────
             ['Tailwind CSS',    'Frontend',      'si:tailwindcss',  true,  30],
@@ -31,6 +33,8 @@ class SkillSeeder extends Seeder
             // ── Base de datos ──────────────────────────────────
             ['MySQL',           'Base de datos', 'si:mysql',        true,  50],
             ['SQLite',          'Base de datos', 'si:sqlite',       false, 51],
+            ['SQL Server',       'Base de datos', null,                    false, 52],
+            ['MongoDB',          'Base de datos', 'si:mongodb',      false, 53],
 
             // ── DevOps ────────────────────────────────────────
             ['Docker',          'DevOps',        'si:docker',       false, 70],
@@ -39,6 +43,7 @@ class SkillSeeder extends Seeder
             ['Git / GitHub',    'Tools',         'si:github',       true,  90],
             ['Vite',            'Tools',         'si:vite',         false, 91],
             ['PHPUnit / PEST',  'Tools',         'si:php',          false, 92],
+            ['Figma',            'Tools',         'si:figma',        false, 93],
         ];
 
         // Elimina habilidades que ya no están en la lista

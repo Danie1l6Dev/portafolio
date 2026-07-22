@@ -4,17 +4,27 @@ return [
     'name' => env('PORTFOLIO_NAME', 'Daniel Sierra'),
     'initials' => env('PORTFOLIO_INITIALS', 'DS'),
     'email' => env('PORTFOLIO_EMAIL', 'danielsierra103@gmail.com'),
-    'role' => env('PORTFOLIO_ROLE', 'Desarrollador de software'),
+    'role' => env('PORTFOLIO_ROLE', 'Desarrollador de software · Ingeniería de Sistemas en formación'),
     'description' => env(
         'PORTFOLIO_DESCRIPTION',
-        'Desarrollador de software. Proyectos, habilidades y experiencia profesional.',
+        'Desarrollador de software enfocado en aplicaciones web, automatización de procesos y gestión de datos.',
     ),
     'hero_title' => 'Transformo procesos operativos en',
     'hero_highlight' => 'aplicaciones web claras.',
-    'intro' => 'Diseño y desarrollo sistemas con Laravel que reúnen datos, usuarios y tareas en una experiencia fácil de usar y mantener.',
-    'about' => 'Me especializo en transformar necesidades operativas en aplicaciones web claras y confiables. Trabajo principalmente con PHP, Laravel, Livewire y Tailwind CSS, cuidando tanto la arquitectura como la experiencia de quienes usan el producto.',
+    'intro' => 'Desarrollo aplicaciones con Laravel para digitalizar registros, inventarios y flujos administrativos mediante interfaces claras, reportes y datos organizados.',
+    'about' => 'Soy estudiante de Ingeniería de Sistemas en la Universidad de La Guajira y desarrollador de software con experiencia construyendo soluciones para procesos institucionales. Desde 2023 también acompaño a estudiantes como tutor académico en lógica de programación y resolución de problemas.',
     'availability' => 'Disponible para proyectos freelance, colaboraciones y nuevas oportunidades.',
     'response_time' => 'Normalmente respondo en menos de 48 horas.',
+    'education' => [
+        'program' => 'Ingeniería de Sistemas',
+        'institution' => 'Universidad de La Guajira',
+        'period' => '2022 — Actualidad',
+        'location' => 'Maicao, La Guajira',
+    ],
+    'resume' => [
+        'path' => 'documents/hoja-de-vida-daniel-sierra.pdf',
+        'download_name' => 'Hoja de vida - Daniel Sierra.pdf',
+    ],
     'services' => [
         [
             'label' => 'Centralizar',

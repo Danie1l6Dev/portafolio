@@ -3,6 +3,7 @@
 use App\Models\Experience;
 use App\Models\Project;
 use App\Models\Skill;
+use Database\Seeders\ExperienceSeeder;
 use Illuminate\Support\Facades\Storage;
 
 function homeProject(array $attributes = []): Project
@@ -183,6 +184,32 @@ it('adds the experience section only when real experience data exists', function
         ->assertSee('id="experiencia"', false)
         ->assertSee('Universidad de La Guajira')
         ->assertSee('Experiencia');
+});
+
+it('seeds the verified academic tutoring experience idempotently', function (): void {
+    $this->seed(ExperienceSeeder::class);
+    $this->seed(ExperienceSeeder::class);
+
+    $this->assertDatabaseCount('experiences', 1)
+        ->assertDatabaseHas('experiences', [
+            'company' => 'Universidad de La Guajira',
+            'position' => 'Tutor académico de programación',
+            'started_at' => '2023-09-01 00:00:00',
+            'is_current' => true,
+        ]);
+});
+
+it('offers the public resume as a downloadable pdf', function (): void {
+    $resumePath = 'documents/hoja-de-vida-daniel-sierra.pdf';
+
+    expect(file_exists(public_path($resumePath)))->toBeTrue()
+        ->and(filesize(public_path($resumePath)))->toBeGreaterThan(250_000);
+
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertSee('data-resume-download', false)
+        ->assertSee(asset($resumePath), false)
+        ->assertSee('download="Hoja de vida - Daniel Sierra.pdf"', false);
 });
 
 it('redirects former section pages back to their one-page anchors', function (string $routeName, string $anchor): void {
