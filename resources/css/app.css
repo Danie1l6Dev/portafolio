@@ -102,7 +102,7 @@
     }
 
     .portfolio-nav {
-        @apply sticky top-0 z-50 border-b border-ink-950/8 bg-paper-50/88 backdrop-blur-xl dark:border-white/10 dark:bg-[#040b16];
+        @apply sticky top-0 z-50 border-b border-ink-950/8 bg-paper-200 backdrop-blur-xl dark:border-white/10 dark:bg-[#040b16];
     }
 
     .skip-link {
@@ -187,12 +187,36 @@
         @apply flex flex-col gap-4 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6;
     }
 
-    .portfolio-note {
-        @apply rounded-2xl border border-ink-950/8 bg-paper-50 p-5 text-sm leading-6 text-ink-600 shadow-[0_1px_2px_rgba(9,18,35,.03)] dark:border-white/10 dark:bg-white/[.045] dark:text-slate-300;
+    .profile-panel {
+        @apply grid overflow-hidden rounded-[1.75rem] border border-ink-950/8 bg-paper-50 shadow-[0_22px_60px_-42px_rgba(9,18,35,.28)] dark:border-white/10 dark:bg-[#0d1a2b] dark:shadow-[0_28px_80px_-48px_rgba(0,0,0,.9)] lg:grid-cols-[minmax(0,1.08fr)_minmax(22rem,.92fr)];
     }
 
-    .portfolio-note__index {
-        @apply mb-7 block font-mono text-[0.65rem] font-semibold tracking-[0.18em] text-signal-700 dark:text-signal-300;
+    .profile-panel__intro {
+        @apply flex min-w-0 flex-col justify-between p-6 sm:p-8 lg:p-10;
+    }
+
+    .profile-panel__label {
+        @apply font-mono text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-signal-700 dark:text-signal-300;
+    }
+
+    .profile-principles {
+        @apply divide-y divide-ink-950/8 border-t border-ink-950/8 bg-white/45 dark:divide-white/10 dark:border-white/10 dark:bg-white/[.025] lg:border-l lg:border-t-0;
+    }
+
+    .profile-principle {
+        @apply grid min-h-44 grid-cols-[2.5rem_1fr] gap-4 p-6 transition-colors duration-200 hover:bg-white/70 dark:hover:bg-white/[.04] sm:grid-cols-[3rem_1fr] sm:p-8;
+    }
+
+    .profile-principle__index {
+        @apply pt-1 font-mono text-[0.65rem] font-semibold tracking-[0.18em] text-signal-700 dark:text-signal-300;
+    }
+
+    .profile-principle__title {
+        @apply text-lg font-semibold tracking-[-0.02em] text-ink-950 dark:text-white;
+    }
+
+    .profile-principle__copy {
+        @apply mt-3 max-w-md text-sm leading-7 text-ink-600 dark:text-slate-300;
     }
 
     .portfolio-empty {

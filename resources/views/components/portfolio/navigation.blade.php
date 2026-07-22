@@ -102,7 +102,7 @@
         x-transition:leave="transition duration-150 ease-in"
         x-transition:leave-start="translate-y-0 opacity-100"
         x-transition:leave-end="-translate-y-2 opacity-0"
-        class="absolute inset-x-0 top-full border-t border-ink-950/8 bg-paper-50/98 px-4 pb-5 pt-3 shadow-lg backdrop-blur-xl dark:border-white/10 dark:bg-[#040b16] lg:hidden"
+        class="absolute inset-x-0 top-full border-t border-ink-950/8 bg-paper-200 px-4 pb-5 pt-3 shadow-lg backdrop-blur-xl dark:border-white/10 dark:bg-[#040b16] lg:hidden"
     >
         <div class="portfolio-container grid gap-1">
             @foreach ($items as $item)

@@ -103,28 +103,68 @@
         </div>
     </section>
 
-    <section id="sobre-mi" class="portfolio-section border-y border-ink-950/8 bg-white/55 py-20 dark:border-white/10 dark:bg-white/[.025] sm:py-28 lg:py-32">
-        <div class="portfolio-container grid gap-12 lg:grid-cols-[.72fr_1.28fr] lg:gap-20">
-            <x-portfolio.section-heading index="01" eyebrow="Perfil" title="Código con contexto, no solo entregables." />
+    <section id="sobre-mi" class="portfolio-section border-y border-ink-950/8 bg-paper-100 py-20 dark:border-white/10 dark:bg-[#0a1525] sm:py-28 lg:py-32">
+        <div class="portfolio-container">
+            <div class="grid gap-8 lg:grid-cols-[minmax(0,.78fr)_minmax(22rem,.42fr)] lg:items-end lg:gap-16">
+                <x-portfolio.section-heading
+                    index="01"
+                    eyebrow="Perfil"
+                    title="Código con contexto, no solo entregables."
+                    description="Conecto la necesidad operativa con la arquitectura, la interfaz y la calidad del producto."
+                    class="mb-0"
+                />
 
-            <div class="lg:pt-10" data-reveal>
-                <p class="max-w-3xl text-balance text-2xl font-medium leading-[1.35] tracking-[-0.025em] text-ink-900 dark:text-slate-100 sm:text-3xl">
-                    {{ config('portfolio.about') }}
+                <p class="max-w-md border-l-2 border-signal-500 pl-5 text-sm leading-7 text-ink-600 dark:text-slate-300 lg:mb-1">
+                    Mi objetivo es que cada decisión técnica haga el sistema más claro para quien lo usa y más sostenible para quien lo mantiene.
                 </p>
-                <div class="mt-10 grid gap-4 sm:grid-cols-3">
-                    <div class="portfolio-note">
-                        <span class="portfolio-note__index">01</span>
-                        <p>Arquitectura mantenible y decisiones técnicas claras.</p>
+            </div>
+
+            <div class="profile-panel mt-12 lg:mt-16" data-reveal>
+                <div class="profile-panel__intro">
+                    <div>
+                        <span class="profile-panel__label">Enfoque profesional</span>
+                        <p class="mt-5 max-w-2xl text-balance text-2xl font-medium leading-[1.35] tracking-[-0.03em] text-ink-950 dark:text-white sm:text-3xl">
+                            {{ config('portfolio.about') }}
+                        </p>
                     </div>
-                    <div class="portfolio-note">
-                        <span class="portfolio-note__index">02</span>
-                        <p>Interfaces útiles para procesos reales y personas reales.</p>
-                    </div>
-                    <div class="portfolio-note">
-                        <span class="portfolio-note__index">03</span>
-                        <p>Calidad respaldada por validación y pruebas automatizadas.</p>
+
+                    <div class="mt-10 border-t border-ink-950/8 pt-6 dark:border-white/10">
+                        <p class="font-mono text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-ink-400 dark:text-slate-500">De la necesidad al producto</p>
+                        <div class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-ink-600 dark:text-slate-300" aria-label="Proceso de trabajo">
+                            <span>Entender</span>
+                            <span class="text-signal-600 dark:text-signal-400" aria-hidden="true">→</span>
+                            <span>Diseñar</span>
+                            <span class="text-signal-600 dark:text-signal-400" aria-hidden="true">→</span>
+                            <span>Construir</span>
+                            <span class="text-signal-600 dark:text-signal-400" aria-hidden="true">→</span>
+                            <span>Validar</span>
+                        </div>
                     </div>
                 </div>
+
+                <ol class="profile-principles" aria-label="Principios de trabajo">
+                    <li class="profile-principle">
+                        <span class="profile-principle__index">01</span>
+                        <div>
+                            <h3 class="profile-principle__title">Arquitectura con intención</h3>
+                            <p class="profile-principle__copy">Estructuras mantenibles y decisiones técnicas que siguen siendo claras cuando el proyecto crece.</p>
+                        </div>
+                    </li>
+                    <li class="profile-principle">
+                        <span class="profile-principle__index">02</span>
+                        <div>
+                            <h3 class="profile-principle__title">Experiencias útiles</h3>
+                            <p class="profile-principle__copy">Interfaces pensadas alrededor de procesos reales, con menos fricción para las personas.</p>
+                        </div>
+                    </li>
+                    <li class="profile-principle">
+                        <span class="profile-principle__index">03</span>
+                        <div>
+                            <h3 class="profile-principle__title">Calidad verificable</h3>
+                            <p class="profile-principle__copy">Validaciones y pruebas automatizadas que respaldan el comportamiento del producto.</p>
+                        </div>
+                    </li>
+                </ol>
             </div>
         </div>
     </section>
@@ -184,25 +224,25 @@
         </section>
     @endif
 
-    <section id="contacto" class="portfolio-section bg-ink-950 py-20 text-white dark:bg-[#040b16] sm:py-28 lg:py-32">
+    <section id="contacto" class="portfolio-section bg-paper-50 py-20 text-ink-950 dark:bg-[#07111f] dark:text-white sm:py-28 lg:py-32">
         <div class="portfolio-container grid gap-14 lg:grid-cols-[.82fr_1.18fr] lg:gap-24">
             <div>
                 <div class="mb-5 flex items-center gap-3">
                     <span class="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-signal-300">{{ $experiences->isNotEmpty() ? '05' : '04' }}</span>
                     <span class="h-px w-8 bg-signal-400" aria-hidden="true"></span>
-                    <span class="font-mono text-[0.68rem] uppercase tracking-[0.2em] text-white/45">Contacto</span>
+                    <span class="font-mono text-[0.68rem] uppercase tracking-[0.2em] text-ink-500 dark:text-white/45">Contacto</span>
                 </div>
                 <h2 class="max-w-xl text-balance text-4xl font-semibold tracking-[-0.045em] sm:text-5xl lg:text-6xl">Convirtamos una necesidad en un producto útil.</h2>
-                <p class="mt-6 max-w-xl text-pretty text-base leading-8 text-white/60">{{ config('portfolio.availability') }} {{ config('portfolio.response_time') }}</p>
+                <p class="mt-6 max-w-xl text-pretty text-base leading-8 text-ink-600 dark:text-white/60">{{ config('portfolio.availability') }} {{ config('portfolio.response_time') }}</p>
 
                 <div class="mt-10 space-y-3">
-                    <a href="mailto:{{ config('portfolio.email') }}" class="inline-flex min-h-11 items-center gap-3 text-sm font-medium text-white/75 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-400">
-                        <span class="grid size-9 place-items-center rounded-xl border border-white/12" aria-hidden="true">@</span>
+                    <a href="mailto:{{ config('portfolio.email') }}" class="inline-flex min-h-11 items-center gap-3 text-sm font-medium text-ink-700 transition-colors hover:text-ink-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-400 dark:text-white/75 dark:hover:text-white">
+                        <span class="grid size-9 place-items-center rounded-xl border border-ink-950/12 dark:border-white/12" aria-hidden="true">@</span>
                         {{ config('portfolio.email') }}
                     </a>
                     <div class="flex flex-wrap gap-2 pt-2">
                         @foreach (config('portfolio.socials') as $social)
-                            <a href="{{ $social['url'] }}" target="_blank" rel="noopener noreferrer" aria-label="Abrir {{ $social['name'] }} en una pestaña nueva" class="grid size-11 place-items-center rounded-xl border border-white/12 text-white/55 transition-[color,border-color,transform] hover:-translate-y-0.5 hover:border-white/25 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-400">
+                            <a href="{{ $social['url'] }}" target="_blank" rel="noopener noreferrer" aria-label="Abrir {{ $social['name'] }} en una pestaña nueva" class="grid size-11 place-items-center rounded-xl border border-ink-950/12 text-ink-500 transition-[color,border-color,transform] hover:-translate-y-0.5 hover:border-ink-950/25 hover:text-ink-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-400 dark:border-white/12 dark:text-white/55 dark:hover:border-white/25 dark:hover:text-white">
                                 <x-portfolio.social-icon :name="$social['icon']" class="size-4" />
                             </a>
                         @endforeach
