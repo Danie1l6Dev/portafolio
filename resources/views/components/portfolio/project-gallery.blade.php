@@ -8,7 +8,7 @@
 
 @if ($images->isNotEmpty())
     <section
-        class="mt-16 border-t border-slate-200 pt-10 sm:mt-20 sm:pt-12"
+        class="mt-16 border-t border-slate-200 pt-10 dark:border-white/10 sm:mt-20 sm:pt-12"
         aria-labelledby="project-gallery-title"
         x-data="{
             image: '',
@@ -25,8 +25,8 @@
     >
         <div class="mb-6 flex items-end justify-between gap-4">
             <div>
-                <p class="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-sky-700">Archivo visual</p>
-                <h2 id="project-gallery-title" class="mt-2 text-2xl font-semibold tracking-[-0.025em] text-slate-950">
+                <p class="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-sky-700 dark:text-sky-300">Archivo visual</p>
+                <h2 id="project-gallery-title" class="mt-2 text-2xl font-semibold tracking-[-0.025em] text-slate-950 dark:text-white">
                     Capturas del proyecto
                 </h2>
             </div>
@@ -42,7 +42,7 @@
 
                 <button
                     type="button"
-                    class="group relative aspect-video overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 text-left shadow-[0_16px_35px_-30px_rgba(15,23,42,0.5)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2"
+                    class="group relative aspect-video overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 text-left shadow-[0_16px_35px_-30px_rgba(15,23,42,0.5)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 dark:border-white/10 dark:bg-[#0d1a2b] dark:focus-visible:ring-offset-[#07111f]"
                     x-on:click="open(@js($imageUrl), @js($imageAlt))"
                     aria-label="Ampliar: {{ $imageAlt }}"
                 >

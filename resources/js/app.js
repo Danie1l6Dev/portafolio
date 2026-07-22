@@ -2,11 +2,21 @@ document.addEventListener('alpine:init', () => {
     window.Alpine.data('portfolioNavigation', (sectionIds = [], initialSection = null) => ({
         open: false,
         active: initialSection,
+        theme: document.documentElement.dataset.theme === 'light' ? 'light' : 'dark',
         sections: [],
         activeFrame: null,
         syncActiveHandler: null,
+        themeStorageHandler: null,
 
         init() {
+            this.themeStorageHandler = (event) => {
+                if (event.key === 'portfolio-theme') {
+                    this.applyTheme(event.newValue === 'light' ? 'light' : 'dark', false);
+                }
+            };
+
+            window.addEventListener('storage', this.themeStorageHandler);
+
             this.sections = sectionIds
                 .map((id) => document.getElementById(id))
                 .filter(Boolean);
@@ -56,6 +66,10 @@ document.addEventListener('alpine:init', () => {
         },
 
         destroy() {
+            if (this.themeStorageHandler) {
+                window.removeEventListener('storage', this.themeStorageHandler);
+            }
+
             if (this.syncActiveHandler) {
                 window.removeEventListener('scroll', this.syncActiveHandler);
                 window.removeEventListener('resize', this.syncActiveHandler);
@@ -70,6 +84,30 @@ document.addEventListener('alpine:init', () => {
 
         toggleMenu() {
             this.open = !this.open;
+        },
+
+        toggleTheme() {
+            this.applyTheme(this.theme === 'dark' ? 'light' : 'dark');
+        },
+
+        applyTheme(theme, persist = true) {
+            this.theme = theme;
+
+            const root = document.documentElement;
+            root.classList.toggle('dark', theme === 'dark');
+            root.dataset.theme = theme;
+            root.style.colorScheme = theme;
+
+            document.querySelector('#portfolio-theme-color')
+                ?.setAttribute('content', theme === 'dark' ? '#07111f' : '#f7f9fb');
+
+            if (persist) {
+                try {
+                    window.localStorage.setItem('portfolio-theme', theme);
+                } catch (_) {
+                    // El tema sigue funcionando durante la sesión aunque el almacenamiento esté bloqueado.
+                }
+            }
         },
 
         closeMenu() {

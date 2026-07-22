@@ -8,19 +8,19 @@
 ])
 
 @section('content')
-    <div class="min-h-screen bg-slate-50 text-slate-950">
+    <div class="min-h-screen bg-slate-50 text-slate-950 transition-colors dark:bg-[#07111f] dark:text-slate-100">
         <div class="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
             <nav class="mb-10" aria-label="Ruta de navegación">
-                <ol class="flex flex-wrap items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-400">
+                <ol class="flex flex-wrap items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500">
                     <li>
-                        <a href="{{ route('home') }}" class="transition-colors hover:text-sky-700 focus-visible:rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500">Inicio</a>
+                        <a href="{{ route('home') }}" class="transition-colors hover:text-sky-700 focus-visible:rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 dark:hover:text-sky-300">Inicio</a>
                     </li>
                     <li aria-hidden="true">/</li>
                     <li>
-                        <a href="{{ route('portfolio.projects.index') }}" class="transition-colors hover:text-sky-700 focus-visible:rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500">Proyectos</a>
+                        <a href="{{ route('portfolio.projects.index') }}" class="transition-colors hover:text-sky-700 focus-visible:rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 dark:hover:text-sky-300">Proyectos</a>
                     </li>
                     <li aria-hidden="true">/</li>
-                    <li class="max-w-48 truncate text-slate-700" aria-current="page">{{ $project->title }}</li>
+                    <li class="max-w-48 truncate text-slate-700 dark:text-slate-300" aria-current="page">{{ $project->title }}</li>
                 </ol>
             </nav>
 
@@ -29,13 +29,13 @@
                     <div>
                         <div class="flex flex-wrap items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em]">
                             @if ($project->category)
-                                <span class="rounded-full bg-sky-50 px-3 py-1.5 text-sky-700 ring-1 ring-inset ring-sky-100">
+                                <span class="rounded-full bg-sky-50 px-3 py-1.5 text-sky-700 ring-1 ring-inset ring-sky-100 dark:bg-sky-400/10 dark:text-sky-300 dark:ring-sky-400/20">
                                     {{ $project->category->name }}
                                 </span>
                             @endif
 
                             @if ($project->isInProgress())
-                                <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-emerald-700 ring-1 ring-inset ring-emerald-100">
+                                <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-emerald-700 ring-1 ring-inset ring-emerald-100 dark:bg-emerald-400/10 dark:text-emerald-300 dark:ring-emerald-400/20">
                                     <span class="size-1.5 rounded-full bg-emerald-500" aria-hidden="true"></span>
                                     En curso
                                 </span>
@@ -46,7 +46,7 @@
                             {{ $project->title }}
                         </h1>
 
-                        <p class="mt-6 max-w-3xl text-lg leading-8 text-slate-600 sm:text-xl sm:leading-9">
+                        <p class="mt-6 max-w-3xl text-lg leading-8 text-slate-600 dark:text-slate-300 sm:text-xl sm:leading-9">
                             {{ $project->summary }}
                         </p>
                     </div>
@@ -54,12 +54,12 @@
                     <dl class="border-l-2 border-sky-500 pl-5 text-sm">
                         <div>
                             <dt class="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-slate-400">Proyecto</dt>
-                            <dd class="mt-1 font-semibold text-slate-900">#{{ str_pad((string) $project->id, 2, '0', STR_PAD_LEFT) }}</dd>
+                            <dd class="mt-1 font-semibold text-slate-900 dark:text-white">#{{ str_pad((string) $project->id, 2, '0', STR_PAD_LEFT) }}</dd>
                         </div>
                         @if ($project->started_at)
                             <div class="mt-5">
                                 <dt class="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-slate-400">Periodo</dt>
-                                <dd class="mt-1 font-semibold text-slate-900">
+                                <dd class="mt-1 font-semibold text-slate-900 dark:text-white">
                                     <time datetime="{{ $project->started_at->toDateString() }}">{{ $project->started_at->format('Y') }}</time>
                                     <span aria-hidden="true">—</span>
                                     @if ($project->finished_at)
@@ -80,7 +80,7 @@
                                 href="{{ $project->demo_url }}"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                class="inline-flex min-h-12 items-center gap-2 rounded-2xl bg-slate-950 px-5 text-sm font-semibold text-white transition hover:bg-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2"
+                                class="inline-flex min-h-12 items-center gap-2 rounded-2xl bg-slate-950 px-5 text-sm font-semibold text-white transition hover:bg-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 dark:bg-signal-600 dark:text-white dark:hover:bg-signal-500 dark:focus-visible:ring-offset-[#07111f]"
                             >
                                 Abrir demostración <span aria-hidden="true">↗</span>
                                 <span class="sr-only">en una pestaña nueva</span>
@@ -91,7 +91,7 @@
                                 href="{{ $project->repo_url }}"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                class="inline-flex min-h-12 items-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-700 transition hover:border-sky-200 hover:bg-sky-50 hover:text-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2"
+                                class="inline-flex min-h-12 items-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-700 transition hover:border-sky-200 hover:bg-sky-50 hover:text-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 dark:border-white/10 dark:bg-white/[.06] dark:text-slate-200 dark:hover:border-sky-400/35 dark:hover:bg-sky-400/10 dark:hover:text-sky-300 dark:focus-visible:ring-offset-[#07111f]"
                             >
                                 Revisar código <span aria-hidden="true">↗</span>
                                 <span class="sr-only">en una pestaña nueva</span>
@@ -100,7 +100,7 @@
                     </div>
                 @endif
 
-                <div class="mt-10 overflow-hidden rounded-3xl border border-slate-200 bg-slate-950 shadow-[0_28px_65px_-40px_rgba(15,23,42,0.75)] sm:mt-12">
+                <div class="mt-10 overflow-hidden rounded-3xl border border-slate-200 bg-slate-950 shadow-[0_28px_65px_-40px_rgba(15,23,42,0.75)] dark:border-white/10 sm:mt-12">
                     @if ($coverUrl)
                         <img
                             src="{{ $coverUrl }}"
@@ -124,19 +124,19 @@
 
                 <div class="mt-14 grid gap-12 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-16 sm:mt-16">
                     <section aria-labelledby="project-story-title">
-                        <p class="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-sky-700">Contexto / solución</p>
-                        <h2 id="project-story-title" class="mt-2 text-2xl font-semibold tracking-[-0.025em] text-slate-950 sm:text-3xl">
+                        <p class="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-sky-700 dark:text-sky-300">Contexto / solución</p>
+                        <h2 id="project-story-title" class="mt-2 text-2xl font-semibold tracking-[-0.025em] text-slate-950 dark:text-white sm:text-3xl">
                             Sobre el proyecto
                         </h2>
 
                         @if ($project->description)
-                            <div class="mt-6 space-y-5 text-base leading-8 text-slate-700">
+                            <div class="mt-6 space-y-5 text-base leading-8 text-slate-700 dark:text-slate-300">
                                 @foreach (preg_split('/\R{2,}/', trim($project->description)) as $paragraph)
                                     <p>{{ trim($paragraph) }}</p>
                                 @endforeach
                             </div>
                         @else
-                            <p class="mt-6 text-base leading-8 text-slate-600">{{ $project->summary }}</p>
+                            <p class="mt-6 text-base leading-8 text-slate-600 dark:text-slate-300">{{ $project->summary }}</p>
                         @endif
                     </section>
 
@@ -145,10 +145,10 @@
                             <h2 id="project-stack-title" class="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-slate-400">
                                 Stack técnico
                             </h2>
-                            <ul class="mt-4 divide-y divide-slate-200 border-y border-slate-200">
+                            <ul class="mt-4 divide-y divide-slate-200 border-y border-slate-200 dark:divide-white/10 dark:border-white/10">
                                 @foreach ($project->skills as $skill)
                                     <li class="flex items-center justify-between gap-3 py-3 text-sm">
-                                        <span class="font-medium text-slate-800">{{ $skill->name }}</span>
+                                        <span class="font-medium text-slate-800 dark:text-slate-200">{{ $skill->name }}</span>
                                         @if ($skill->group)
                                             <span class="font-mono text-[0.65rem] uppercase tracking-wider text-slate-400">{{ $skill->group }}</span>
                                         @endif
@@ -162,10 +162,10 @@
                 <x-portfolio.project-gallery :project="$project" />
             </article>
 
-            <div class="mt-16 border-t border-slate-200 pt-8 sm:mt-20">
+            <div class="mt-16 border-t border-slate-200 pt-8 dark:border-white/10 sm:mt-20">
                 <a
                     href="{{ route('portfolio.projects.index') }}"
-                    class="inline-flex min-h-11 items-center gap-2 rounded-xl text-sm font-semibold text-slate-700 transition-colors hover:text-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2"
+                    class="inline-flex min-h-11 items-center gap-2 rounded-xl text-sm font-semibold text-slate-700 transition-colors hover:text-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 dark:text-slate-300 dark:hover:text-sky-300 dark:focus-visible:ring-offset-[#07111f]"
                 >
                     <span aria-hidden="true">←</span> Volver al archivo de proyectos
                 </a>

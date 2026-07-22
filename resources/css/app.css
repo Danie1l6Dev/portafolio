@@ -85,9 +85,16 @@
 
 @layer components {
     .portfolio-shell {
+        @apply transition-colors duration-300;
         background-image:
             radial-gradient(circle at 12% 8%, rgb(43 169 240 / 0.06), transparent 32rem),
             radial-gradient(circle at 92% 26%, rgb(9 18 35 / 0.035), transparent 30rem);
+    }
+
+    .dark .portfolio-shell {
+        background-image:
+            radial-gradient(circle at 12% 8%, rgb(89 199 251 / 0.1), transparent 34rem),
+            radial-gradient(circle at 92% 26%, rgb(22 137 214 / 0.07), transparent 32rem);
     }
 
     .portfolio-container {
@@ -95,7 +102,7 @@
     }
 
     .portfolio-nav {
-        @apply sticky top-0 z-50 border-b border-ink-950/8 bg-paper-50/88 backdrop-blur-xl;
+        @apply sticky top-0 z-50 border-b border-ink-950/8 bg-paper-50/88 backdrop-blur-xl dark:border-white/10 dark:bg-[#040b16];
     }
 
     .skip-link {
@@ -103,11 +110,11 @@
     }
 
     .portfolio-button {
-        @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-ink-950 px-5 py-3 text-sm font-semibold text-white shadow-[0_1px_2px_rgba(9,18,35,.16),0_7px_20px_rgba(9,18,35,.08)] transition-[transform,background-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-ink-800 hover:shadow-[0_1px_2px_rgba(9,18,35,.2),0_10px_26px_rgba(9,18,35,.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-500 focus-visible:ring-offset-4 focus-visible:ring-offset-paper-50 active:scale-[.97];
+        @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-ink-950 px-5 py-3 text-sm font-semibold text-white shadow-[0_1px_2px_rgba(9,18,35,.16),0_7px_20px_rgba(9,18,35,.08)] transition-[transform,background-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-ink-800 hover:shadow-[0_1px_2px_rgba(9,18,35,.2),0_10px_26px_rgba(9,18,35,.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-500 focus-visible:ring-offset-4 focus-visible:ring-offset-paper-50 active:scale-[.97] dark:bg-signal-600 dark:text-white dark:hover:bg-signal-500 dark:focus-visible:ring-offset-[#07111f];
     }
 
     .portfolio-button--secondary {
-        @apply border border-ink-950/10 bg-white text-ink-900 shadow-sm hover:border-ink-950/20 hover:bg-paper-50;
+        @apply border border-ink-950/10 bg-white text-ink-900 shadow-sm hover:border-ink-950/20 hover:bg-paper-50 dark:border-white/12 dark:bg-white/[.06] dark:text-slate-100 dark:hover:border-signal-400/40 dark:hover:bg-white/[.1];
     }
 
     .portfolio-button--small {
@@ -115,11 +122,11 @@
     }
 
     .portfolio-text-link {
-        @apply inline-flex min-h-11 items-center gap-2 rounded-lg text-sm font-semibold text-signal-700 underline-offset-4 transition-colors hover:text-signal-900 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-500;
+        @apply inline-flex min-h-11 items-center gap-2 rounded-lg text-sm font-semibold text-signal-700 underline-offset-4 transition-colors hover:text-signal-900 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-500 dark:text-signal-300 dark:hover:text-white;
     }
 
     .portfolio-eyebrow {
-        @apply inline-flex max-w-full items-center gap-3 rounded-full border border-ink-950/8 bg-white/70 px-4 py-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-ink-600 shadow-sm backdrop-blur;
+        @apply inline-flex max-w-full items-center gap-3 rounded-full border border-ink-950/8 bg-white/70 px-4 py-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-ink-600 shadow-sm backdrop-blur dark:border-white/10 dark:bg-white/[.06] dark:text-slate-300;
     }
 
     .portfolio-grid-bg {
@@ -130,8 +137,14 @@
         mask-image: linear-gradient(to bottom, black 0%, rgb(0 0 0 / 0.4) 70%, transparent 100%);
     }
 
+    .dark .portfolio-grid-bg {
+        background-image:
+            linear-gradient(rgb(142 220 255 / 0.055) 1px, transparent 1px),
+            linear-gradient(90deg, rgb(142 220 255 / 0.055) 1px, transparent 1px);
+    }
+
     .service-panel {
-        @apply overflow-hidden rounded-[1.75rem] border border-white/8 bg-ink-950 shadow-[0_0_0_1px_rgba(9,18,35,.06),0_24px_70px_-24px_rgba(9,18,35,.38)];
+        @apply overflow-hidden rounded-[1.75rem] border border-white/8 bg-ink-950 shadow-[0_0_0_1px_rgba(9,18,35,.06),0_24px_70px_-24px_rgba(9,18,35,.38)] dark:border-white/12 dark:bg-[#0c192b] dark:shadow-[0_24px_80px_-30px_rgba(0,0,0,.7)];
     }
 
     .service-panel__header {
@@ -175,15 +188,15 @@
     }
 
     .portfolio-note {
-        @apply rounded-2xl border border-ink-950/8 bg-paper-50 p-5 text-sm leading-6 text-ink-600 shadow-[0_1px_2px_rgba(9,18,35,.03)];
+        @apply rounded-2xl border border-ink-950/8 bg-paper-50 p-5 text-sm leading-6 text-ink-600 shadow-[0_1px_2px_rgba(9,18,35,.03)] dark:border-white/10 dark:bg-white/[.045] dark:text-slate-300;
     }
 
     .portfolio-note__index {
-        @apply mb-7 block font-mono text-[0.65rem] font-semibold tracking-[0.18em] text-signal-700;
+        @apply mb-7 block font-mono text-[0.65rem] font-semibold tracking-[0.18em] text-signal-700 dark:text-signal-300;
     }
 
     .portfolio-empty {
-        @apply rounded-[1.5rem] border border-dashed border-ink-950/15 bg-white/50 px-6 py-16 text-center;
+        @apply rounded-[1.5rem] border border-dashed border-ink-950/15 bg-white/50 px-6 py-16 text-center dark:border-white/15 dark:bg-white/[.04];
     }
 
     .featured-project-carousel__track {
@@ -216,11 +229,11 @@
     }
 
     .featured-project-carousel__link {
-        @apply block rounded-[1.75rem] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-500 focus-visible:ring-offset-4 focus-visible:ring-offset-paper-50;
+        @apply block rounded-[1.75rem] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-500 focus-visible:ring-offset-4 focus-visible:ring-offset-paper-50 dark:focus-visible:ring-offset-[#07111f];
     }
 
     .featured-project-carousel__card {
-        @apply overflow-hidden rounded-[1.75rem] border border-ink-950/8 bg-white shadow-[0_18px_48px_-30px_rgba(9,18,35,.32)];
+        @apply overflow-hidden rounded-[1.75rem] border border-ink-950/8 bg-white shadow-[0_18px_48px_-30px_rgba(9,18,35,.32)] dark:border-white/10 dark:bg-[#0d1a2b] dark:shadow-[0_24px_70px_-36px_rgba(0,0,0,.85)];
         transition:
             border-color 250ms ease,
             box-shadow 250ms ease;
@@ -263,7 +276,7 @@
     }
 
     .featured-project-carousel__control {
-        @apply absolute z-20 grid size-11 -translate-y-1/2 place-items-center rounded-full border border-ink-950/10 bg-white/94 text-ink-600 shadow-[0_8px_28px_-12px_rgba(9,18,35,.42)] backdrop-blur transition-[color,border-color,background-color,transform] duration-200 hover:border-signal-200 hover:bg-signal-50 hover:text-signal-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-500 focus-visible:ring-offset-3 focus-visible:ring-offset-paper-50 active:scale-95;
+        @apply absolute z-20 grid size-11 -translate-y-1/2 place-items-center rounded-full border border-ink-950/10 bg-white/94 text-ink-600 shadow-[0_8px_28px_-12px_rgba(9,18,35,.42)] backdrop-blur transition-[color,border-color,background-color,transform] duration-200 hover:border-signal-200 hover:bg-signal-50 hover:text-signal-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-500 focus-visible:ring-offset-3 focus-visible:ring-offset-paper-50 active:scale-95 dark:border-white/12 dark:bg-[#122238]/95 dark:text-slate-200 dark:hover:border-signal-400/50 dark:hover:bg-[#18304b] dark:hover:text-signal-300 dark:focus-visible:ring-offset-[#07111f];
     }
 
     .featured-project-carousel__control--previous {
@@ -275,15 +288,15 @@
     }
 
     .featured-project-carousel__dot {
-        @apply h-1.5 w-1.5 rounded-full bg-ink-300 transition-[width,background-color] duration-300 hover:bg-ink-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-500 focus-visible:ring-offset-3 focus-visible:ring-offset-paper-50;
+        @apply h-1.5 w-1.5 rounded-full bg-ink-300 transition-[width,background-color] duration-300 hover:bg-ink-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-500 focus-visible:ring-offset-3 focus-visible:ring-offset-paper-50 dark:bg-slate-600 dark:hover:bg-slate-400 dark:focus-visible:ring-offset-[#07111f];
     }
 
     .featured-project-carousel__dot[data-active='true'] {
-        @apply w-7 bg-signal-600;
+        @apply w-7 bg-signal-600 dark:bg-signal-600;
     }
 
     .portfolio-skill-group {
-        @apply rounded-[1.5rem] border border-ink-950/8 bg-white/55 p-5 shadow-[0_1px_2px_rgba(9,18,35,.025)] sm:p-6;
+        @apply rounded-[1.5rem] border border-ink-950/8 bg-white/55 p-5 shadow-[0_1px_2px_rgba(9,18,35,.025)] dark:border-white/10 dark:bg-white/[.035] sm:p-6;
     }
 
     [data-reveal][data-reveal-ready='true'] {

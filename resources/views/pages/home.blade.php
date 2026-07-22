@@ -20,12 +20,12 @@
                     {{ config('portfolio.availability') }}
                 </p>
 
-                <h1 class="max-w-4xl text-balance text-[clamp(3rem,4.6vw,5.1rem)] font-semibold leading-[0.94] tracking-[-0.06em] text-ink-950">
+                <h1 class="max-w-4xl text-balance text-[clamp(3rem,4.6vw,5.1rem)] font-semibold leading-[0.94] tracking-[-0.06em] text-ink-950 dark:text-white">
                     {{ config('portfolio.hero_title') }}
-                    <span class="text-signal-600">{{ config('portfolio.hero_highlight') }}</span>
+                    <span class="text-signal-600 dark:text-signal-500">{{ config('portfolio.hero_highlight') }}</span>
                 </h1>
 
-                <p class="mt-7 max-w-2xl text-pretty text-lg leading-8 text-ink-600 sm:text-xl sm:leading-9">
+                <p class="mt-7 max-w-2xl text-pretty text-lg leading-8 text-ink-600 dark:text-slate-300 sm:text-xl sm:leading-9">
                     {{ config('portfolio.intro') }}
                 </p>
 
@@ -37,15 +37,15 @@
                     <a href="#proyectos" class="portfolio-button portfolio-button--secondary">Ver trabajo realizado</a>
                 </div>
 
-                <div class="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4 border-t border-ink-950/8 pt-6">
+                <div class="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4 border-t border-ink-950/8 pt-6 dark:border-white/10">
                     <div>
-                        <p class="font-mono text-xl font-semibold tabular-nums text-ink-950">&lt; 48 h</p>
-                        <p class="mt-1 text-xs text-ink-500">Respuesta habitual</p>
+                        <p class="font-mono text-xl font-semibold tabular-nums text-ink-950 dark:text-white">&lt; 48 h</p>
+                        <p class="mt-1 text-xs text-ink-500 dark:text-slate-400">Respuesta habitual</p>
                     </div>
-                    <div class="h-8 w-px bg-ink-950/10" aria-hidden="true"></div>
+                    <div class="h-8 w-px bg-ink-950/10 dark:bg-white/12" aria-hidden="true"></div>
                     <div>
-                        <p class="font-mono text-xl font-semibold tabular-nums text-ink-950">{{ $featuredProjects->count() }}</p>
-                        <p class="mt-1 text-xs text-ink-500">Casos destacados para revisar</p>
+                        <p class="font-mono text-xl font-semibold tabular-nums text-ink-950 dark:text-white">{{ $featuredProjects->count() }}</p>
+                        <p class="mt-1 text-xs text-ink-500 dark:text-slate-400">Casos destacados para revisar</p>
                     </div>
                 </div>
             </div>
@@ -103,12 +103,12 @@
         </div>
     </section>
 
-    <section id="sobre-mi" class="portfolio-section border-y border-ink-950/8 bg-white/55 py-20 sm:py-28 lg:py-32">
+    <section id="sobre-mi" class="portfolio-section border-y border-ink-950/8 bg-white/55 py-20 dark:border-white/10 dark:bg-white/[.025] sm:py-28 lg:py-32">
         <div class="portfolio-container grid gap-12 lg:grid-cols-[.72fr_1.28fr] lg:gap-20">
             <x-portfolio.section-heading index="01" eyebrow="Perfil" title="Código con contexto, no solo entregables." />
 
             <div class="lg:pt-10" data-reveal>
-                <p class="max-w-3xl text-balance text-2xl font-medium leading-[1.35] tracking-[-0.025em] text-ink-900 sm:text-3xl">
+                <p class="max-w-3xl text-balance text-2xl font-medium leading-[1.35] tracking-[-0.025em] text-ink-900 dark:text-slate-100 sm:text-3xl">
                     {{ config('portfolio.about') }}
                 </p>
                 <div class="mt-10 grid gap-4 sm:grid-cols-3">
@@ -142,14 +142,14 @@
                 <x-portfolio.project-carousel :projects="$featuredProjects" />
             @else
                 <div class="portfolio-empty">
-                    <p class="font-semibold text-ink-900">Aún no hay proyectos destacados.</p>
-                    <p class="mt-2 text-sm text-ink-500">Los proyectos publicados y marcados como destacados aparecerán aquí automáticamente.</p>
+                    <p class="font-semibold text-ink-900 dark:text-slate-100">Aún no hay proyectos destacados.</p>
+                    <p class="mt-2 text-sm text-ink-500 dark:text-slate-400">Los proyectos publicados y marcados como destacados aparecerán aquí automáticamente.</p>
                 </div>
             @endif
         </div>
     </section>
 
-    <section id="habilidades" class="portfolio-section border-y border-ink-950/8 bg-paper-100 py-20 sm:py-28 lg:py-32">
+    <section id="habilidades" class="portfolio-section border-y border-ink-950/8 bg-paper-100 py-20 dark:border-white/10 dark:bg-[#0a1525] sm:py-28 lg:py-32">
         <div class="portfolio-container">
             <x-portfolio.section-heading index="03" eyebrow="Herramientas" title="Tecnologías con las que construyo." description="Agrupadas por el papel que cumplen en mis proyectos y conectadas con trabajo real." />
 
@@ -157,8 +157,8 @@
                 @foreach ($skills as $group => $groupSkills)
                     <section class="portfolio-skill-group" data-reveal aria-labelledby="skill-group-{{ Str::slug($group) }}">
                         <div class="mb-5 flex items-center justify-between gap-4">
-                            <h3 id="skill-group-{{ Str::slug($group) }}" class="text-lg font-semibold tracking-tight text-ink-950">{{ $group }}</h3>
-                            <span class="font-mono text-xs text-ink-400">{{ str_pad((string) $groupSkills->count(), 2, '0', STR_PAD_LEFT) }}</span>
+                            <h3 id="skill-group-{{ Str::slug($group) }}" class="text-lg font-semibold tracking-tight text-ink-950 dark:text-white">{{ $group }}</h3>
+                            <span class="font-mono text-xs text-ink-400 dark:text-slate-500">{{ str_pad((string) $groupSkills->count(), 2, '0', STR_PAD_LEFT) }}</span>
                         </div>
                         <div class="grid gap-2 sm:grid-cols-2">
                             @foreach ($groupSkills as $skill)
@@ -184,7 +184,7 @@
         </section>
     @endif
 
-    <section id="contacto" class="portfolio-section bg-ink-950 py-20 text-white sm:py-28 lg:py-32">
+    <section id="contacto" class="portfolio-section bg-ink-950 py-20 text-white dark:bg-[#040b16] sm:py-28 lg:py-32">
         <div class="portfolio-container grid gap-14 lg:grid-cols-[.82fr_1.18fr] lg:gap-24">
             <div>
                 <div class="mb-5 flex items-center gap-3">
@@ -210,7 +210,7 @@
                 </div>
             </div>
 
-            <div class="text-ink-950" data-reveal>
+            <div class="text-ink-950 dark:text-slate-100" data-reveal>
                 <livewire:portfolio.contact-form />
             </div>
         </div>

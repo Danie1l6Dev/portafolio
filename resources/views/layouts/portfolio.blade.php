@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="es" class="dark scroll-smooth" data-theme="dark">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -36,7 +36,27 @@
         @endif
 
         <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
-        <meta name="theme-color" content="#091223">
+        <meta id="portfolio-theme-color" name="theme-color" content="#07111f">
+        <script>
+            (() => {
+                const storageKey = 'portfolio-theme';
+                let theme = 'dark';
+
+                try {
+                    theme = window.localStorage.getItem(storageKey) === 'light' ? 'light' : 'dark';
+                } catch (_) {
+                    theme = 'dark';
+                }
+
+                const root = document.documentElement;
+                root.classList.toggle('dark', theme === 'dark');
+                root.dataset.theme = theme;
+                root.style.colorScheme = theme;
+
+                const themeColor = document.querySelector('#portfolio-theme-color');
+                themeColor?.setAttribute('content', theme === 'dark' ? '#07111f' : '#f7f9fb');
+            })();
+        </script>
 
         @if (isset($schema))
             <script type="application/ld+json">{!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}</script>
@@ -46,7 +66,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @livewireStyles
     </head>
-    <body class="portfolio-shell min-h-screen overflow-x-hidden bg-paper-50 text-ink-950 antialiased">
+    <body class="portfolio-shell min-h-screen overflow-x-hidden bg-paper-50 text-ink-950 antialiased dark:bg-[#07111f] dark:text-slate-100">
         <a href="#contenido" class="skip-link">Saltar al contenido</a>
 
         <x-portfolio.navigation :show-experience="isset($experiences) && $experiences->isNotEmpty()" />

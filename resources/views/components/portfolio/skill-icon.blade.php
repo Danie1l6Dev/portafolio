@@ -16,7 +16,7 @@
 
 <span
     {{ $attributes->class([
-        'relative inline-flex shrink-0 items-center justify-center overflow-hidden bg-paper-100 text-ink-500 ring-1 ring-inset ring-ink-950/5',
+        'relative inline-flex shrink-0 items-center justify-center overflow-hidden bg-paper-100 text-ink-500 ring-1 ring-inset ring-ink-950/5 dark:bg-white/[.08] dark:text-slate-300 dark:ring-white/10',
         $wrapperClass,
     ]) }}
     aria-hidden="true"

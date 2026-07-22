@@ -107,37 +107,37 @@
                         <div class="featured-project-carousel__body">
                             <div class="flex flex-wrap items-center justify-between gap-3">
                                 @if ($project->category)
-                                    <span class="rounded-full bg-signal-50 px-3 py-1.5 font-mono text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-signal-700 ring-1 ring-inset ring-signal-100">
+                                    <span class="rounded-full bg-signal-50 px-3 py-1.5 font-mono text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-signal-700 ring-1 ring-inset ring-signal-100 dark:bg-signal-400/10 dark:text-signal-300 dark:ring-signal-400/20">
                                         {{ $project->category->name }}
                                     </span>
                                 @else
-                                    <span class="font-mono text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-ink-400">Proyecto</span>
+                                    <span class="font-mono text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-ink-400 dark:text-slate-500">Proyecto</span>
                                 @endif
 
-                                <span class="font-mono text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-ink-400">
+                                <span class="font-mono text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-ink-400 dark:text-slate-500">
                                     0{{ $loop->iteration }} / {{ str_pad((string) $projectCount, 2, '0', STR_PAD_LEFT) }}
                                 </span>
                             </div>
 
-                            <h4 class="mt-4 line-clamp-2 text-2xl font-semibold tracking-[-0.035em] text-ink-950 sm:text-[1.75rem]">
+                            <h4 class="mt-4 line-clamp-2 text-2xl font-semibold tracking-[-0.035em] text-ink-950 dark:text-white sm:text-[1.75rem]">
                                 {{ $project->title }}
                             </h4>
 
-                            <p class="mt-3 line-clamp-3 text-sm leading-7 text-ink-600 sm:text-[0.95rem]">
+                            <p class="mt-3 line-clamp-3 text-sm leading-7 text-ink-600 dark:text-slate-300 sm:text-[0.95rem]">
                                 {{ $project->summary }}
                             </p>
 
                             @if ($project->skills->isNotEmpty())
                                 <ul class="featured-project-carousel__skills mt-5 flex flex-wrap gap-2" aria-label="Habilidades destacadas del proyecto">
                                     @foreach ($project->skills->take(5) as $skill)
-                                        <li class="inline-flex items-center gap-1.5 rounded-lg bg-paper-100 px-2 py-1 font-mono text-[0.68rem] font-medium text-ink-600 ring-1 ring-inset ring-ink-950/5" data-carousel-skill="{{ $skill->slug }}">
+                                        <li class="inline-flex items-center gap-1.5 rounded-lg bg-paper-100 px-2 py-1 font-mono text-[0.68rem] font-medium text-ink-600 ring-1 ring-inset ring-ink-950/5 dark:bg-white/[.07] dark:text-slate-300 dark:ring-white/10" data-carousel-skill="{{ $skill->slug }}">
                                             <x-portfolio.skill-icon :icon="$skill->icon" :name="$skill->name" size="sm" />
                                             <span>{{ $skill->name }}</span>
                                         </li>
                                     @endforeach
 
                                     @if ($project->skills->count() > 5)
-                                        <li class="rounded-lg bg-paper-50 px-2.5 py-1.5 font-mono text-[0.68rem] font-medium text-ink-400 ring-1 ring-inset ring-ink-950/5">
+                                        <li class="rounded-lg bg-paper-50 px-2.5 py-1.5 font-mono text-[0.68rem] font-medium text-ink-400 ring-1 ring-inset ring-ink-950/5 dark:bg-white/[.04] dark:text-slate-500 dark:ring-white/10">
                                             +{{ $project->skills->count() - 5 }}
                                             <span class="sr-only">habilidades más</span>
                                         </li>
@@ -196,7 +196,7 @@
                 ></button>
             @endforeach
         @else
-            <span class="font-mono text-xs tabular-nums text-ink-400" x-text="`${activeIndex + 1} / ${total}`"></span>
+            <span class="font-mono text-xs tabular-nums text-ink-400 dark:text-slate-500" x-text="`${activeIndex + 1} / ${total}`"></span>
         @endif
     </div>
 

@@ -1,7 +1,7 @@
-<div class="min-h-screen bg-slate-50 text-slate-950">
-    <section class="border-b border-slate-200 bg-white" aria-labelledby="projects-page-title">
+<div class="min-h-screen bg-slate-50 text-slate-950 transition-colors dark:bg-[#07111f] dark:text-slate-100">
+    <section class="border-b border-slate-200 bg-white transition-colors dark:border-white/10 dark:bg-[#091524]" aria-labelledby="projects-page-title">
         <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
-            <p class="font-mono text-xs font-semibold uppercase tracking-[0.22em] text-sky-700">
+            <p class="font-mono text-xs font-semibold uppercase tracking-[0.22em] text-sky-700 dark:text-sky-300">
                 Proyectos / archivo público
             </p>
             <div class="mt-5 grid gap-8 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-end">
@@ -9,21 +9,21 @@
                     <h1 id="projects-page-title" class="max-w-4xl text-4xl font-semibold tracking-[-0.04em] text-balance sm:text-5xl lg:text-6xl">
                         Sistemas construidos para resolver problemas reales.
                     </h1>
-                    <p class="mt-6 max-w-2xl text-base leading-8 text-slate-600 sm:text-lg">
+                    <p class="mt-6 max-w-2xl text-base leading-8 text-slate-600 dark:text-slate-300 sm:text-lg">
                         Una selección de productos web centrados en gestión, trazabilidad y experiencias de uso claras.
                     </p>
                 </div>
                 <div class="border-l-2 border-sky-500 pl-5">
-                    <p class="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-slate-400">Índice activo</p>
-                    <p class="mt-2 text-3xl font-semibold tabular-nums text-slate-950">{{ str_pad((string) $projects->total(), 2, '0', STR_PAD_LEFT) }}</p>
-                    <p class="mt-1 text-sm text-slate-500">{{ $projects->total() === 1 ? 'proyecto publicado' : 'proyectos publicados' }}</p>
+                    <p class="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">Índice activo</p>
+                    <p class="mt-2 text-3xl font-semibold tabular-nums text-slate-950 dark:text-white">{{ str_pad((string) $projects->total(), 2, '0', STR_PAD_LEFT) }}</p>
+                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ $projects->total() === 1 ? 'proyecto publicado' : 'proyectos publicados' }}</p>
                 </div>
             </div>
         </div>
     </section>
 
     <section class="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8" aria-label="Explorar proyectos">
-        <div class="rounded-3xl border border-slate-200 bg-white p-4 shadow-[0_18px_45px_-38px_rgba(15,23,42,0.4)] sm:p-5">
+        <div class="rounded-3xl border border-slate-200 bg-white p-4 shadow-[0_18px_45px_-38px_rgba(15,23,42,0.4)] transition-colors dark:border-white/10 dark:bg-[#0d1a2b] dark:shadow-[0_22px_55px_-38px_rgba(0,0,0,0.9)] sm:p-5">
             <div class="grid gap-3 md:grid-cols-2 lg:grid-cols-[minmax(16rem,1.45fr)_minmax(12rem,1fr)_minmax(12rem,1fr)_auto]">
                 <div>
                     <label for="project-search" class="sr-only">Buscar proyectos</label>
@@ -40,7 +40,7 @@
                             maxlength="80"
                             autocomplete="off"
                             aria-controls="project-results"
-                            class="min-h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                            class="min-h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-sky-500 focus:ring-4 focus:ring-sky-100 dark:border-white/10 dark:bg-[#07111f] dark:text-slate-100 dark:placeholder:text-slate-500 dark:hover:border-white/20 dark:focus:border-sky-400 dark:focus:ring-sky-500/15"
                         >
                     </div>
                 </div>
@@ -51,7 +51,7 @@
                         id="project-category"
                         wire:model.live="category"
                         aria-controls="project-results"
-                        class="min-h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none transition hover:border-slate-300 focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                        class="min-h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none transition hover:border-slate-300 focus:border-sky-500 focus:ring-4 focus:ring-sky-100 dark:border-white/10 dark:bg-[#07111f] dark:text-slate-200 dark:hover:border-white/20 dark:focus:border-sky-400 dark:focus:ring-sky-500/15"
                     >
                         <option value="">Todas las categorías</option>
                         @foreach ($this->categories as $categoryOption)
@@ -66,7 +66,7 @@
                         id="project-technology"
                         wire:model.live="technology"
                         aria-controls="project-results"
-                        class="min-h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none transition hover:border-slate-300 focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                        class="min-h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none transition hover:border-slate-300 focus:border-sky-500 focus:ring-4 focus:ring-sky-100 dark:border-white/10 dark:bg-[#07111f] dark:text-slate-200 dark:hover:border-white/20 dark:focus:border-sky-400 dark:focus:ring-sky-500/15"
                     >
                         <option value="">Todas las tecnologías</option>
                         @foreach ($this->technologies->groupBy(fn ($skill) => $skill->group ?: 'Otras') as $group => $skills)
@@ -83,7 +83,7 @@
                     <button
                         type="button"
                         wire:click="clearFilters"
-                        class="inline-flex min-h-12 items-center justify-center rounded-2xl border border-slate-200 px-4 text-sm font-semibold text-slate-600 transition hover:border-sky-200 hover:bg-sky-50 hover:text-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2"
+                        class="inline-flex min-h-12 items-center justify-center rounded-2xl border border-slate-200 px-4 text-sm font-semibold text-slate-600 transition hover:border-sky-200 hover:bg-sky-50 hover:text-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 dark:border-white/10 dark:text-slate-300 dark:hover:border-sky-400/40 dark:hover:bg-sky-400/10 dark:hover:text-sky-300 dark:focus-visible:ring-offset-[#07111f]"
                     >
                         Limpiar
                     </button>
@@ -92,16 +92,16 @@
         </div>
 
         <div class="mt-8 flex flex-wrap items-center justify-between gap-3">
-            <p class="text-sm text-slate-500" aria-live="polite">
+            <p class="text-sm text-slate-500 dark:text-slate-400" aria-live="polite">
                 Mostrando
-                <span class="font-semibold tabular-nums text-slate-900">{{ $projects->firstItem() ?? 0 }}–{{ $projects->lastItem() ?? 0 }}</span>
+                <span class="font-semibold tabular-nums text-slate-900 dark:text-slate-100">{{ $projects->firstItem() ?? 0 }}–{{ $projects->lastItem() ?? 0 }}</span>
                 de
-                <span class="font-semibold tabular-nums text-slate-900">{{ $projects->total() }}</span>
+                <span class="font-semibold tabular-nums text-slate-900 dark:text-slate-100">{{ $projects->total() }}</span>
             </p>
             <div
                 wire:loading.flex
                 wire:target="search,category,technology,clearFilters,gotoPage,previousPage,nextPage"
-                class="items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-sky-700"
+                class="items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-sky-700 dark:text-sky-300"
                 role="status"
             >
                 <span class="size-2 animate-pulse rounded-full bg-sky-500" aria-hidden="true"></span>
@@ -116,16 +116,16 @@
             wire:target="search,category,technology,clearFilters,gotoPage,previousPage,nextPage"
         >
             @if ($projects->isEmpty())
-                <div class="rounded-3xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center sm:py-20">
+                <div class="rounded-3xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center transition-colors dark:border-white/15 dark:bg-[#0d1a2b] sm:py-20">
                     <span class="mx-auto flex size-12 items-center justify-center rounded-2xl bg-slate-950 font-mono text-sm font-semibold text-sky-300" aria-hidden="true">00</span>
-                    <h2 class="mt-5 text-xl font-semibold text-slate-950">No encontramos coincidencias</h2>
-                    <p class="mx-auto mt-2 max-w-md text-sm leading-7 text-slate-500">
+                    <h2 class="mt-5 text-xl font-semibold text-slate-950 dark:text-white">No encontramos coincidencias</h2>
+                    <p class="mx-auto mt-2 max-w-md text-sm leading-7 text-slate-500 dark:text-slate-400">
                         Ajusta la búsqueda o elimina los filtros para volver a consultar todos los proyectos publicados.
                     </p>
                     <button
                         type="button"
                         wire:click="clearFilters"
-                        class="mt-6 inline-flex min-h-11 items-center rounded-xl bg-slate-950 px-5 text-sm font-semibold text-white transition hover:bg-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2"
+                        class="mt-6 inline-flex min-h-11 items-center rounded-xl bg-slate-950 px-5 text-sm font-semibold text-white transition hover:bg-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 dark:bg-signal-600 dark:text-white dark:hover:bg-signal-500 dark:focus-visible:ring-offset-[#0d1a2b]"
                     >
                         Ver todos los proyectos
                     </button>
@@ -138,7 +138,7 @@
                 </div>
 
                 @if ($projects->hasPages())
-                    <nav class="mt-10 border-t border-slate-200 pt-8" aria-label="Paginación de proyectos">
+                    <nav class="mt-10 border-t border-slate-200 pt-8 dark:border-white/10" aria-label="Paginación de proyectos">
                         {{ $projects->onEachSide(1)->links() }}
                     </nav>
                 @endif
