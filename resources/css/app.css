@@ -67,7 +67,7 @@
 @layer base {
 
     html {
-        scroll-padding-top: 5.25rem;
+        scroll-padding-top: calc(4.5rem + 1px);
     }
 
     [x-cloak] {
