@@ -4,14 +4,15 @@ namespace App\Livewire\Admin;
 
 use App\Livewire\Admin\Concerns\AuthorizesContentEditors;
 use App\Models\Category;
-use App\Models\Media;
 use App\Models\Project;
 use App\Models\Skill;
 use App\Services\ImageService;
+use App\Services\MediaGalleryService;
 use Flux\Flux;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -64,6 +65,9 @@ class ProjectManager extends Component
     /** @var list<mixed> */
     public array $galleryImages = [];
 
+    /** @var array<int, string> */
+    public array $mediaAlt = [];
+
     public bool $confirmingDelete = false;
 
     public ?int $deletingProjectId = null;
@@ -99,7 +103,9 @@ class ProjectManager extends Component
 
     public function edit(int $projectId): void
     {
-        $project = Project::query()->with('skills')->findOrFail($projectId);
+        $project = Project::query()
+            ->with(['skills', 'media' => fn ($query) => $query->where('collection', MediaGalleryService::COLLECTION)])
+            ->findOrFail($projectId);
 
         $this->editingProjectId = $project->id;
         $this->title = $project->title;
@@ -114,13 +120,19 @@ class ProjectManager extends Component
         $this->startedAt = $project->started_at?->toDateString() ?? '';
         $this->finishedAt = $project->finished_at?->toDateString() ?? '';
         $this->skillIds = array_values($project->skills->modelKeys());
+        $this->mediaAlt = $project->media
+            ->mapWithKeys(static fn ($media): array => [$media->id => (string) ($media->alt ?? '')])
+            ->all();
         $this->showForm = true;
         $this->resetErrorBag();
     }
 
-    public function save(ImageService $imageService): void
+    public function save(ImageService $imageService, MediaGalleryService $galleryService): void
     {
         $this->authorizeContentEditor();
+
+        $galleryLimit = (int) config('admin.galleries.projects.max_items', 8);
+        $galleryFileLimit = (int) config('admin.galleries.projects.max_file_kilobytes', 2048);
 
         $existingGalleryCount = $this->editingProjectId
             ? Project::query()
@@ -130,8 +142,8 @@ class ProjectManager extends Component
                 ->count()
             : 0;
 
-        if ($existingGalleryCount + count($this->galleryImages) > 8) {
-            $this->addError('galleryImages', 'La galería admite un máximo de 8 imágenes en total.');
+        if ($existingGalleryCount + count($this->galleryImages) > $galleryLimit) {
+            $this->addError('galleryImages', "La galería admite un máximo de {$galleryLimit} imágenes en total.");
 
             return;
         }
@@ -151,8 +163,8 @@ class ProjectManager extends Component
             'skillIds' => ['array'],
             'skillIds.*' => ['integer', 'exists:skills,id'],
             'coverImage' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
-            'galleryImages' => ['array', 'max:8'],
-            'galleryImages.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'galleryImages' => ['array', "max:{$galleryLimit}"],
+            'galleryImages.*' => ['image', 'mimes:jpg,jpeg,png,webp', "max:{$galleryFileLimit}"],
         ]);
 
         $project = $this->editingProjectId ? Project::findOrFail($this->editingProjectId) : new Project;
@@ -166,7 +178,7 @@ class ProjectManager extends Component
                 $newPaths[] = $newCover;
             }
 
-            DB::transaction(function () use ($project, $validated, $newCover, $imageService, &$newPaths): void {
+            DB::transaction(function () use ($project, $validated, $newCover, $galleryService, &$newPaths): void {
                 $project->fill([
                     'category_id' => filled($validated['categoryId']) ? (int) $validated['categoryId'] : null,
                     'title' => $validated['title'],
@@ -192,22 +204,14 @@ class ProjectManager extends Component
                 $project->save();
                 $project->skills()->sync(array_map('intval', $validated['skillIds']));
 
-                $sortOrder = (int) ($project->media()
-                    ->where('collection', 'gallery')
-                    ->max('sort_order') ?? 0);
-
-                foreach ($this->galleryImages as $image) {
-                    $path = $imageService->store($image, 'projects/gallery');
-                    $newPaths[] = $path;
-                    $project->media()->create([
-                        'collection' => 'gallery',
-                        'disk' => 'public',
-                        'path' => $path,
-                        'filename' => $image->getClientOriginalName(),
-                        'mime_type' => $image->getMimeType(),
-                        'size' => $image->getSize(),
-                        'sort_order' => ++$sortOrder,
-                    ]);
+                if ($this->galleryImages !== []) {
+                    $gallery = $galleryService->append(
+                        $project,
+                        $this->galleryImages,
+                        'projects/gallery',
+                        "Captura de {$project->title}",
+                    );
+                    $newPaths = [...$newPaths, ...$gallery['paths']];
                 }
             });
         } catch (Throwable $exception) {
@@ -219,7 +223,7 @@ class ProjectManager extends Component
         }
 
         if ($newCover && $oldCover && $oldCover !== $newCover) {
-            $imageService->delete($oldCover);
+            $galleryService->deletePathsIfUnreferenced([$oldCover]);
         }
 
         $this->resetForm();
@@ -235,12 +239,18 @@ class ProjectManager extends Component
         $this->confirmingDelete = true;
     }
 
-    public function delete(ImageService $imageService): void
+    public function delete(MediaGalleryService $galleryService): void
     {
         $this->authorizeContentEditor();
 
         $project = Project::query()->with('media')->findOrFail($this->deletingProjectId);
-        $paths = $project->media->pluck('path')->push($project->cover_image)->filter()->all();
+        $paths = array_values($project->media
+            ->pluck('path')
+            ->map(static fn (mixed $path): string => (string) $path)
+            ->push($project->cover_image)
+            ->filter()
+            ->values()
+            ->all());
 
         DB::transaction(function () use ($project): void {
             $project->skills()->detach();
@@ -248,9 +258,7 @@ class ProjectManager extends Component
             $project->delete();
         });
 
-        foreach ($paths as $path) {
-            $imageService->delete($path);
-        }
+        $galleryService->deletePathsIfUnreferenced($paths);
 
         if ($this->editingProjectId === $this->deletingProjectId) {
             $this->resetForm();
@@ -263,10 +271,9 @@ class ProjectManager extends Component
 
     public function confirmMediaDelete(int $mediaId): void
     {
-        $media = Media::query()
-            ->where('mediable_type', Project::class)
-            ->where('mediable_id', $this->editingProjectId)
-            ->where('collection', 'gallery')
+        $media = $this->editingProject()
+            ->media()
+            ->where('collection', MediaGalleryService::COLLECTION)
             ->findOrFail($mediaId);
 
         $this->deletingMediaId = $media->id;
@@ -274,22 +281,58 @@ class ProjectManager extends Component
         $this->confirmingMediaDelete = true;
     }
 
-    public function deleteMedia(ImageService $imageService): void
+    public function deleteMedia(MediaGalleryService $galleryService): void
     {
         $this->authorizeContentEditor();
 
-        $media = Media::query()
-            ->where('mediable_type', Project::class)
-            ->where('mediable_id', $this->editingProjectId)
-            ->where('collection', 'gallery')
-            ->findOrFail($this->deletingMediaId);
-
-        $path = $media->path;
-        $media->delete();
-        $imageService->delete($path);
+        $galleryService->delete($this->editingProject(), (int) $this->deletingMediaId);
 
         $this->cancelMediaDelete();
         Flux::toast(variant: 'success', text: 'Imagen eliminada de la galería.');
+    }
+
+    public function sortGalleryImage(int $mediaId, int $position, MediaGalleryService $galleryService): void
+    {
+        $this->authorizeContentEditor();
+        $galleryService->move($this->editingProject(), $mediaId, $position);
+    }
+
+    public function useMediaAsCover(int $mediaId, MediaGalleryService $galleryService): void
+    {
+        $this->authorizeContentEditor();
+        $project = $this->editingProject();
+
+        $galleryService->promoteToCover(
+            $project,
+            $mediaId,
+            'cover_image',
+            "Portada anterior de {$project->title}",
+        );
+
+        Flux::toast(variant: 'success', text: 'La portada se actualizó y la anterior pasó a la galería.');
+    }
+
+    public function saveMediaAlt(int $mediaId, MediaGalleryService $galleryService): void
+    {
+        $this->authorizeContentEditor();
+
+        $validated = Validator::make(
+            ['alt' => $this->mediaAlt[$mediaId] ?? null],
+            ['alt' => ['nullable', 'string', 'max:255']],
+        )->validate();
+
+        $galleryService->updateAlt($this->editingProject(), $mediaId, $validated['alt'] ?? null);
+        Flux::toast(variant: 'success', text: 'Texto alternativo actualizado.');
+    }
+
+    public function removePendingGalleryImage(int $index): void
+    {
+        if (! array_key_exists($index, $this->galleryImages)) {
+            return;
+        }
+
+        array_splice($this->galleryImages, $index, 1);
+        $this->resetValidation('galleryImages');
     }
 
     public function cancelDelete(): void
@@ -312,12 +355,13 @@ class ProjectManager extends Component
         return view('livewire.admin.project-manager', [
             'projects' => $this->projects(),
             'categories' => Category::ordered()->get(['id', 'name']),
-            'skills' => Skill::ordered()->get(['id', 'name', 'group']),
+            'skills' => Skill::ordered()->get(['id', 'name', 'group', 'icon']),
             'editingProject' => $this->editingProjectId
                 ? Project::query()
-                    ->with(['media' => fn ($query) => $query->where('collection', 'gallery')])
+                    ->with(['media' => fn ($query) => $query->where('collection', MediaGalleryService::COLLECTION)])
                     ->find($this->editingProjectId)
                 : null,
+            'galleryLimit' => (int) config('admin.galleries.projects.max_items', 8),
         ]);
     }
 
@@ -354,8 +398,14 @@ class ProjectManager extends Component
             'skillIds',
             'coverImage',
             'galleryImages',
+            'mediaAlt',
         );
         $this->status = 'draft';
         $this->resetErrorBag();
+    }
+
+    private function editingProject(): Project
+    {
+        return Project::query()->findOrFail($this->editingProjectId);
     }
 }

@@ -1,4 +1,4 @@
-@props(['showExperience' => false])
+@props(['showExperience' => false, 'showAchievements' => false])
 
 @php
     $items = [
@@ -10,6 +10,10 @@
 
     if ($showExperience) {
         $items[] = ['id' => 'experiencia', 'label' => 'Experiencia'];
+    }
+
+    if ($showAchievements) {
+        $items[] = ['id' => 'logros', 'label' => 'Logros'];
     }
 
     $items[] = ['id' => 'contacto', 'label' => 'Contacto'];
@@ -46,7 +50,7 @@
                     @click="closeMenu()"
                     :aria-current="active === '{{ $item['id'] }}' ? 'location' : null"
                     :class="active === '{{ $item['id'] }}' ? 'bg-ink-950 text-white shadow-sm dark:bg-signal-600 dark:text-white' : 'text-ink-600 hover:bg-paper-100 hover:text-ink-950 dark:text-slate-300 dark:hover:bg-white/[.08] dark:hover:text-white'"
-                    class="min-h-10 rounded-xl px-4 py-2.5 text-sm font-medium transition-[color,background-color,box-shadow] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-500"
+                    class="min-h-10 rounded-xl {{ count($items) > 6 ? 'px-3' : 'px-4' }} py-2.5 text-sm font-medium transition-[color,background-color,box-shadow] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-500"
                 >{{ $item['label'] }}</a>
             @endforeach
         </div>

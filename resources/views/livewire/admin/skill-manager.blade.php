@@ -20,7 +20,7 @@
                         <tbody class="divide-y divide-zinc-200/70 dark:divide-zinc-700">
                             @forelse ($skills as $skill)
                                 <tr wire:key="skill-{{ $skill->id }}" class="hover:bg-zinc-50/70 dark:hover:bg-zinc-800/40">
-                                    <td class="px-4 py-3"><div class="flex items-center gap-3"><span class="grid size-9 place-items-center rounded-lg bg-zinc-100 text-xs font-semibold text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">{{ str($skill->name)->substr(0, 2)->upper() }}</span><div><p class="font-medium text-zinc-950 dark:text-white">{{ $skill->name }}</p><p class="font-mono text-xs text-zinc-400">{{ $skill->icon ?: 'sin icono' }}</p></div>@if($skill->is_featured)<span class="rounded-full bg-violet-50 px-2 py-0.5 text-[11px] font-semibold text-violet-700 dark:bg-violet-400/10 dark:text-violet-300">Destacada</span>@endif</div></td>
+                                    <td class="px-4 py-3"><div class="flex items-center gap-3"><x-portfolio.skill-icon :icon="$skill->icon" :name="$skill->name" /><div><p class="font-medium text-zinc-950 dark:text-white">{{ $skill->name }}</p><p class="font-mono text-xs text-zinc-400">{{ $skill->icon ?: 'icono automático' }}</p></div>@if($skill->is_featured)<span class="rounded-full bg-violet-50 px-2 py-0.5 text-[11px] font-semibold text-violet-700 dark:bg-violet-400/10 dark:text-violet-300">Destacada</span>@endif</div></td>
                                     <td class="px-4 py-3 text-zinc-600 dark:text-zinc-300">{{ $skill->group ?: 'Sin grupo' }}</td>
                                     <td class="px-4 py-3 tabular-nums text-zinc-500">{{ $skill->projects_count }} proyectos</td>
                                     <td class="px-4 py-3"><div class="flex justify-end gap-1"><flux:button size="sm" variant="ghost" icon="pencil-square" wire:click="edit({{ $skill->id }})" aria-label="Editar {{ $skill->name }}" /><flux:button size="sm" variant="ghost" icon="trash" wire:click="confirmDelete({{ $skill->id }})" aria-label="Eliminar {{ $skill->name }}" /></div></td>
@@ -42,7 +42,12 @@
                     <flux:input wire:model="name" label="Nombre" required autofocus />
                     <flux:select wire:model="group" label="Grupo"><flux:select.option value="">Sin grupo</flux:select.option>@foreach ($groups as $groupName)<flux:select.option value="{{ $groupName }}">{{ $groupName }}</flux:select.option>@endforeach</flux:select>
                     <flux:input wire:model="sortOrder" label="Orden" type="number" min="0" />
-                    <flux:input wire:model="icon" label="Icono" placeholder="si:laravel" />
+                    <div class="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-3">
+                        <flux:input wire:model.live.debounce.300ms="icon" label="Icono" placeholder="si:laravel" description="Usa si:nombre para cargar el logo oficial." />
+                        <div class="grid min-h-10 min-w-10 place-items-center rounded-lg border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-950" aria-label="Vista previa del icono">
+                            <x-portfolio.skill-icon :icon="$icon" :name="$name ?: 'Tecnología'" />
+                        </div>
+                    </div>
                     <label class="flex items-center gap-3 rounded-lg border border-zinc-200 bg-white px-3 py-3 text-sm dark:border-zinc-700 dark:bg-zinc-950"><input type="checkbox" wire:model="isFeatured" class="rounded border-zinc-300 text-zinc-900 focus:ring-zinc-500 dark:border-zinc-600" /><span><strong class="block font-medium">Destacar habilidad</strong><span class="text-xs text-zinc-500">Aparecerá en selecciones principales.</span></span></label>
                     <div class="flex justify-end gap-2 pt-2"><flux:button type="button" variant="ghost" wire:click="cancelForm">Cancelar</flux:button><flux:button type="submit" variant="primary" wire:loading.attr="disabled" wire:target="save">Guardar</flux:button></div>
                 </form>

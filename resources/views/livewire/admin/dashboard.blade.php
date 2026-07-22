@@ -46,8 +46,25 @@
                 <div class="flex items-center justify-between"><dt class="text-sm text-zinc-600 dark:text-zinc-300">Habilidades</dt><dd class="font-semibold tabular-nums">{{ $stats['skills'] }}</dd></div>
                 <div class="flex items-center justify-between"><dt class="text-sm text-zinc-600 dark:text-zinc-300">Categorías</dt><dd class="font-semibold tabular-nums">{{ $stats['categories'] }}</dd></div>
                 <div class="flex items-center justify-between"><dt class="text-sm text-zinc-600 dark:text-zinc-300">Experiencias</dt><dd class="font-semibold tabular-nums">{{ $stats['experiences'] }}</dd></div>
+                <div class="flex items-center justify-between"><dt class="text-sm text-zinc-600 dark:text-zinc-300">Logros</dt><dd class="font-semibold tabular-nums">{{ $stats['achievements'] }}</dd></div>
                 <div class="flex items-center justify-between border-t border-zinc-200 pt-4 dark:border-zinc-700"><dt class="text-sm font-medium">Mensajes sin leer</dt><dd class="rounded-full bg-zinc-950 px-2 py-0.5 text-xs font-semibold tabular-nums text-white dark:bg-white dark:text-zinc-950">{{ $stats['unreadMessages'] }}</dd></div>
             </dl>
+        </div>
+    </section>
+
+    <section aria-labelledby="quick-access-heading">
+        <div class="mb-3 flex items-center justify-between gap-4">
+            <div>
+                <p class="text-xs font-semibold uppercase tracking-[0.14em] text-zinc-500">Mesa de trabajo</p>
+                <flux:heading id="quick-access-heading" size="lg" class="mt-1">Accesos rápidos</flux:heading>
+            </div>
+            <flux:text variant="subtle" class="hidden text-sm sm:block">Publica y organiza sin salir del panel.</flux:text>
+        </div>
+        <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <a href="{{ route('panel.projects') }}" wire:navigate class="group flex min-h-20 items-center gap-3 rounded-xl border border-zinc-200/80 bg-white px-4 transition-[border-color,background-color,transform] hover:-translate-y-0.5 hover:border-sky-300 hover:bg-sky-50/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 dark:border-zinc-700 dark:bg-zinc-900 dark:hover:border-sky-700 dark:hover:bg-sky-950/20"><span class="grid size-10 place-items-center rounded-lg bg-sky-50 text-sky-700 dark:bg-sky-400/10 dark:text-sky-300"><flux:icon.folder-git-2 class="size-5" /></span><span><strong class="block text-sm font-semibold">Proyectos</strong><span class="text-xs text-zinc-500">Portadas y galerías</span></span></a>
+            <a href="{{ route('panel.achievements') }}" wire:navigate class="group flex min-h-20 items-center gap-3 rounded-xl border border-zinc-200/80 bg-white px-4 transition-[border-color,background-color,transform] hover:-translate-y-0.5 hover:border-violet-300 hover:bg-violet-50/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 dark:border-zinc-700 dark:bg-zinc-900 dark:hover:border-violet-700 dark:hover:bg-violet-950/20"><span class="grid size-10 place-items-center rounded-lg bg-violet-50 text-violet-700 dark:bg-violet-400/10 dark:text-violet-300"><flux:icon.trophy class="size-5" /></span><span><strong class="block text-sm font-semibold">Logros</strong><span class="text-xs text-zinc-500">Certificados y fotos</span></span></a>
+            <a href="{{ route('panel.skills') }}" wire:navigate class="group flex min-h-20 items-center gap-3 rounded-xl border border-zinc-200/80 bg-white px-4 transition-[border-color,background-color,transform] hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-emerald-50/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 dark:border-zinc-700 dark:bg-zinc-900 dark:hover:border-emerald-700 dark:hover:bg-emerald-950/20"><span class="grid size-10 place-items-center rounded-lg bg-emerald-50 text-emerald-700 dark:bg-emerald-400/10 dark:text-emerald-300"><flux:icon.code-bracket class="size-5" /></span><span><strong class="block text-sm font-semibold">Tecnologías</strong><span class="text-xs text-zinc-500">Grupos y logotipos</span></span></a>
+            <a href="{{ route('panel.messages') }}" wire:navigate class="group flex min-h-20 items-center gap-3 rounded-xl border border-zinc-200/80 bg-white px-4 transition-[border-color,background-color,transform] hover:-translate-y-0.5 hover:border-amber-300 hover:bg-amber-50/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 dark:border-zinc-700 dark:bg-zinc-900 dark:hover:border-amber-700 dark:hover:bg-amber-950/20"><span class="grid size-10 place-items-center rounded-lg bg-amber-50 text-amber-700 dark:bg-amber-400/10 dark:text-amber-300"><flux:icon.inbox class="size-5" /></span><span><strong class="block text-sm font-semibold">Mensajes</strong><span class="text-xs text-zinc-500">{{ $stats['unreadMessages'] }} por leer</span></span></a>
         </div>
     </section>
 

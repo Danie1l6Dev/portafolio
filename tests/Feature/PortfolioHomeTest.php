@@ -217,6 +217,7 @@ it('redirects former section pages back to their one-page anchors', function (st
 })->with([
     ['portfolio.skills.redirect', 'habilidades'],
     ['portfolio.experience.redirect', 'experiencia'],
+    ['portfolio.achievements.redirect', 'logros'],
     ['portfolio.contact.redirect', 'contacto'],
 ]);
 

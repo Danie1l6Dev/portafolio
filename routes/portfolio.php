@@ -28,6 +28,7 @@ Route::get('proyectos/{project:slug}', ProjectPageController::class)->name('port
 
 Route::redirect('habilidades', '/#habilidades')->name('portfolio.skills.redirect');
 Route::redirect('experiencia', '/#experiencia')->name('portfolio.experience.redirect');
+Route::redirect('logros', '/#logros')->name('portfolio.achievements.redirect');
 Route::redirect('contacto', '/#contacto')->name('portfolio.contact.redirect');
 
 Route::get('sitemap.xml', SitemapController::class)->name('sitemap');

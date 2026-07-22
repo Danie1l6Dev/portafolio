@@ -4,6 +4,7 @@
         @include('partials.head')
     </head>
     <body class="min-h-screen bg-white dark:bg-zinc-800">
+        @php($sidebarUnreadMessages = \App\Models\Message::query()->unread()->count())
         <flux:sidebar sticky collapsible="mobile" class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
             <flux:sidebar.header>
                 <x-app-logo :sidebar="true" href="{{ route('panel.dashboard') }}" wire:navigate />
@@ -27,8 +28,16 @@
                     <flux:sidebar.item icon="briefcase" :href="route('panel.experiences')" :current="request()->routeIs('panel.experiences')" wire:navigate>
                         Experiencias
                     </flux:sidebar.item>
+                    <flux:sidebar.item icon="trophy" :href="route('panel.achievements')" :current="request()->routeIs('panel.achievements')" wire:navigate>
+                        Logros
+                    </flux:sidebar.item>
                     <flux:sidebar.item icon="inbox" :href="route('panel.messages')" :current="request()->routeIs('panel.messages')" wire:navigate>
-                        Mensajes
+                        <span class="flex w-full items-center justify-between gap-3">
+                            <span>Mensajes</span>
+                            @if ($sidebarUnreadMessages > 0)
+                                <span class="grid min-w-5 place-items-center rounded-full bg-sky-600 px-1.5 py-0.5 text-[10px] font-semibold tabular-nums text-white" aria-label="{{ $sidebarUnreadMessages }} mensajes sin leer">{{ $sidebarUnreadMessages > 99 ? '99+' : $sidebarUnreadMessages }}</span>
+                            @endif
+                        </span>
                     </flux:sidebar.item>
                 </flux:sidebar.group>
             </flux:sidebar.nav>

@@ -7,18 +7,15 @@ use App\Http\Resources\MediaResource;
 use App\Http\Resources\ProjectResource;
 use App\Models\Media;
 use App\Models\Project;
-use App\Services\ImageService;
+use App\Services\MediaGalleryService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
-use Throwable;
 
 class MediaController extends Controller
 {
-    public function __construct(private readonly ImageService $imageService) {}
+    public function __construct(private readonly MediaGalleryService $galleryService) {}
 
     /**
      * POST /admin/projects/{project}/media
@@ -26,9 +23,12 @@ class MediaController extends Controller
      */
     public function store(Request $request, int $projectId): JsonResponse
     {
+        $galleryLimit = (int) config('admin.galleries.projects.max_items', 8);
+        $galleryFileLimit = (int) config('admin.galleries.projects.max_file_kilobytes', 2048);
+
         $request->validate([
-            'images' => ['required', 'array', 'min:1', 'max:8'],
-            'images.*' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'images' => ['required', 'array', 'min:1', "max:{$galleryLimit}"],
+            'images.*' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', "max:{$galleryFileLimit}"],
             'collection' => ['nullable', Rule::in(['gallery'])],
         ]);
 
@@ -37,44 +37,23 @@ class MediaController extends Controller
         if (! is_array($images)) {
             $images = [$images];
         }
+        $images = array_values($images);
 
         $existingCount = $project->media()->inCollection('gallery')->count();
 
-        if ($existingCount + count($images) > 8) {
+        if ($existingCount + count($images) > $galleryLimit) {
             throw ValidationException::withMessages([
-                'images' => 'La galería admite un máximo total de 8 imágenes.',
+                'images' => "La galería admite un máximo total de {$galleryLimit} imágenes.",
             ]);
         }
 
-        $mediaItems = [];
-        $storedPaths = [];
-
-        try {
-            DB::transaction(function () use ($project, $images, &$mediaItems, &$storedPaths): void {
-                $sortOrder = $project->media()->inCollection('gallery')->max('sort_order') ?? 0;
-
-                foreach ($images as $image) {
-                    $path = $this->imageService->store($image, 'projects/gallery');
-                    $storedPaths[] = $path;
-
-                    $mediaItems[] = $project->media()->create([
-                        'collection' => 'gallery',
-                        'disk' => 'public',
-                        'path' => $path,
-                        'filename' => $image->getClientOriginalName(),
-                        'mime_type' => $image->getMimeType(),
-                        'size' => $image->getSize(),
-                        'sort_order' => ++$sortOrder,
-                    ]);
-                }
-            });
-        } catch (Throwable $exception) {
-            foreach (array_reverse($storedPaths) as $path) {
-                $this->imageService->delete($path);
-            }
-
-            throw $exception;
-        }
+        $gallery = $this->galleryService->append(
+            $project,
+            $images,
+            'projects/gallery',
+            "Captura de {$project->title}",
+        );
+        $mediaItems = $gallery['media'];
 
         return response()->json([
             'data' => MediaResource::collection($mediaItems),
@@ -88,7 +67,7 @@ class MediaController extends Controller
      */
     public function destroy(int $media): JsonResponse
     {
-        $mediaItem = Media::findOrFail($media);
+        $mediaItem = Media::query()->where('collection', MediaGalleryService::COLLECTION)->findOrFail($media);
 
         // Verificar que el usuario tiene acceso al proyecto padre
         $project = $mediaItem->mediable;
@@ -96,8 +75,7 @@ class MediaController extends Controller
             return response()->json(['message' => 'Recurso no encontrado.'], 404);
         }
 
-        $this->imageService->delete($mediaItem->path);
-        $mediaItem->delete();
+        $this->galleryService->delete($project, $mediaItem->id);
 
         return response()->json([
             'message' => 'Imagen eliminada correctamente.',
@@ -110,17 +88,28 @@ class MediaController extends Controller
      */
     public function update(Request $request, int $media): JsonResponse
     {
-        $mediaItem = Media::findOrFail($media);
+        $mediaItem = Media::query()->where('collection', MediaGalleryService::COLLECTION)->findOrFail($media);
+        $project = $mediaItem->mediable;
+
+        if (! $project instanceof Project) {
+            return response()->json(['message' => 'Recurso no encontrado.'], 404);
+        }
 
         $request->validate([
             'alt' => ['nullable', 'string', 'max:255'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
         ]);
 
-        $mediaItem->update($request->only(['alt', 'sort_order']));
+        if ($request->has('alt')) {
+            $this->galleryService->updateAlt($project, $mediaItem->id, $request->string('alt')->toString());
+        }
+
+        if ($request->filled('sort_order')) {
+            $this->galleryService->move($project, $mediaItem->id, $request->integer('sort_order'));
+        }
 
         return response()->json([
-            'data' => $mediaItem,
+            'data' => $mediaItem->fresh(),
             'message' => 'Imagen actualizada correctamente.',
         ]);
     }
@@ -131,20 +120,14 @@ class MediaController extends Controller
      */
     public function reorder(Request $request, int $projectId): JsonResponse
     {
-        $request->validate([
+        $validated = $request->validate([
             'order' => ['required', 'array'],
-            'order.*' => ['required', 'integer'],
+            'order.*' => ['required', 'integer', 'distinct'],
         ]);
 
         $project = Project::findOrFail($projectId);
-        $order = $request->input('order', []);
-
-        foreach ($order as $mediaId) {
-            $mediaItem = $project->media()->where('id', $mediaId)->first();
-            if ($mediaItem) {
-                $mediaItem->update(['sort_order' => array_search($mediaId, $order)]);
-            }
-        }
+        $order = array_values(array_map('intval', $validated['order']));
+        $this->galleryService->reorder($project, $order);
 
         return response()->json([
             'message' => 'Orden actualizado correctamente.',
@@ -170,38 +153,12 @@ class MediaController extends Controller
         ]);
 
         $project = Project::findOrFail($projectId);
-        $mediaItem = Media::query()
-            ->where('mediable_type', $project->getMorphClass())
-            ->where('mediable_id', $project->getKey())
-            ->findOrFail($request->integer('media_id'));
-
-        $oldCoverPath = $project->cover_image;
-        $newCoverPath = $mediaItem->path;
-
-        // 1. Quitar de `media` el registro que pasa a portada (conservamos el archivo).
-        $mediaItem->delete();
-
-        // 2. Si había una portada anterior, moverla a la galería creando un nuevo
-        //    registro de media que apunte al mismo archivo.
-        if ($oldCoverPath) {
-            $absolutePath = Storage::disk('public')->path($oldCoverPath);
-            $size = is_file($absolutePath) ? (filesize($absolutePath) ?: 0) : 0;
-            $mime = is_file($absolutePath) ? (@mime_content_type($absolutePath) ?: null) : null;
-            $sortOrder = ($project->media()->max('sort_order') ?? 0) + 1;
-
-            $project->media()->create([
-                'collection' => 'gallery',
-                'disk' => 'public',
-                'path' => $oldCoverPath,
-                'filename' => basename($oldCoverPath),
-                'mime_type' => $mime,
-                'size' => $size,
-                'sort_order' => $sortOrder,
-            ]);
-        }
-
-        // 3. Actualizar la ruta de la portada (sin borrar archivos: ambos se reutilizan).
-        $project->update(['cover_image' => $newCoverPath]);
+        $this->galleryService->promoteToCover(
+            $project,
+            $request->integer('media_id'),
+            'cover_image',
+            "Portada anterior de {$project->title}",
+        );
 
         return response()->json([
             'data' => ProjectResource::make($project->fresh(['category', 'skills', 'media'])),

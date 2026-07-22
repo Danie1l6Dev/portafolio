@@ -51,7 +51,7 @@ class Media extends Model
                 $path = preg_replace('#/+#', '/', $path); // /storage//storage → /storage/
                 $path = ltrim($path, '/'); // /images/ → images/
 
-                return Storage::url($path);
+                return Storage::disk($this->disk)->url($path);
             }
         );
     }

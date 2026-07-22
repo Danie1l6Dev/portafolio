@@ -38,6 +38,11 @@ Route::prefix('admin')
             'title' => 'Experiencias',
         ])->name('experiences');
 
+        Route::view('logros', 'admin.page', [
+            'livewireComponent' => 'admin.achievement-manager',
+            'title' => 'Logros y reconocimientos',
+        ])->name('achievements');
+
         Route::view('mensajes', 'admin.page', [
             'livewireComponent' => 'admin.message-inbox',
             'title' => 'Mensajes',

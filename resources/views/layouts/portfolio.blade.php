@@ -69,7 +69,10 @@
     <body class="portfolio-shell min-h-screen overflow-x-hidden bg-paper-50 text-ink-950 antialiased dark:bg-[#07111f] dark:text-slate-100">
         <a href="#contenido" class="skip-link">Saltar al contenido</a>
 
-        <x-portfolio.navigation :show-experience="isset($experiences) && $experiences->isNotEmpty()" />
+        <x-portfolio.navigation
+            :show-experience="isset($experiences) && $experiences->isNotEmpty()"
+            :show-achievements="isset($achievements) && $achievements->isNotEmpty()"
+        />
 
         <main id="contenido">
             @isset($slot)

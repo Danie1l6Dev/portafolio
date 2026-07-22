@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin;
 
+use App\Models\Achievement;
 use App\Models\Category;
 use App\Models\Experience;
 use App\Models\Message;
@@ -28,6 +29,7 @@ class Dashboard extends Component
                 'skills' => Skill::count(),
                 'categories' => Category::count(),
                 'experiences' => Experience::count(),
+                'achievements' => Achievement::count(),
                 'unreadMessages' => Message::unread()->count(),
             ],
             'recentProjects' => Project::query()

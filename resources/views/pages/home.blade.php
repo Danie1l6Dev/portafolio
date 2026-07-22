@@ -103,7 +103,7 @@
         </div>
     </section>
 
-    <section id="sobre-mi" class="portfolio-section border-y border-ink-950/8 bg-paper-100 py-20 dark:border-white/10 dark:bg-[#0a1525] sm:py-28 lg:py-32">
+    <section id="sobre-mi" class="portfolio-section border-y border-ink-950/8 bg-[#f4f7fa] py-20 dark:border-white/10 dark:bg-[#0a1728] sm:py-28 lg:py-32">
         <div class="portfolio-container">
             <div class="grid gap-8 lg:grid-cols-[minmax(0,.78fr)_minmax(22rem,.42fr)] lg:items-end lg:gap-16">
                 <x-portfolio.section-heading
@@ -189,7 +189,7 @@
         </div>
     </section>
 
-    <section id="proyectos" class="portfolio-section py-20 sm:py-28 lg:py-32">
+    <section id="proyectos" class="portfolio-section portfolio-section--textured py-20 sm:py-28 lg:py-32">
         <div class="portfolio-container">
             <div class="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
                 <x-portfolio.section-heading index="02" eyebrow="Trabajo seleccionado" title="Sistemas construidos para resolver." description="Una selección de productos reales, sus decisiones técnicas y el problema que atienden." class="mb-0" />
@@ -209,7 +209,7 @@
         </div>
     </section>
 
-    <section id="habilidades" class="portfolio-section border-y border-ink-950/8 bg-paper-100 py-20 dark:border-white/10 dark:bg-[#0a1525] sm:py-28 lg:py-32">
+    <section id="habilidades" class="portfolio-section border-y border-ink-950/8 bg-[#f4f7fa] py-20 dark:border-white/10 dark:bg-[#0a1728] sm:py-28 lg:py-32">
         <div class="portfolio-container">
             <x-portfolio.section-heading index="03" eyebrow="Herramientas" title="Tecnologías con las que construyo." description="Agrupadas por el papel que cumplen en mis proyectos y conectadas con trabajo real." />
 
@@ -232,7 +232,7 @@
     </section>
 
     @if ($experiences->isNotEmpty())
-        <section id="experiencia" class="portfolio-section bg-paper-50 py-20 dark:bg-[#07111f] sm:py-28 lg:py-32">
+        <section id="experiencia" class="portfolio-section portfolio-section--textured bg-paper-50 py-20 dark:bg-[#07111f] sm:py-28 lg:py-32">
             <div class="portfolio-container grid gap-12 lg:grid-cols-[.72fr_1.28fr] lg:gap-20">
                 <x-portfolio.section-heading index="04" eyebrow="Trayectoria" title="Experiencia y acompañamiento académico." description="Trabajo aplicado en desarrollo de software y formación en fundamentos de programación." />
                 <div class="lg:pt-10" data-reveal>
@@ -244,11 +244,36 @@
         </section>
     @endif
 
-    <section id="contacto" class="portfolio-section bg-paper-100 py-20 text-ink-950 dark:bg-[#0a1525] dark:text-white sm:py-28 lg:py-32">
+    @if ($achievements->isNotEmpty())
+        <section id="logros" class="portfolio-section portfolio-section--textured border-t border-ink-950/8 bg-paper-50 py-20 dark:border-white/10 dark:bg-[#07111f] sm:py-28 lg:py-32">
+            <div class="portfolio-container">
+                <div class="grid gap-8 lg:grid-cols-[.72fr_1.28fr] lg:items-end lg:gap-20">
+                    <x-portfolio.section-heading
+                        :index="$achievementSectionIndex"
+                        eyebrow="Evidencia"
+                        title="Logros que respaldan el trabajo."
+                        description="Hackathons, certificaciones y reconocimientos acompañados por resultados, contexto y evidencia verificable."
+                        class="mb-0"
+                    />
+                    <p class="max-w-2xl text-pretty text-base leading-8 text-ink-600 dark:text-slate-400 lg:pb-1">
+                        Más que acumular diplomas, esta selección muestra situaciones en las que una idea, una colaboración o una habilidad produjo un resultado concreto.
+                    </p>
+                </div>
+
+                <div class="mt-12 grid gap-6 lg:grid-cols-2 lg:gap-8">
+                    @foreach ($achievements as $achievement)
+                        <x-portfolio.achievement-card :achievement="$achievement" :index="$loop->iteration" />
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
+    <section id="contacto" class="portfolio-section bg-[#f4f7fa] py-20 text-ink-950 dark:bg-[#0a1728] dark:text-white sm:py-28 lg:py-32">
         <div class="portfolio-container grid gap-14 lg:grid-cols-[.82fr_1.18fr] lg:gap-24">
             <div>
                 <div class="mb-5 flex items-center gap-3">
-                    <span class="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-signal-300">{{ $experiences->isNotEmpty() ? '05' : '04' }}</span>
+                    <span class="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-signal-300">{{ $contactSectionIndex }}</span>
                     <span class="h-px w-8 bg-signal-400" aria-hidden="true"></span>
                     <span class="font-mono text-[0.68rem] uppercase tracking-[0.2em] text-ink-500 dark:text-white/45">Contacto</span>
                 </div>

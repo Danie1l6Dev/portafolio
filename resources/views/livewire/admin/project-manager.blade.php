@@ -4,7 +4,7 @@
         <flux:button variant="primary" icon="plus" wire:click="create">Nuevo proyecto</flux:button>
     </header>
 
-    <div class="grid gap-6 {{ $showForm ? '2xl:grid-cols-[minmax(0,1fr)_31rem]' : '' }}">
+    <div class="grid gap-6 {{ $showForm ? 'xl:grid-cols-[minmax(0,1fr)_32rem]' : '' }}">
         <section class="min-w-0 space-y-4" aria-label="Listado de proyectos">
             <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_11rem_13rem]">
                 <flux:input wire:model.live.debounce.300ms="search" icon="magnifying-glass" placeholder="Buscar título o resumen" aria-label="Buscar proyectos" />
@@ -44,16 +44,41 @@
                     <flux:textarea wire:model="summary" label="Resumen de tarjeta" rows="3" maxlength="500" />
                     <flux:textarea wire:model="description" label="Descripción completa" rows="7" />
                     <div class="grid gap-4 sm:grid-cols-2"><flux:input wire:model="demoUrl" label="Demo" type="url" placeholder="https://" /><flux:input wire:model="repoUrl" label="Repositorio" type="url" placeholder="https://" /></div>
-                    <div class="grid grid-cols-3 gap-4"><flux:input wire:model="startedAt" label="Inicio" type="date" /><flux:input wire:model="finishedAt" label="Fin" type="date" /><flux:input wire:model="sortOrder" label="Orden" type="number" min="0" /></div>
+                    <div class="grid gap-4 sm:grid-cols-2">
+                        <flux:input wire:model="startedAt" label="Inicio" type="date" />
+                        <flux:input wire:model="finishedAt" label="Fin" type="date" />
+                        <div class="sm:col-span-2">
+                            <flux:input wire:model="sortOrder" label="Orden" type="number" min="0" />
+                        </div>
+                    </div>
                     <label class="flex items-center gap-3 rounded-lg border border-zinc-200 bg-white px-3 py-3 text-sm dark:border-zinc-700 dark:bg-zinc-950"><input type="checkbox" wire:model="isFeatured" class="rounded border-zinc-300 text-zinc-900 focus:ring-zinc-500 dark:border-zinc-600" /><span><strong class="block font-medium">Proyecto destacado</strong><span class="text-xs text-zinc-500">Aparecerá en el carrusel de proyectos de la portada cuando esté publicado.</span></span></label>
 
-                    <fieldset class="space-y-2"><legend class="text-sm font-medium">Habilidades vinculadas</legend><div class="grid max-h-48 grid-cols-2 gap-2 overflow-y-auto rounded-lg border border-zinc-200 bg-white p-3 dark:border-zinc-700 dark:bg-zinc-950">@forelse($skills as $skill)<label wire:key="project-skill-{{ $skill->id }}" class="flex items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-zinc-50 dark:hover:bg-zinc-800"><input type="checkbox" wire:model="skillIds" value="{{ $skill->id }}" class="rounded border-zinc-300 text-zinc-900 focus:ring-zinc-500 dark:border-zinc-600" /><span class="truncate">{{ $skill->name }}</span></label>@empty<p class="col-span-2 text-xs text-zinc-500">Primero crea habilidades.</p>@endforelse</div></fieldset>
+                    <fieldset class="space-y-2">
+                        <legend class="text-sm font-medium">Habilidades vinculadas</legend>
+                        <div class="grid max-h-52 grid-cols-2 gap-2 overflow-y-auto rounded-lg border border-zinc-200 bg-white p-3 dark:border-zinc-700 dark:bg-zinc-950">
+                            @forelse($skills as $skill)
+                                <label wire:key="project-skill-{{ $skill->id }}" class="flex min-w-0 cursor-pointer items-center gap-2 rounded-lg border border-transparent px-2 py-2 text-sm hover:border-zinc-200 hover:bg-zinc-50 dark:hover:border-zinc-700 dark:hover:bg-zinc-800">
+                                    <input type="checkbox" wire:model="skillIds" value="{{ $skill->id }}" class="rounded border-zinc-300 text-zinc-900 focus:ring-zinc-500 dark:border-zinc-600" />
+                                    <x-portfolio.skill-icon :icon="$skill->icon" :name="$skill->name" size="sm" />
+                                    <span class="truncate">{{ $skill->name }}</span>
+                                </label>
+                            @empty
+                                <p class="col-span-2 text-xs text-zinc-500">Primero crea habilidades.</p>
+                            @endforelse
+                        </div>
+                    </fieldset>
 
                     <div class="space-y-3"><flux:input wire:model="coverImage" label="Portada" type="file" accept="image/jpeg,image/png,image/webp" />@if($coverImage instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile && $coverImage->isPreviewable())<img class="h-28 w-full rounded-lg object-cover ring-1 ring-black/10" src="{{ $coverImage->temporaryUrl() }}" alt="Vista previa de la nueva portada" />@elseif($editingProject?->cover_image)<img class="h-28 w-full rounded-lg object-cover ring-1 ring-black/10" src="{{ asset('storage/'.ltrim($editingProject->cover_image, '/')) }}" alt="Portada actual" />@endif<div wire:loading wire:target="coverImage" class="text-xs text-zinc-500">Preparando portada…</div></div>
 
-                    <div class="space-y-3"><flux:input wire:model="galleryImages" label="Añadir a galería (máximo 8)" type="file" accept="image/jpeg,image/png,image/webp" multiple /><div wire:loading wire:target="galleryImages" class="text-xs text-zinc-500">Preparando galería…</div>@if(count($galleryImages) > 0)<p class="text-xs text-zinc-500">{{ count($galleryImages) }} imagen(es) listas para subir.</p>@endif
-                        @if($editingProject?->media->isNotEmpty())<div class="grid grid-cols-3 gap-2">@foreach($editingProject->media as $media)<figure wire:key="media-{{ $media->id }}" class="group/media relative aspect-square overflow-hidden rounded-lg bg-zinc-100 ring-1 ring-black/10 dark:bg-zinc-800"><img class="size-full object-cover" src="{{ asset('storage/'.ltrim($media->path, '/')) }}" alt="{{ $media->alt ?: $media->filename }}" /><button type="button" wire:click="confirmMediaDelete({{ $media->id }})" class="absolute right-1.5 top-1.5 grid size-8 place-items-center rounded-md bg-black/70 text-white opacity-100 focus-visible:outline-2 focus-visible:outline-white sm:opacity-0 sm:group-hover/media:opacity-100 sm:focus:opacity-100" aria-label="Eliminar {{ $media->alt ?: $media->filename }}"><flux:icon.trash class="size-4" /></button></figure>@endforeach</div>@endif
-                    </div>
+                    <x-admin.media-gallery-editor
+                        id="project-media-gallery"
+                        :media="$editingProject?->media ?? collect()"
+                        :uploads="$galleryImages"
+                        :limit="$galleryLimit"
+                        title="Galería del proyecto"
+                        description="Carga varias capturas, amplíalas, ordénalas arrastrando y elige cualquiera como portada."
+                        empty-text="Añade capturas que expliquen el producto y sus estados principales."
+                    />
 
                     <div class="flex justify-end gap-2 border-t border-zinc-200 pt-5 dark:border-zinc-700"><flux:button type="button" variant="ghost" wire:click="cancelForm">Cancelar</flux:button><flux:button type="submit" variant="primary" wire:loading.attr="disabled" wire:target="save,coverImage,galleryImages">Guardar proyecto</flux:button></div>
                 </form>
