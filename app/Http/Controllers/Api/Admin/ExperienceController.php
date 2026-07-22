@@ -10,44 +10,45 @@ use App\Models\Experience;
 use App\Services\ImageService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class ExperienceController extends Controller
 {
     public function __construct(private readonly ImageService $imageService) {}
 
-    /**
-     * GET /admin/experiences
-     */
     public function index(): AnonymousResourceCollection
     {
-        $experiences = Experience::query()
-            ->with('media')
-            ->ordered()
-            ->get();
-
-        return ExperienceResource::collection($experiences);
+        return ExperienceResource::collection(
+            Experience::query()->with('media')->ordered()->get(),
+        );
     }
 
-    /**
-     * POST /admin/experiences
-     */
     public function store(StoreExperienceRequest $request): JsonResponse
     {
         $data = $request->validated();
+        unset($data['company_logo']);
 
-        if ($request->hasFile('company_logo')) {
-            $data['company_logo'] = $this->imageService->store(
-                $request->file('company_logo'),
-                'experiences'
-            );
-        }
-
-        // Si is_current es true, asegurar que finished_at sea null
         if (! empty($data['is_current'])) {
             $data['finished_at'] = null;
         }
 
-        $experience = Experience::create($data);
+        $storedLogoPath = null;
+
+        try {
+            $experience = DB::transaction(function () use ($request, $data, &$storedLogoPath): Experience {
+                if ($request->hasFile('company_logo')) {
+                    $storedLogoPath = $this->imageService->store($request->file('company_logo'), 'experiences');
+                    $data['company_logo'] = $storedLogoPath;
+                }
+
+                return Experience::create($data);
+            });
+        } catch (Throwable $exception) {
+            $this->imageService->delete($storedLogoPath);
+
+            throw $exception;
+        }
 
         return response()->json([
             'data' => ExperienceResource::make($experience),
@@ -55,9 +56,6 @@ class ExperienceController extends Controller
         ], 201);
     }
 
-    /**
-     * GET /admin/experiences/{experience}
-     */
     public function show(Experience $experience): JsonResponse
     {
         $experience->load('media');
@@ -67,26 +65,40 @@ class ExperienceController extends Controller
         ]);
     }
 
-    /**
-     * PUT/PATCH /admin/experiences/{experience}
-     */
     public function update(UpdateExperienceRequest $request, Experience $experience): JsonResponse
     {
         $data = $request->validated();
+        unset($data['company_logo']);
 
-        if ($request->hasFile('company_logo')) {
-            $this->imageService->delete($experience->company_logo);
-            $data['company_logo'] = $this->imageService->store(
-                $request->file('company_logo'),
-                'experiences'
-            );
-        }
+        $effectiveIsCurrent = array_key_exists('is_current', $data)
+            ? (bool) $data['is_current']
+            : $experience->is_current;
 
-        if (! empty($data['is_current'])) {
+        if ($effectiveIsCurrent) {
             $data['finished_at'] = null;
         }
 
-        $experience->update($data);
+        $oldLogoPath = $experience->company_logo;
+        $storedLogoPath = null;
+
+        try {
+            DB::transaction(function () use ($request, $experience, $data, &$storedLogoPath): void {
+                if ($request->hasFile('company_logo')) {
+                    $storedLogoPath = $this->imageService->store($request->file('company_logo'), 'experiences');
+                    $data['company_logo'] = $storedLogoPath;
+                }
+
+                $experience->update($data);
+            });
+        } catch (Throwable $exception) {
+            $this->imageService->delete($storedLogoPath);
+
+            throw $exception;
+        }
+
+        if ($request->hasFile('company_logo') && $oldLogoPath !== $experience->company_logo) {
+            $this->imageService->delete($oldLogoPath);
+        }
 
         return response()->json([
             'data' => ExperienceResource::make($experience->fresh()->load('media')),
@@ -94,19 +106,18 @@ class ExperienceController extends Controller
         ]);
     }
 
-    /**
-     * DELETE /admin/experiences/{experience}
-     */
     public function destroy(Experience $experience): JsonResponse
     {
-        $this->imageService->delete($experience->company_logo);
+        $paths = $experience->media->pluck('path')->push($experience->company_logo)->filter()->all();
 
-        foreach ($experience->media as $media) {
-            $this->imageService->delete($media->path);
-            $media->delete();
+        DB::transaction(function () use ($experience): void {
+            $experience->media()->delete();
+            $experience->delete();
+        });
+
+        foreach ($paths as $path) {
+            $this->imageService->delete((string) $path);
         }
-
-        $experience->delete();
 
         return response()->json([
             'message' => 'Experiencia eliminada correctamente.',

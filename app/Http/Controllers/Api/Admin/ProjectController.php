@@ -11,29 +11,27 @@ use App\Services\ImageService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class ProjectController extends Controller
 {
     public function __construct(private readonly ImageService $imageService) {}
 
-    /**
-     * GET /admin/projects
-     * Lista TODOS los proyectos (incluye draft y archived). Paginado.
-     */
     public function index(Request $request): AnonymousResourceCollection
     {
         $projects = Project::query()
             ->with(['category', 'skills'])
             ->when(
                 $request->filled('status'),
-                fn ($q) => $q->withStatus($request->status)
+                fn ($query) => $query->withStatus($request->status),
             )
             ->when(
                 $request->filled('category'),
-                fn ($q) => $q->whereHas(
+                fn ($query) => $query->whereHas(
                     'category',
-                    fn ($q) => $q->where('slug', $request->category)
-                )
+                    fn ($query) => $query->where('slug', $request->category),
+                ),
             )
             ->ordered()
             ->paginate(perPage: 15, page: $request->integer('page', 1))
@@ -42,45 +40,34 @@ class ProjectController extends Controller
         return ProjectResource::collection($projects);
     }
 
-    /**
-     * POST /admin/projects
-     */
     public function store(StoreProjectRequest $request): JsonResponse
     {
         $data = $request->validated();
-
-        // Slug único generado desde el título
         $data['slug'] = (new Project)->generateSlug($data['title']);
 
-        // Subida de imagen de portada
-        if ($request->hasFile('cover_image')) {
-            $data['cover_image'] = $this->imageService->store(
-                $request->file('cover_image'),
-                'projects'
-            );
-        }
-
         $skillIds = $data['skill_ids'] ?? [];
-        unset($data['skill_ids']);
-
-        // Imágenes de galería
         $galleryImages = $request->file('gallery_images', []);
-        unset($data['gallery_images']);
+        $galleryImages = is_array($galleryImages) ? $galleryImages : [$galleryImages];
+        unset($data['skill_ids'], $data['gallery_images'], $data['cover_image']);
 
-        $project = Project::create($data);
+        $storedPaths = [];
 
-        // Sincronizar habilidades
-        if (! empty($skillIds)) {
-            $project->skills()->sync($skillIds);
-        }
+        try {
+            $project = DB::transaction(function () use ($request, $data, $skillIds, $galleryImages, &$storedPaths): Project {
+                if ($request->hasFile('cover_image')) {
+                    $coverPath = $this->imageService->store($request->file('cover_image'), 'projects');
+                    $storedPaths[] = $coverPath;
+                    $data['cover_image'] = $coverPath;
+                }
 
-        // Guardar imágenes de galería
-        if (! empty($galleryImages)) {
-            $galleryImages = is_array($galleryImages) ? $galleryImages : [$galleryImages];
-            $sortOrder = $project->media()->max('sort_order') ?? 0;
-            foreach ($galleryImages as $image) {
-                if ($image->isValid()) {
+                $project = Project::create($data);
+                $project->skills()->sync($skillIds);
+                $sortOrder = $project->media()->inCollection('gallery')->max('sort_order') ?? 0;
+
+                foreach ($galleryImages as $image) {
                     $path = $this->imageService->store($image, 'projects/gallery');
+                    $storedPaths[] = $path;
+
                     $project->media()->create([
                         'collection' => 'gallery',
                         'disk' => 'public',
@@ -91,7 +78,13 @@ class ProjectController extends Controller
                         'sort_order' => ++$sortOrder,
                     ]);
                 }
-            }
+
+                return $project;
+            });
+        } catch (Throwable $exception) {
+            $this->deleteStoredPaths($storedPaths);
+
+            throw $exception;
         }
 
         $project->load(['category', 'skills', 'media']);
@@ -102,9 +95,6 @@ class ProjectController extends Controller
         ], 201);
     }
 
-    /**
-     * GET /admin/projects/{project}
-     */
     public function show(Project $project): JsonResponse
     {
         $project->load(['category', 'skills', 'media']);
@@ -114,51 +104,44 @@ class ProjectController extends Controller
         ]);
     }
 
-    /**
-     * PUT/PATCH /admin/projects/{project}
-     */
     public function update(UpdateProjectRequest $request, Project $project): JsonResponse
     {
         $data = $request->validated();
 
-        // Regenerar slug si el título cambió
         if (isset($data['title']) && $data['title'] !== $project->title) {
             $data['slug'] = $project->generateSlug($data['title'], $project->id);
         }
 
-        // Nueva imagen: borrar la anterior y subir la nueva
-        if ($request->hasFile('cover_image')) {
-            $this->imageService->delete($project->cover_image);
-            $data['cover_image'] = $this->imageService->store(
-                $request->file('cover_image'),
-                'projects'
-            );
-        }
-
-        // Filtra IDs vacíos que pueden llegar del FormData cuando skill_ids es []
         $skillIds = isset($data['skill_ids'])
-            ? array_values(array_filter($data['skill_ids'], fn ($v) => $v !== '' && $v !== null))
+            ? array_values(array_filter($data['skill_ids'], fn ($value) => $value !== '' && $value !== null))
             : null;
-        unset($data['skill_ids']);
-
-        // Imágenes de galería
         $galleryImages = $request->file('gallery_images', []);
-        unset($data['gallery_images']);
+        $galleryImages = is_array($galleryImages) ? $galleryImages : [$galleryImages];
+        unset($data['skill_ids'], $data['gallery_images'], $data['cover_image']);
 
-        $project->update($data);
+        $oldCoverPath = $project->cover_image;
+        $storedPaths = [];
 
-        // Sincronizar habilidades si se enviaron (incluso array vacío = quitar todas)
-        if (! is_null($skillIds)) {
-            $project->skills()->sync($skillIds);
-        }
+        try {
+            DB::transaction(function () use ($request, $project, $data, $skillIds, $galleryImages, &$storedPaths): void {
+                if ($request->hasFile('cover_image')) {
+                    $coverPath = $this->imageService->store($request->file('cover_image'), 'projects');
+                    $storedPaths[] = $coverPath;
+                    $data['cover_image'] = $coverPath;
+                }
 
-        // Guardar imágenes de galería adicionales
-        if (! empty($galleryImages)) {
-            $galleryImages = is_array($galleryImages) ? $galleryImages : [$galleryImages];
-            $sortOrder = $project->media()->max('sort_order') ?? 0;
-            foreach ($galleryImages as $image) {
-                if ($image->isValid()) {
+                $project->update($data);
+
+                if ($skillIds !== null) {
+                    $project->skills()->sync($skillIds);
+                }
+
+                $sortOrder = $project->media()->inCollection('gallery')->max('sort_order') ?? 0;
+
+                foreach ($galleryImages as $image) {
                     $path = $this->imageService->store($image, 'projects/gallery');
+                    $storedPaths[] = $path;
+
                     $project->media()->create([
                         'collection' => 'gallery',
                         'disk' => 'public',
@@ -169,7 +152,15 @@ class ProjectController extends Controller
                         'sort_order' => ++$sortOrder,
                     ]);
                 }
-            }
+            });
+        } catch (Throwable $exception) {
+            $this->deleteStoredPaths($storedPaths);
+
+            throw $exception;
+        }
+
+        if ($request->hasFile('cover_image') && $oldCoverPath !== $project->cover_image) {
+            $this->imageService->delete($oldCoverPath);
         }
 
         $project->load(['category', 'skills', 'media']);
@@ -180,24 +171,27 @@ class ProjectController extends Controller
         ]);
     }
 
-    /**
-     * DELETE /admin/projects/{project}
-     */
     public function destroy(Project $project): JsonResponse
     {
-        // Borrar imagen de portada
-        $this->imageService->delete($project->cover_image);
+        $paths = $project->media->pluck('path')->push($project->cover_image)->filter()->all();
 
-        // Borrar media adjunta (galería)
-        foreach ($project->media as $media) {
-            $this->imageService->delete($media->path);
-            $media->delete();
-        }
+        DB::transaction(function () use ($project): void {
+            $project->media()->delete();
+            $project->delete();
+        });
 
-        $project->delete();
+        $this->deleteStoredPaths($paths);
 
         return response()->json([
             'message' => 'Proyecto eliminado correctamente.',
         ]);
+    }
+
+    /** @param array<int, string> $paths */
+    private function deleteStoredPaths(array $paths): void
+    {
+        foreach (array_reverse($paths) as $path) {
+            $this->imageService->delete($path);
+        }
     }
 }

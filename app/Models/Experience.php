@@ -46,7 +46,7 @@ class Experience extends Model
      */
     public function scopeCurrent(Builder $query): Builder
     {
-        return $query->where('is_current', true)->orWhereNull('finished_at');
+        return $query->where('is_current', true);
     }
 
     /**
@@ -57,7 +57,7 @@ class Experience extends Model
      */
     public function scopeOrdered(Builder $query): Builder
     {
-        return $query->orderBy('sort_order')->orderByDesc('started_at');
+        return $query->orderBy('sort_order')->orderByDesc('started_at')->orderBy('id');
     }
 
     // ── Helpers ───────────────────────────────────────────────

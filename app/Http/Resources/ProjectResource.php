@@ -14,7 +14,7 @@ class ProjectResource extends JsonResource
     {
         // La descripción completa se incluye en el detalle público (show)
         // y en todos los endpoints del panel admin.
-        $includeDescription = $request->routeIs('portfolio.projects.show')
+        $includeDescription = $request->routeIs('backend.projects.show')
             || $request->routeIs('admin.projects.*');
 
         return [

@@ -10,6 +10,34 @@
 
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-mono: ui-monospace, 'SFMono-Regular', 'Cascadia Code', 'Roboto Mono', monospace;
+
+    --color-ink-50: #f3f6f9;
+    --color-ink-100: #e5ebf1;
+    --color-ink-200: #cad5e0;
+    --color-ink-300: #a7b6c7;
+    --color-ink-400: #7d8fa3;
+    --color-ink-500: #5d7085;
+    --color-ink-600: #46596e;
+    --color-ink-700: #334357;
+    --color-ink-800: #202e40;
+    --color-ink-900: #121e30;
+    --color-ink-950: #091223;
+
+    --color-paper-50: #f7f9fb;
+    --color-paper-100: #eef2f6;
+    --color-paper-200: #dde5ed;
+
+    --color-signal-50: #eefaff;
+    --color-signal-100: #d9f3ff;
+    --color-signal-200: #bceaff;
+    --color-signal-300: #8edcff;
+    --color-signal-400: #59c7fb;
+    --color-signal-500: #2ba9f0;
+    --color-signal-600: #1689d6;
+    --color-signal-700: #146dab;
+    --color-signal-800: #175c8d;
+    --color-signal-900: #184d75;
 
     --color-zinc-50: #fafafa;
     --color-zinc-100: #f5f5f5;
@@ -38,12 +66,257 @@
 
 @layer base {
 
+    html {
+        scroll-padding-top: 5.25rem;
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+
     *,
     ::after,
     ::before,
     ::backdrop,
     ::file-selector-button {
         border-color: var(--color-gray-200, currentColor);
+    }
+}
+
+@layer components {
+    .portfolio-shell {
+        background-image:
+            radial-gradient(circle at 12% 8%, rgb(43 169 240 / 0.06), transparent 32rem),
+            radial-gradient(circle at 92% 26%, rgb(9 18 35 / 0.035), transparent 30rem);
+    }
+
+    .portfolio-container {
+        @apply mx-auto w-full max-w-[75rem] px-5 sm:px-8 lg:px-10;
+    }
+
+    .portfolio-nav {
+        @apply sticky top-0 z-50 border-b border-ink-950/8 bg-paper-50/88 backdrop-blur-xl;
+    }
+
+    .skip-link {
+        @apply fixed left-4 top-3 z-[100] -translate-y-24 rounded-xl bg-ink-950 px-4 py-3 text-sm font-semibold text-white shadow-lg transition-transform focus:translate-y-0 focus:outline-none focus:ring-2 focus:ring-signal-400;
+    }
+
+    .portfolio-button {
+        @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-ink-950 px-5 py-3 text-sm font-semibold text-white shadow-[0_1px_2px_rgba(9,18,35,.16),0_7px_20px_rgba(9,18,35,.08)] transition-[transform,background-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-ink-800 hover:shadow-[0_1px_2px_rgba(9,18,35,.2),0_10px_26px_rgba(9,18,35,.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-500 focus-visible:ring-offset-4 focus-visible:ring-offset-paper-50 active:scale-[.97];
+    }
+
+    .portfolio-button--secondary {
+        @apply border border-ink-950/10 bg-white text-ink-900 shadow-sm hover:border-ink-950/20 hover:bg-paper-50;
+    }
+
+    .portfolio-button--small {
+        @apply min-h-10 rounded-xl px-4 py-2.5;
+    }
+
+    .portfolio-text-link {
+        @apply inline-flex min-h-11 items-center gap-2 rounded-lg text-sm font-semibold text-signal-700 underline-offset-4 transition-colors hover:text-signal-900 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-500;
+    }
+
+    .portfolio-eyebrow {
+        @apply inline-flex max-w-full items-center gap-3 rounded-full border border-ink-950/8 bg-white/70 px-4 py-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-ink-600 shadow-sm backdrop-blur;
+    }
+
+    .portfolio-grid-bg {
+        background-image:
+            linear-gradient(rgb(9 18 35 / 0.035) 1px, transparent 1px),
+            linear-gradient(90deg, rgb(9 18 35 / 0.035) 1px, transparent 1px);
+        background-size: 36px 36px;
+        mask-image: linear-gradient(to bottom, black 0%, rgb(0 0 0 / 0.4) 70%, transparent 100%);
+    }
+
+    .service-panel {
+        @apply overflow-hidden rounded-[1.75rem] border border-white/8 bg-ink-950 shadow-[0_0_0_1px_rgba(9,18,35,.06),0_24px_70px_-24px_rgba(9,18,35,.38)];
+    }
+
+    .service-panel__header {
+        @apply flex items-center justify-between gap-4 border-b border-white/8 px-5 py-4 sm:px-6;
+    }
+
+    .service-panel__intro {
+        @apply px-5 py-6 sm:px-6;
+    }
+
+    .service-panel__services {
+        @apply grid border-y border-white/8 sm:grid-cols-2;
+    }
+
+    .service-panel__service {
+        @apply min-w-0 px-5 py-4 sm:px-6;
+    }
+
+    .service-panel__service:first-child {
+        @apply border-b border-white/8 sm:col-span-2;
+    }
+
+    .service-panel__service:nth-child(2) {
+        @apply border-b border-white/8 sm:border-b-0 sm:border-r;
+    }
+
+    .service-panel__service:first-child .service-panel__copy {
+        @apply max-w-xl;
+    }
+
+    .service-panel__service:first-child h3 {
+        @apply text-lg;
+    }
+
+    .service-panel__index {
+        @apply font-mono text-[0.64rem] font-semibold tracking-[0.18em] text-signal-300;
+    }
+
+    .service-panel__process {
+        @apply flex flex-col gap-4 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6;
+    }
+
+    .portfolio-note {
+        @apply rounded-2xl border border-ink-950/8 bg-paper-50 p-5 text-sm leading-6 text-ink-600 shadow-[0_1px_2px_rgba(9,18,35,.03)];
+    }
+
+    .portfolio-note__index {
+        @apply mb-7 block font-mono text-[0.65rem] font-semibold tracking-[0.18em] text-signal-700;
+    }
+
+    .portfolio-empty {
+        @apply rounded-[1.5rem] border border-dashed border-ink-950/15 bg-white/50 px-6 py-16 text-center;
+    }
+
+    .featured-project-carousel__track {
+        @apply flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4;
+        scrollbar-width: none;
+    }
+
+    .featured-project-carousel__track::-webkit-scrollbar {
+        display: none;
+    }
+
+    .featured-project-carousel__slide {
+        width: min(84vw, 40rem);
+        flex: 0 0 min(84vw, 40rem);
+        scroll-snap-align: center;
+    }
+
+    .featured-project-carousel[data-carousel-ready='true'] .featured-project-carousel__track {
+        @apply relative block overflow-hidden p-0;
+        touch-action: pan-y;
+    }
+
+    .featured-project-carousel[data-carousel-ready='true'] .featured-project-carousel__slide {
+        @apply absolute left-1/2 top-4;
+        transform-origin: top center;
+        transition:
+            transform 450ms cubic-bezier(0.4, 0, 0.2, 1),
+            opacity 400ms ease;
+        will-change: transform, opacity;
+    }
+
+    .featured-project-carousel__link {
+        @apply block rounded-[1.75rem] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-500 focus-visible:ring-offset-4 focus-visible:ring-offset-paper-50;
+    }
+
+    .featured-project-carousel__card {
+        @apply overflow-hidden rounded-[1.75rem] border border-ink-950/8 bg-white shadow-[0_18px_48px_-30px_rgba(9,18,35,.32)];
+        transition:
+            border-color 250ms ease,
+            box-shadow 250ms ease;
+    }
+
+    .featured-project-carousel__slide[data-active='true'] .featured-project-carousel__card {
+        @apply border-signal-200/80 shadow-[0_30px_76px_-32px_rgba(9,18,35,.42),0_12px_34px_-24px_rgba(22,137,214,.32)];
+    }
+
+    .featured-project-carousel__media {
+        @apply relative aspect-video w-full overflow-hidden bg-ink-950;
+    }
+
+    .featured-project-carousel__placeholder {
+        @apply flex h-full flex-col justify-between bg-ink-950 p-6 sm:p-8;
+        background-image:
+            linear-gradient(rgb(89 199 251 / 0.08) 1px, transparent 1px),
+            linear-gradient(90deg, rgb(89 199 251 / 0.08) 1px, transparent 1px);
+        background-size: 28px 28px;
+    }
+
+    .featured-project-carousel__media-shade {
+        @apply pointer-events-none absolute inset-0 bg-gradient-to-t from-ink-950/50 via-transparent to-ink-950/5;
+    }
+
+    .featured-project-carousel__image-cta {
+        @apply absolute bottom-4 left-4 inline-flex translate-y-2 items-center gap-2 rounded-xl bg-white/92 px-3.5 py-2 text-xs font-semibold text-ink-900 opacity-0 shadow-sm backdrop-blur transition-[transform,opacity] duration-300 sm:bottom-5 sm:left-5;
+    }
+
+    .featured-project-carousel__slide[data-active='true'] .featured-project-carousel__image-cta {
+        @apply translate-y-0 opacity-100;
+    }
+
+    .featured-project-carousel__body {
+        @apply p-5 sm:p-7;
+    }
+
+    .featured-project-carousel[data-carousel-ready='true'] .featured-project-carousel__slide:not([data-active='true']) .featured-project-carousel__skills {
+        @apply invisible opacity-0;
+    }
+
+    .featured-project-carousel__control {
+        @apply absolute z-20 grid size-11 -translate-y-1/2 place-items-center rounded-full border border-ink-950/10 bg-white/94 text-ink-600 shadow-[0_8px_28px_-12px_rgba(9,18,35,.42)] backdrop-blur transition-[color,border-color,background-color,transform] duration-200 hover:border-signal-200 hover:bg-signal-50 hover:text-signal-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-500 focus-visible:ring-offset-3 focus-visible:ring-offset-paper-50 active:scale-95;
+    }
+
+    .featured-project-carousel__control--previous {
+        @apply left-1 sm:left-3;
+    }
+
+    .featured-project-carousel__control--next {
+        @apply right-1 sm:right-3;
+    }
+
+    .featured-project-carousel__dot {
+        @apply h-1.5 w-1.5 rounded-full bg-ink-300 transition-[width,background-color] duration-300 hover:bg-ink-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-500 focus-visible:ring-offset-3 focus-visible:ring-offset-paper-50;
+    }
+
+    .featured-project-carousel__dot[data-active='true'] {
+        @apply w-7 bg-signal-600;
+    }
+
+    .portfolio-skill-group {
+        @apply rounded-[1.5rem] border border-ink-950/8 bg-white/55 p-5 shadow-[0_1px_2px_rgba(9,18,35,.025)] sm:p-6;
+    }
+
+    [data-reveal][data-reveal-ready='true'] {
+        opacity: 0;
+        transform: translateY(18px);
+        transition:
+            opacity 600ms cubic-bezier(0.23, 1, 0.32, 1),
+            transform 600ms cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    [data-reveal][data-reveal-ready='true'][data-revealed='true'] {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    [data-reveal] {
+        opacity: 1;
+        transform: none;
     }
 }
 

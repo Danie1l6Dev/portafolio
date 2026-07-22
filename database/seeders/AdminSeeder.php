@@ -24,13 +24,19 @@ class AdminSeeder extends Seeder
     {
         $config = config('admin');
 
-        User::firstOrCreate(
+        $admin = User::firstOrCreate(
             ['email' => $config['email']],
             [
                 'name' => $config['name'],
                 'password' => Hash::make($config['password']),
+                'role' => 'admin',
+                'email_verified_at' => now(),
             ]
         );
+
+        if (! $admin->email_verified_at) {
+            $admin->forceFill(['email_verified_at' => now()])->save();
+        }
 
         $this->command->info("Usuario admin listo: {$config['email']}");
     }

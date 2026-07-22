@@ -41,11 +41,11 @@ class ProjectSeeder extends Seeder
         $this->upsertProject(
             title: 'Portafolio Personal',
             category: 'portafolio',
-            summary: 'Portafolio personal fullstack con panel de administración, carrusel de proyectos, sección de habilidades, experiencia laboral y formulario de contacto.',
+            summary: 'Portafolio personal fullstack integrado en Laravel, con experiencia pública editorial, proyectos filtrables, formulario de contacto y panel de administración.',
             description: <<<'TEXT'
-            Sitio web personal diseñado para mostrar proyectos, habilidades y experiencia profesional de forma dinámica. Construido como un monorepo con un backend API REST en Laravel 13 y un frontend en Next.js 16 con React 19, totalmente desacoplados.
+            Sitio web personal diseñado para presentar proyectos, habilidades y experiencia profesional desde una experiencia continua y responsive. La interfaz pública está construida dentro de Laravel con Blade, Livewire, Alpine.js, Tailwind CSS y Vite, sin depender de un frontend separado.
 
-            El área pública presenta un carrusel interactivo de proyectos con filtro por categoría, una sección de habilidades agrupadas por tecnología, el historial de experiencia laboral y un formulario de contacto con notificación por correo. Todo el contenido es gestionable desde un panel de administración privado que incluye CRUD completo para proyectos (con subida de imágenes), habilidades, categorías, experiencias y mensajes recibidos. La autenticación del panel usa Laravel Sanctum con tokens de sesión. El frontend aprovecha el App Router de Next.js con Server Components, streaming y revalidación ISR para un rendimiento óptimo.
+            El área pública ofrece proyectos destacados, un archivo con búsqueda y filtros, páginas de detalle, habilidades agrupadas, experiencia condicionada a datos reales y un formulario de contacto persistente. El panel privado permite gestionar proyectos y su galería, categorías, habilidades, experiencias y mensajes recibidos mediante componentes Livewire protegidos por roles.
             TEXT,
             demo_url: null,
             repo_url: 'https://github.com/Danie1l6Dev/portafolio',
@@ -55,9 +55,9 @@ class ProjectSeeder extends Seeder
             started_at: '2025-01-01',
             finished_at: null,
             skills: [
-                'PHP', 'Laravel', 'Laravel Sanctum', 'Eloquent ORM',
-                'React', 'Tailwind CSS', 'JavaScript',
-                'MySQL', 'Docker', 'Git / GitHub',
+                'PHP', 'Laravel', 'Livewire', 'Blade', 'Eloquent ORM',
+                'Tailwind CSS', 'Alpine.js', 'JavaScript', 'Vite',
+                'SQLite', 'Git / GitHub', 'PHPUnit / PEST',
             ],
         );
 
@@ -84,6 +84,7 @@ class ProjectSeeder extends Seeder
                 'MySQL', 'Eloquent ORM',
                 'Docker', 'Git / GitHub', 'PHPUnit / PEST',
             ],
+            coverImage: 'images/projects/994328cd-03b3-449e-a469-37c7989b5500.png',
         );
     }
 
@@ -103,6 +104,7 @@ class ProjectSeeder extends Seeder
         string $started_at,
         ?string $finished_at,
         array $skills,
+        ?string $coverImage = null,
     ): void {
         $categoryModel = Category::where('slug', $category)->first();
         $slug = Str::slug($title);
@@ -125,6 +127,10 @@ class ProjectSeeder extends Seeder
                 'finished_at' => $finished_at,
             ],
         );
+
+        if ($coverImage && blank($project->cover_image)) {
+            $project->update(['cover_image' => $coverImage]);
+        }
 
         // Asocia habilidades (busca por nombre exacto)
         $skillIds = Skill::whereIn('name', $skills)->pluck('id');

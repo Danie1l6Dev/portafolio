@@ -44,7 +44,7 @@ class Message extends Model
      */
     public function scopeLatestFirst(Builder $query): Builder
     {
-        return $query->orderByDesc('created_at');
+        return $query->orderByDesc('created_at')->orderByDesc('id');
     }
 
     // ── Helpers ───────────────────────────────────────────────

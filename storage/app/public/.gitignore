@@ -1,2 +1,7 @@
 *
 !.gitignore
+!images/
+images/*
+!images/projects/
+images/projects/*
+!images/projects/994328cd-03b3-449e-a469-37c7989b5500.png

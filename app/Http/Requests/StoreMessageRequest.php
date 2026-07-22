@@ -15,10 +15,10 @@ class StoreMessageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:100'],
-            'email' => ['required', 'email', 'max:150'],
-            'subject' => ['required', 'string', 'max:150'],
-            'body' => ['required', 'string', 'max:3000'],
+            'name' => ['required', 'string', 'min:2', 'max:100'],
+            'email' => ['required', 'email:rfc', 'max:150'],
+            'subject' => ['required', 'string', 'min:3', 'max:150'],
+            'body' => ['required', 'string', 'min:10', 'max:3000'],
         ];
     }
 

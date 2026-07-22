@@ -1,19 +1,34 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         @include('partials.head')
     </head>
     <body class="min-h-screen bg-white dark:bg-zinc-800">
         <flux:sidebar sticky collapsible="mobile" class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
             <flux:sidebar.header>
-                <x-app-logo :sidebar="true" href="{{ route('dashboard') }}" wire:navigate />
+                <x-app-logo :sidebar="true" href="{{ route('panel.dashboard') }}" wire:navigate />
                 <flux:sidebar.collapse class="lg:hidden" />
             </flux:sidebar.header>
 
             <flux:sidebar.nav>
-                <flux:sidebar.group :heading="__('Platform')" class="grid">
-                    <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
-                        {{ __('Dashboard') }}
+                <flux:sidebar.group heading="Contenido" class="grid">
+                    <flux:sidebar.item icon="home" :href="route('panel.dashboard')" :current="request()->routeIs('panel.dashboard', 'dashboard')" wire:navigate>
+                        Resumen
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="folder-git-2" :href="route('panel.projects')" :current="request()->routeIs('panel.projects')" wire:navigate>
+                        Proyectos
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="tag" :href="route('panel.categories')" :current="request()->routeIs('panel.categories')" wire:navigate>
+                        Categorías
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="code-bracket" :href="route('panel.skills')" :current="request()->routeIs('panel.skills')" wire:navigate>
+                        Habilidades
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="briefcase" :href="route('panel.experiences')" :current="request()->routeIs('panel.experiences')" wire:navigate>
+                        Experiencias
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="inbox" :href="route('panel.messages')" :current="request()->routeIs('panel.messages')" wire:navigate>
+                        Mensajes
                     </flux:sidebar.item>
                 </flux:sidebar.group>
             </flux:sidebar.nav>
@@ -21,12 +36,8 @@
             <flux:spacer />
 
             <flux:sidebar.nav>
-                <flux:sidebar.item icon="folder-git-2" href="https://github.com/laravel/livewire-starter-kit" target="_blank">
-                    {{ __('Repository') }}
-                </flux:sidebar.item>
-
-                <flux:sidebar.item icon="book-open-text" href="https://laravel.com/docs/starter-kits#livewire" target="_blank">
-                    {{ __('Documentation') }}
+                <flux:sidebar.item icon="globe-alt" :href="route('home')" target="_blank">
+                    Ver portafolio
                 </flux:sidebar.item>
             </flux:sidebar.nav>
 
@@ -66,7 +77,7 @@
 
                     <flux:menu.radio.group>
                         <flux:menu.item :href="route('profile.edit')" icon="cog" wire:navigate>
-                            {{ __('Settings') }}
+                            Configuración
                         </flux:menu.item>
                     </flux:menu.radio.group>
 
@@ -81,7 +92,7 @@
                             class="w-full cursor-pointer"
                             data-test="logout-button"
                         >
-                            {{ __('Log out') }}
+                            Cerrar sesión
                         </flux:menu.item>
                     </form>
                 </flux:menu>

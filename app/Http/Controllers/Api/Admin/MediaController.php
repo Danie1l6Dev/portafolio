@@ -10,7 +10,11 @@ use App\Models\Project;
 use App\Services\ImageService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
+use Throwable;
 
 class MediaController extends Controller
 {
@@ -23,38 +27,53 @@ class MediaController extends Controller
     public function store(Request $request, int $projectId): JsonResponse
     {
         $request->validate([
-            'images' => ['required', 'array', 'min:1'],
-            'images.*' => ['required', 'file', 'max:2048'],
-            'collection' => ['nullable', 'string', 'max:50'],
+            'images' => ['required', 'array', 'min:1', 'max:8'],
+            'images.*' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'collection' => ['nullable', Rule::in(['gallery'])],
         ]);
 
         $project = Project::findOrFail($projectId);
-        $collection = $request->input('collection', 'gallery');
         $images = $request->file('images', []);
-
         if (! is_array($images)) {
             $images = [$images];
         }
 
+        $existingCount = $project->media()->inCollection('gallery')->count();
+
+        if ($existingCount + count($images) > 8) {
+            throw ValidationException::withMessages([
+                'images' => 'La galería admite un máximo total de 8 imágenes.',
+            ]);
+        }
+
         $mediaItems = [];
-        $sortOrder = $project->media()->max('sort_order') ?? 0;
+        $storedPaths = [];
 
-        foreach ($images as $image) {
-            if ($image->isValid()) {
-                $path = $this->imageService->store($image, 'projects/gallery');
+        try {
+            DB::transaction(function () use ($project, $images, &$mediaItems, &$storedPaths): void {
+                $sortOrder = $project->media()->inCollection('gallery')->max('sort_order') ?? 0;
 
-                $media = $project->media()->create([
-                    'collection' => $collection,
-                    'disk' => 'public',
-                    'path' => $path,
-                    'filename' => $image->getClientOriginalName(),
-                    'mime_type' => $image->getMimeType(),
-                    'size' => $image->getSize(),
-                    'sort_order' => ++$sortOrder,
-                ]);
+                foreach ($images as $image) {
+                    $path = $this->imageService->store($image, 'projects/gallery');
+                    $storedPaths[] = $path;
 
-                $mediaItems[] = $media;
+                    $mediaItems[] = $project->media()->create([
+                        'collection' => 'gallery',
+                        'disk' => 'public',
+                        'path' => $path,
+                        'filename' => $image->getClientOriginalName(),
+                        'mime_type' => $image->getMimeType(),
+                        'size' => $image->getSize(),
+                        'sort_order' => ++$sortOrder,
+                    ]);
+                }
+            });
+        } catch (Throwable $exception) {
+            foreach (array_reverse($storedPaths) as $path) {
+                $this->imageService->delete($path);
             }
+
+            throw $exception;
         }
 
         return response()->json([
