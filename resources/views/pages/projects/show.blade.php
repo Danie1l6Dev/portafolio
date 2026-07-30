@@ -3,6 +3,7 @@
     'description' => $metaDescription,
     'canonical' => $canonicalUrl,
     'image' => $metaImage,
+    'imageAlt' => 'Portada del proyecto '.$project->title,
     'type' => 'article',
     'schema' => $schema,
 ])

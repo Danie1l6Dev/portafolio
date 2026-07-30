@@ -40,11 +40,12 @@ it('renders the factual one-page portfolio with SEO and security headers', funct
         ->assertSee('data-theme-toggle', false)
         ->assertSee("window.localStorage.getItem(storageKey) === 'light'", false)
         ->assertSee('data-portfolio-mark', false)
-        ->assertSee('data-service-panel', false)
-        ->assertSee('id="hero-services-title"', false)
-        ->assertSee('Sistemas de gestión')
-        ->assertSee('Procesos operativos')
-        ->assertSee('Aplicaciones Laravel completas')
+        ->assertDontSee('data-service-panel', false)
+        ->assertDontSee('id="hero-services-title"', false)
+        ->assertDontSee('Sistemas de gestión')
+        ->assertDontSee('Procesos operativos')
+        ->assertDontSee('Aplicaciones Laravel completas')
+        ->assertSee('¿Tienes un proceso por mejorar? Hablemos')
         ->assertDontSee('Sistema / portafolio')
         ->assertDontSee('id="experiencia"', false)
         ->assertSee($published->title)
@@ -54,6 +55,10 @@ it('renders the factual one-page portfolio with SEO and security headers', funct
         ->assertDontSee('data-carousel-control=', false)
         ->assertSee('application/ld+json', false)
         ->assertSee('ProfilePage')
+        ->assertSee('CollegeOrUniversity')
+        ->assertSee('<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">', false)
+        ->assertSee('<meta property="og:image" content="'.asset(config('portfolio.seo.default_image')).'">', false)
+        ->assertSee('<meta name="twitter:card" content="summary_large_image">', false)
         ->assertSee('<link rel="canonical" href="'.route('home').'">', false)
         ->assertHeader('X-Frame-Options', 'SAMEORIGIN')
         ->assertHeader('X-Content-Type-Options', 'nosniff')
@@ -164,7 +169,6 @@ it('shows the featured-project empty state when no published project is highligh
 
     $this->get(route('home'))
         ->assertOk()
-        ->assertSee('data-service-panel', false)
         ->assertSee('Aún no hay proyectos destacados.')
         ->assertDontSee('data-featured-carousel', false)
         ->assertDontSee('Solo en el archivo');
@@ -240,6 +244,7 @@ it('advertises the sitemap with an absolute URL in robots.txt', function (): voi
     $this->get(route('robots'))
         ->assertOk()
         ->assertHeader('Content-Type', 'text/plain; charset=UTF-8')
+        ->assertSee('Allow: /')
         ->assertSee('Sitemap: '.route('sitemap'));
 });
 

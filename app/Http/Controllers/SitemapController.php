@@ -22,7 +22,7 @@ class SitemapController extends Controller
     public function robots(): Response
     {
         return response(
-            "User-agent: *\nDisallow:\n\nSitemap: ".route('sitemap')."\n",
+            "User-agent: *\nAllow: /\n\nSitemap: ".route('sitemap')."\n",
             200,
             ['Content-Type' => 'text/plain; charset=UTF-8'],
         );

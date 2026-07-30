@@ -23,19 +23,20 @@ class ProjectPageController extends Controller
         ]);
 
         $canonicalUrl = route('portfolio.projects.show', ['project' => $project->slug]);
-        $metaImage = $this->coverUrl($project);
+        $coverUrl = $this->coverUrl($project);
+        $metaImage = $coverUrl ?? asset(config('portfolio.seo.default_image'));
         $schema = array_filter([
             '@context' => 'https://schema.org',
-            '@type' => 'SoftwareSourceCode',
+            '@type' => 'SoftwareApplication',
             'name' => $project->title,
             'description' => $project->summary,
             'url' => $canonicalUrl,
             'image' => $metaImage,
             'dateCreated' => $project->started_at?->toDateString(),
             'dateModified' => $project->updated_at?->toDateString(),
-            'codeRepository' => $project->repo_url,
+            'applicationCategory' => 'WebApplication',
+            'operatingSystem' => 'Web',
             'sameAs' => $project->demo_url,
-            'programmingLanguage' => $project->skills->pluck('name')->values()->all(),
             'author' => [
                 '@type' => 'Person',
                 'name' => config('portfolio.name'),
@@ -45,7 +46,7 @@ class ProjectPageController extends Controller
 
         return view('pages.projects.show', [
             'project' => $project,
-            'coverUrl' => $metaImage,
+            'coverUrl' => $coverUrl,
             'title' => $project->title,
             'description' => $project->summary,
             'canonical' => $canonicalUrl,

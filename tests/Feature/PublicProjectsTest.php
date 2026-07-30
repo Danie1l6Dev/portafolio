@@ -178,7 +178,9 @@ test('el controlador prepara el detalle publicado con relaciones y metadatos', f
         ->and($data['metaTitle'])->toBe('Proyecto con detalle — Daniel Sierra')
         ->and($data['metaDescription'])->toBe($project->summary)
         ->and($data['canonicalUrl'])->toBe(route('portfolio.projects.show', ['project' => $project->slug]))
-        ->and($data['metaImage'])->toContain('/storage/projects/cover.webp');
+        ->and($data['metaImage'])->toContain('/storage/projects/cover.webp')
+        ->and($data['schema']['@type'])->toBe('SoftwareApplication')
+        ->and($data['schema']['operatingSystem'])->toBe('Web');
 });
 
 test('el detalle responde 404 cuando el proyecto no está publicado', function (string $status): void {
@@ -209,12 +211,16 @@ test('las rutas públicas de listado y detalle renderizan las vistas Laravel com
 
     $this->get(route('portfolio.projects.index'))
         ->assertOk()
+        ->assertSee('Proyectos de software — Daniel Sierra')
+        ->assertSee('Explora proyectos de software desarrollados con Laravel', false)
         ->assertSee('Sistemas construidos para resolver problemas reales.')
         ->assertSee($project->title);
 
     $this->get(route('portfolio.projects.show', ['project' => $project->slug]))
         ->assertOk()
         ->assertSee($project->title)
+        ->assertSee('<meta name="twitter:card" content="summary_large_image">', false)
+        ->assertSee('<meta property="og:image" content="'.asset(config('portfolio.seo.default_image')).'">', false)
         ->assertSee('Sobre el proyecto')
         ->assertSee('Capturas del proyecto')
         ->assertSee('Captura renderizada')

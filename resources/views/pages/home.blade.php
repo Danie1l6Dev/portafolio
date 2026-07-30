@@ -6,15 +6,10 @@
 ])
 
 @section('content')
-    @php
-        $services = collect(config('portfolio.services', []));
-        $deliverySteps = collect(config('portfolio.delivery_steps', []));
-    @endphp
-
     <section id="inicio" class="portfolio-section relative min-h-[calc(100svh-4.5rem)] overflow-hidden pt-16 sm:pt-24 lg:pt-20 xl:pt-24">
         <div class="portfolio-grid-bg absolute inset-0" aria-hidden="true"></div>
-        <div class="portfolio-container relative grid items-center gap-14 pb-20 lg:grid-cols-[.98fr_1.02fr] lg:gap-16 lg:pb-20 xl:pb-24">
-            <div data-reveal>
+        <div class="portfolio-container relative flex min-h-[calc(100svh-4.5rem)] items-center pb-20 lg:pb-20 xl:pb-24">
+            <div class="max-w-4xl" data-reveal>
                 <p class="portfolio-eyebrow mb-6">
                     <span class="size-2 rounded-full bg-emerald-500 shadow-[0_0_0_5px_rgba(16,185,129,.12)]" aria-hidden="true"></span>
                     {{ config('portfolio.availability') }}
@@ -31,7 +26,7 @@
 
                 <div class="mt-8 flex flex-wrap gap-3">
                     <a href="#contacto" class="portfolio-button">
-                        Cuéntame tu proyecto
+                        ¿Tienes un proceso por mejorar? Hablemos
                         <span aria-hidden="true">↗</span>
                     </a>
                     <a href="#proyectos" class="portfolio-button portfolio-button--secondary">Ver trabajo realizado</a>
@@ -48,57 +43,6 @@
                         <p class="mt-1 text-xs text-ink-500 dark:text-slate-400">Casos destacados para revisar</p>
                     </div>
                 </div>
-            </div>
-
-            <div class="relative mx-auto w-full max-w-2xl" data-reveal>
-                <section class="service-panel" aria-labelledby="hero-services-title" data-service-panel>
-                    <div class="service-panel__header">
-                        <span class="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-white/45">Servicios / desarrollo web</span>
-                        <span class="inline-flex items-center gap-2 font-mono text-[0.65rem] uppercase tracking-[0.12em] text-emerald-300">
-                            <span class="size-1.5 rounded-full bg-emerald-400" aria-hidden="true"></span> Disponible
-                        </span>
-                    </div>
-
-                    <div class="service-panel__intro">
-                        <span class="font-mono text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-signal-300">Del problema al producto</span>
-                        <h2 id="hero-services-title" class="mt-4 max-w-xl text-balance text-2xl font-semibold leading-tight tracking-[-0.035em] text-white sm:text-3xl">
-                            Qué puedo construir contigo.
-                        </h2>
-                        <p class="mt-3 max-w-xl text-pretty text-sm leading-7 text-white/55">
-                            Software pensado para ordenar la operación diaria y seguir siendo mantenible cuando el proyecto crece.
-                        </p>
-                    </div>
-
-                    <ol class="service-panel__services">
-                        @foreach ($services as $service)
-                            <li class="service-panel__service" data-service="{{ Str::slug($service['title']) }}">
-                                <div class="flex items-center justify-between gap-4">
-                                    <span class="service-panel__index">0{{ $loop->iteration }}</span>
-                                    <span class="font-mono text-[0.58rem] font-semibold uppercase tracking-[0.16em] text-white/30">{{ $service['label'] }}</span>
-                                </div>
-                                <div class="service-panel__copy mt-4">
-                                    <h3 class="text-base font-semibold leading-snug text-white">{{ $service['title'] }}</h3>
-                                    <p class="mt-2 text-pretty text-xs leading-5 text-white/50">{{ $service['description'] }}</p>
-                                </div>
-                            </li>
-                        @endforeach
-                    </ol>
-
-                    <div class="service-panel__process">
-                        <div class="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[0.56rem] font-semibold uppercase tracking-[0.12em] text-white/35" aria-label="Proceso de trabajo">
-                            @foreach ($deliverySteps as $step)
-                                <span>{{ $step }}</span>
-                                @unless ($loop->last)
-                                    <span class="text-signal-400/60" aria-hidden="true">→</span>
-                                @endunless
-                            @endforeach
-                        </div>
-                        <a href="#contacto" class="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-xl text-sm font-semibold text-white/80 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-400 focus-visible:ring-offset-4 focus-visible:ring-offset-ink-950">
-                            Hablemos <span aria-hidden="true">↗</span>
-                        </a>
-                    </div>
-                </section>
-                <div class="absolute -bottom-7 -left-7 -z-10 size-32 rounded-full bg-signal-400/18 blur-3xl" aria-hidden="true"></div>
             </div>
         </div>
     </section>

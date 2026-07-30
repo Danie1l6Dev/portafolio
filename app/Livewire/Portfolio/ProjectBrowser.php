@@ -15,8 +15,10 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Layout('layouts.portfolio')]
-#[Title('Proyectos')]
+#[Layout('layouts.portfolio', [
+    'description' => 'Explora proyectos de software desarrollados con Laravel para gestión, trazabilidad, automatización de procesos e interfaces web claras.',
+])]
+#[Title('Proyectos de software')]
 class ProjectBrowser extends Component
 {
     use WithPagination;

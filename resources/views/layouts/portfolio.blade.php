@@ -10,12 +10,16 @@
                 : config('portfolio.name').' — '.config('portfolio.role');
             $pageDescription = $description ?? config('portfolio.description');
             $pageCanonical = $canonical ?? url()->current();
-            $pageImage = $image ?? null;
+            $pageImage = $image ?? asset(config('portfolio.seo.default_image'));
+            $pageImageAlt = $imageAlt ?? config('portfolio.seo.default_image_alt');
             $pageType = $type ?? 'website';
+            $pageRobots = $robots ?? 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1';
         @endphp
 
         <title>{{ $pageTitle }}</title>
         <meta name="description" content="{{ $pageDescription }}">
+        <meta name="author" content="{{ config('portfolio.name') }}">
+        <meta name="robots" content="{{ $pageRobots }}">
         <link rel="canonical" href="{{ $pageCanonical }}">
 
         <meta property="og:locale" content="es_CO">
@@ -24,16 +28,14 @@
         <meta property="og:title" content="{{ $pageTitle }}">
         <meta property="og:description" content="{{ $pageDescription }}">
         <meta property="og:url" content="{{ $pageCanonical }}">
-        @if ($pageImage)
-            <meta property="og:image" content="{{ $pageImage }}">
-        @endif
+        <meta property="og:image" content="{{ $pageImage }}">
+        <meta property="og:image:alt" content="{{ $pageImageAlt }}">
 
-        <meta name="twitter:card" content="{{ $pageImage ? 'summary_large_image' : 'summary' }}">
+        <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="{{ $pageTitle }}">
         <meta name="twitter:description" content="{{ $pageDescription }}">
-        @if ($pageImage)
-            <meta name="twitter:image" content="{{ $pageImage }}">
-        @endif
+        <meta name="twitter:image" content="{{ $pageImage }}">
+        <meta name="twitter:image:alt" content="{{ $pageImageAlt }}">
 
         <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
         <meta id="portfolio-theme-color" name="theme-color" content="#07111f">

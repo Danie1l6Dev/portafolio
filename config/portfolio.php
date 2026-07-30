@@ -25,24 +25,10 @@ return [
         'path' => 'documents/hoja-de-vida-daniel-sierra.pdf',
         'download_name' => 'Hoja de vida - Daniel Sierra.pdf',
     ],
-    'services' => [
-        [
-            'label' => 'Centralizar',
-            'title' => 'Sistemas de gestión',
-            'description' => 'Centralizo usuarios, roles, datos y procesos en paneles claros y fáciles de operar.',
-        ],
-        [
-            'label' => 'Digitalizar',
-            'title' => 'Procesos operativos',
-            'description' => 'Creo flujos para registros, inventarios, trazabilidad, importaciones y reportes.',
-        ],
-        [
-            'label' => 'Construir',
-            'title' => 'Aplicaciones Laravel completas',
-            'description' => 'Integro interfaz pública, panel administrativo, base de datos, validaciones y pruebas.',
-        ],
+    'seo' => [
+        'default_image' => 'images/profile/daniel-sierra.webp',
+        'default_image_alt' => 'Daniel Sierra, desarrollador de software',
     ],
-    'delivery_steps' => ['Necesidad', 'Arquitectura', 'Desarrollo', 'Validación'],
     'socials' => [
         [
             'name' => 'GitHub',

@@ -39,23 +39,56 @@ class HomeController extends Controller
 
         /** @var list<array{name: string, url: string, icon: string}> $socials */
         $socials = config('portfolio.socials', []);
+        $profileUrl = route('home');
+        $personId = $profileUrl.'#daniel-sierra';
+        $awards = $achievements
+            ->map(fn (Achievement $achievement): string => $achievement->result
+                ? "{$achievement->result} — {$achievement->title}"
+                : $achievement->title)
+            ->values()
+            ->all();
+        $technologies = $skills
+            ->flatten()
+            ->pluck('name')
+            ->unique()
+            ->values()
+            ->all();
 
         $schema = [
             '@context' => 'https://schema.org',
-            '@type' => 'ProfilePage',
-            'mainEntity' => [
-                '@type' => 'Person',
-                'name' => config('portfolio.name'),
-                'jobTitle' => config('portfolio.role'),
-                'email' => 'mailto:'.config('portfolio.email'),
-                'url' => route('home'),
-                'sameAs' => array_column($socials, 'url'),
-                'award' => $achievements
-                    ->map(fn (Achievement $achievement): string => $achievement->result
-                        ? "{$achievement->result} — {$achievement->title}"
-                        : $achievement->title)
-                    ->values()
-                    ->all(),
+            '@graph' => [
+                [
+                    '@type' => 'WebSite',
+                    '@id' => $profileUrl.'#website',
+                    'name' => config('portfolio.name'),
+                    'url' => $profileUrl,
+                    'inLanguage' => 'es-CO',
+                ],
+                [
+                    '@type' => 'ProfilePage',
+                    '@id' => $profileUrl.'#profile',
+                    'url' => $profileUrl,
+                    'name' => config('portfolio.name').' — '.config('portfolio.role'),
+                    'inLanguage' => 'es-CO',
+                    'isPartOf' => ['@id' => $profileUrl.'#website'],
+                    'mainEntity' => ['@id' => $personId],
+                ],
+                [
+                    '@type' => 'Person',
+                    '@id' => $personId,
+                    'name' => config('portfolio.name'),
+                    'jobTitle' => config('portfolio.role'),
+                    'email' => 'mailto:'.config('portfolio.email'),
+                    'url' => $profileUrl,
+                    'image' => asset(config('portfolio.seo.default_image')),
+                    'sameAs' => array_column($socials, 'url'),
+                    'knowsAbout' => $technologies,
+                    'award' => $awards,
+                    'affiliation' => [
+                        '@type' => 'CollegeOrUniversity',
+                        'name' => config('portfolio.education.institution'),
+                    ],
+                ],
             ],
         ];
 
