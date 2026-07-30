@@ -37,7 +37,7 @@
                     x-on:click="open(@js($image->url), @js($imageAlt))"
                     aria-label="Ampliar {{ $imageAlt }}"
                 >
-                    <img src="{{ $image->url }}" alt="{{ $imageAlt }}" loading="lazy" decoding="async" class="size-full object-cover transition-transform duration-200 group-hover/gallery:scale-[1.04]">
+                    <img src="{{ $image->preview_url }}" alt="{{ $imageAlt }}" loading="lazy" decoding="async" class="size-full object-cover transition-transform duration-200 group-hover/gallery:scale-[1.04]">
                     <span class="absolute inset-0 ring-1 ring-inset ring-black/10 dark:ring-white/10" aria-hidden="true"></span>
                 </button>
             @endforeach

@@ -24,7 +24,7 @@ class MediaController extends Controller
     public function store(Request $request, int $projectId): JsonResponse
     {
         $galleryLimit = (int) config('admin.galleries.projects.max_items', 8);
-        $galleryFileLimit = (int) config('admin.galleries.projects.max_file_kilobytes', 2048);
+        $galleryFileLimit = (int) config('admin.galleries.projects.max_file_kilobytes', 10240);
 
         $request->validate([
             'images' => ['required', 'array', 'min:1', "max:{$galleryLimit}"],

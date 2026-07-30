@@ -89,7 +89,7 @@
                             x-on:click="open(@js($mediaItem->url), @js($mediaAltValue))"
                             aria-label="Ampliar {{ $mediaAltValue }}"
                         >
-                            <img src="{{ $mediaItem->url }}" alt="{{ $mediaAltValue }}" class="size-full object-cover transition-transform duration-200 group-hover/gallery:scale-[1.03]">
+                            <img src="{{ $mediaItem->preview_url }}" alt="{{ $mediaAltValue }}" class="size-full object-cover transition-transform duration-200 group-hover/gallery:scale-[1.03]">
                         </button>
 
                         <div class="admin-gallery__overlay" aria-hidden="true"></div>

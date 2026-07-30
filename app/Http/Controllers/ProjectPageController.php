@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Storage;
 
 class ProjectPageController extends Controller
 {
@@ -61,22 +60,6 @@ class ProjectPageController extends Controller
 
     private function coverUrl(Project $project): ?string
     {
-        if (blank($project->cover_image)) {
-            return null;
-        }
-
-        $path = ltrim($project->cover_image, '/');
-
-        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
-            return $path;
-        }
-
-        $storageUrl = str_starts_with($path, 'storage/')
-            ? '/'.$path
-            : Storage::disk('public')->url($path);
-
-        return str_starts_with($storageUrl, 'http://') || str_starts_with($storageUrl, 'https://')
-            ? $storageUrl
-            : url($storageUrl);
+        return $project->coverUrl();
     }
 }

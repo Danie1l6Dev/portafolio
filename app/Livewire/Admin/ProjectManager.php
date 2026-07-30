@@ -132,7 +132,8 @@ class ProjectManager extends Component
         $this->authorizeContentEditor();
 
         $galleryLimit = (int) config('admin.galleries.projects.max_items', 8);
-        $galleryFileLimit = (int) config('admin.galleries.projects.max_file_kilobytes', 2048);
+        $galleryFileLimit = (int) config('admin.galleries.projects.max_file_kilobytes', 10240);
+        $imageFileLimit = (int) config('admin.images.max_file_kilobytes', 10240);
 
         $existingGalleryCount = $this->editingProjectId
             ? Project::query()
@@ -162,7 +163,7 @@ class ProjectManager extends Component
             'finishedAt' => ['nullable', 'date', 'after_or_equal:startedAt'],
             'skillIds' => ['array'],
             'skillIds.*' => ['integer', 'exists:skills,id'],
-            'coverImage' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'coverImage' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', "max:{$imageFileLimit}"],
             'galleryImages' => ['array', "max:{$galleryLimit}"],
             'galleryImages.*' => ['image', 'mimes:jpg,jpeg,png,webp', "max:{$galleryFileLimit}"],
         ]);

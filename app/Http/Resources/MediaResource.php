@@ -15,11 +15,12 @@ class MediaResource extends JsonResource
         return [
             'id' => $this->id,
             'collection' => $this->collection,
-            'url' => $this->url,           // accessor: Storage::url(path)
-            'path' => $this->path,          // ruta relativa para comparaciones
+            'url' => $this->url,
+            'preview_url' => $this->preview_url,
+            'path' => $this->path,
             'filename' => $this->filename,
             'mime_type' => $this->mime_type,
-            'is_image' => $this->is_image,      // accessor: str_starts_with mime
+            'is_image' => $this->is_image,
             'alt' => $this->alt,
             'sort_order' => $this->sort_order,
         ];

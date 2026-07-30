@@ -2,9 +2,9 @@
 
 <article class="achievement-card group" data-achievement="{{ $achievement->id }}" data-reveal>
     <div class="achievement-card__visual">
-        @if ($achievement->imageUrl())
+        @if ($achievement->imageUrl(preview: true))
             <img
-                src="{{ $achievement->imageUrl() }}"
+                src="{{ $achievement->imageUrl(preview: true) }}"
                 alt="Evidencia visual de {{ $achievement->title }}"
                 class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.025]"
                 loading="lazy"

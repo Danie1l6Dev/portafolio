@@ -45,14 +45,15 @@ final readonly class MediaGalleryService
                     $path = $this->imageService->store($file, $folder);
                     $paths[] = $path;
                     $sortOrder++;
+                    $metadata = $this->imageService->metadata($path);
 
                     $mediaItems[] = $owner->media()->create([
                         'collection' => self::COLLECTION,
                         'disk' => 'public',
                         'path' => $path,
                         'filename' => $file->getClientOriginalName(),
-                        'mime_type' => $file->getMimeType(),
-                        'size' => $file->getSize(),
+                        'mime_type' => $metadata['mime_type'],
+                        'size' => $metadata['size'],
                         'alt' => "{$defaultAlt} {$sortOrder}",
                         'sort_order' => $sortOrder,
                     ]);

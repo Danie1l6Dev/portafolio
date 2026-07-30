@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\ImageService;
 use App\Traits\HasSlug;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -119,5 +120,10 @@ class Project extends Model
     public function isInProgress(): bool
     {
         return is_null($this->finished_at);
+    }
+
+    public function coverUrl(bool $preview = false): ?string
+    {
+        return ImageService::url($this->cover_image, $preview);
     }
 }

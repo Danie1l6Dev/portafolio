@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreProjectRequest extends FormRequest
+final class StoreProjectRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -15,6 +17,8 @@ class StoreProjectRequest extends FormRequest
     /** @return array<string, array<int, string|object>> */
     public function rules(): array
     {
+        $imageFileLimit = (int) config('admin.images.max_file_kilobytes', 10240);
+
         return [
             'title' => ['required', 'string', 'max:200', 'unique:projects,title'],
             'category_id' => ['nullable', 'exists:categories,id'],
@@ -22,9 +26,9 @@ class StoreProjectRequest extends FormRequest
             'description' => ['nullable', 'string'],
             'demo_url' => ['nullable', 'url', 'max:255'],
             'repo_url' => ['nullable', 'url', 'max:255'],
-            'cover_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'cover_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', "max:{$imageFileLimit}"],
             'gallery_images' => ['nullable', 'array', 'max:8'],
-            'gallery_images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'gallery_images.*' => ['image', 'mimes:jpg,jpeg,png,webp', "max:{$imageFileLimit}"],
             'status' => ['nullable', Rule::in(['draft', 'published', 'archived'])],
             'is_featured' => ['nullable', 'boolean'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
@@ -43,12 +47,12 @@ class StoreProjectRequest extends FormRequest
             'summary.required' => 'El resumen del proyecto es obligatorio.',
             'category_id.exists' => 'La categoría seleccionada no existe.',
             'cover_image.image' => 'El archivo debe ser una imagen.',
-            'cover_image.mimes' => 'La imagen debe ser jpg, jpeg, png o webp.',
-            'cover_image.max' => 'La imagen no puede superar 2MB.',
+            'cover_image.mimes' => 'La imagen debe ser JPG, JPEG, PNG o WebP.',
+            'cover_image.max' => 'La imagen no puede superar 10 MB.',
             'gallery_images.max' => 'La galería admite un máximo de 8 imágenes.',
             'gallery_images.*.image' => 'Cada archivo de la galería debe ser una imagen.',
-            'gallery_images.*.mimes' => 'Las imágenes de galería deben ser jpg, jpeg, png o webp.',
-            'gallery_images.*.max' => 'Cada imagen de galería puede pesar hasta 2MB.',
+            'gallery_images.*.mimes' => 'Las imágenes de galería deben ser JPG, JPEG, PNG o WebP.',
+            'gallery_images.*.max' => 'Cada imagen de galería puede pesar hasta 10 MB.',
             'status.in' => 'El estado debe ser draft, published o archived.',
             'finished_at.after_or_equal' => 'La fecha de fin debe ser igual o posterior a la de inicio.',
             'skill_ids.*.exists' => 'Una o más habilidades seleccionadas no existen.',

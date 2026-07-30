@@ -154,7 +154,8 @@ final class AchievementManager extends Component
         $this->authorizeContentEditor();
 
         $galleryLimit = (int) config('admin.galleries.achievements.max_items', 12);
-        $galleryFileLimit = (int) config('admin.galleries.achievements.max_file_kilobytes', 3072);
+        $galleryFileLimit = (int) config('admin.galleries.achievements.max_file_kilobytes', 10240);
+        $imageFileLimit = (int) config('admin.images.max_file_kilobytes', 10240);
         $existingGalleryCount = $this->editingAchievementId
             ? Achievement::query()
                 ->findOrFail($this->editingAchievementId)
@@ -178,7 +179,7 @@ final class AchievementManager extends Component
             'description' => ['nullable', 'string', 'max:3000'],
             'achievedAt' => ['required', 'date', 'before_or_equal:today'],
             'externalUrl' => ['nullable', 'url:http,https', 'max:255'],
-            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:3072'],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', "max:{$imageFileLimit}"],
             'galleryImages' => ['array', "max:{$galleryLimit}"],
             'galleryImages.*' => ['image', 'mimes:jpg,jpeg,png,webp', "max:{$galleryFileLimit}"],
             'certificate' => ['nullable', 'file', 'mimes:pdf', 'max:5120'],
@@ -189,10 +190,10 @@ final class AchievementManager extends Component
             'achievedAt.before_or_equal' => 'La fecha del logro no puede estar en el futuro.',
             'image.image' => 'La portada debe ser una imagen válida.',
             'image.mimes' => 'La portada debe ser JPG, PNG o WebP.',
-            'image.max' => 'La portada no puede superar 3 MB.',
+            'image.max' => 'La portada no puede superar 10 MB.',
             'galleryImages.*.image' => 'Cada archivo de la galería debe ser una imagen válida.',
             'galleryImages.*.mimes' => 'Las fotos deben ser JPG, PNG o WebP.',
-            'galleryImages.*.max' => 'Cada foto no puede superar 3 MB.',
+            'galleryImages.*.max' => 'Cada foto no puede superar 10 MB.',
             'certificate.mimes' => 'El certificado debe ser un archivo PDF.',
             'certificate.max' => 'El certificado no puede superar 5 MB.',
         ]);

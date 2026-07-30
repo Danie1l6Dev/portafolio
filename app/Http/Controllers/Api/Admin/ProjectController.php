@@ -67,14 +67,15 @@ class ProjectController extends Controller
                 foreach ($galleryImages as $image) {
                     $path = $this->imageService->store($image, 'projects/gallery');
                     $storedPaths[] = $path;
+                    $metadata = $this->imageService->metadata($path);
 
                     $project->media()->create([
                         'collection' => 'gallery',
                         'disk' => 'public',
                         'path' => $path,
                         'filename' => $image->getClientOriginalName(),
-                        'mime_type' => $image->getMimeType(),
-                        'size' => $image->getSize(),
+                        'mime_type' => $metadata['mime_type'],
+                        'size' => $metadata['size'],
                         'sort_order' => ++$sortOrder,
                     ]);
                 }
@@ -141,14 +142,15 @@ class ProjectController extends Controller
                 foreach ($galleryImages as $image) {
                     $path = $this->imageService->store($image, 'projects/gallery');
                     $storedPaths[] = $path;
+                    $metadata = $this->imageService->metadata($path);
 
                     $project->media()->create([
                         'collection' => 'gallery',
                         'disk' => 'public',
                         'path' => $path,
                         'filename' => $image->getClientOriginalName(),
-                        'mime_type' => $image->getMimeType(),
-                        'size' => $image->getSize(),
+                        'mime_type' => $metadata['mime_type'],
+                        'size' => $metadata['size'],
                         'sort_order' => ++$sortOrder,
                     ]);
                 }

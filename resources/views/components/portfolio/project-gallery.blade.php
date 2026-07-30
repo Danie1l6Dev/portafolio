@@ -37,6 +37,7 @@
             @foreach ($images as $image)
                 @php
                     $imageUrl = $image->url;
+                    $previewUrl = $image->preview_url;
                     $imageAlt = $image->alt ?: 'Captura de '.$project->title;
                 @endphp
 
@@ -47,7 +48,7 @@
                     aria-label="Ampliar: {{ $imageAlt }}"
                 >
                     <img
-                        src="{{ $imageUrl }}"
+                        src="{{ $previewUrl }}"
                         alt="{{ $imageAlt }}"
                         width="1200"
                         height="675"

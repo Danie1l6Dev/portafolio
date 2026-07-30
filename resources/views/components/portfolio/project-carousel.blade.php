@@ -27,13 +27,7 @@
     >
         @foreach ($projects as $project)
             @php
-                $coverPath = $project->cover_image ? ltrim($project->cover_image, '/') : null;
-                $coverUrl = match (true) {
-                    blank($coverPath) => null,
-                    str_starts_with($coverPath, 'http://'), str_starts_with($coverPath, 'https://') => $coverPath,
-                    str_starts_with($coverPath, 'storage/') => asset($coverPath),
-                    default => Illuminate\Support\Facades\Storage::disk('public')->url($coverPath),
-                };
+                $coverUrl = $project->coverUrl(preview: true);
                 $detailUrl = route('portfolio.projects.show', ['project' => $project->slug]);
                 $slideIndex = $loop->index;
             @endphp

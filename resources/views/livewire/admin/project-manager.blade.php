@@ -81,7 +81,7 @@
                             <div class="flex min-w-0 items-center gap-3">
                                 <div class="admin-table__thumb">
                                     @if ($project->cover_image)
-                                        <img src="{{ asset('storage/'.ltrim($project->cover_image, '/')) }}" alt="" class="size-full object-cover">
+                                        <img src="{{ $project->coverUrl(preview: true) }}" alt="" class="size-full object-cover">
                                     @else
                                         <flux:icon.photo class="size-4" />
                                     @endif
@@ -145,7 +145,7 @@
                 <div class="flex items-start gap-3">
                     <div class="admin-mobile-card__thumb">
                         @if ($project->cover_image)
-                            <img src="{{ asset('storage/'.ltrim($project->cover_image, '/')) }}" alt="" class="size-full object-cover">
+                            <img src="{{ $project->coverUrl(preview: true) }}" alt="" class="size-full object-cover">
                         @else
                             <flux:icon.photo class="size-5" />
                         @endif
@@ -248,7 +248,7 @@
                     <div class="admin-upload-panel__header">
                         <div>
                             <h3>Portada principal</h3>
-                            <p>JPG, PNG o WebP de máximo 2 MB.</p>
+                            <p>JPG, PNG o WebP de máximo 10 MB. Se convierte automáticamente a WebP optimizado.</p>
                         </div>
                         <flux:input wire:model="coverImage" type="file" accept="image/jpeg,image/png,image/webp" aria-label="Seleccionar portada" />
                     </div>
@@ -256,7 +256,7 @@
                     @if ($coverImage instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile && $coverImage->isPreviewable())
                         <img class="mt-4 aspect-[16/6] w-full rounded-lg object-cover ring-1 ring-slate-900/10 dark:ring-white/10" src="{{ $coverImage->temporaryUrl() }}" alt="Vista previa de la nueva portada">
                     @elseif ($editingProject?->cover_image)
-                        <img class="mt-4 aspect-[16/6] w-full rounded-lg object-cover ring-1 ring-slate-900/10 dark:ring-white/10" src="{{ asset('storage/'.ltrim($editingProject->cover_image, '/')) }}" alt="Portada actual">
+                        <img class="mt-4 aspect-[16/6] w-full rounded-lg object-cover ring-1 ring-slate-900/10 dark:ring-white/10" src="{{ $editingProject->coverUrl(preview: true) }}" alt="Portada actual">
                     @endif
                 </section>
 
@@ -266,7 +266,7 @@
                     :uploads="$galleryImages"
                     :limit="$galleryLimit"
                     title="Galería del proyecto"
-                    description="Carga varias capturas, amplíalas, ordénalas y elige cualquiera como portada."
+                    description="Hasta 8 capturas de 10 MB; se optimizan a WebP, ordénalas y elige una como portada."
                     empty-text="Añade capturas que expliquen el producto y sus estados principales."
                 />
 

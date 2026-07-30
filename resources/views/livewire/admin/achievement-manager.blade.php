@@ -66,8 +66,8 @@
                         <td>
                             <div class="flex min-w-0 items-center gap-3">
                                 <div class="admin-table__thumb">
-                                    @if ($achievement->imageUrl())
-                                        <img src="{{ $achievement->imageUrl() }}" alt="" class="size-full object-cover">
+                                    @if ($achievement->imageUrl(preview: true))
+                                        <img src="{{ $achievement->imageUrl(preview: true) }}" alt="" class="size-full object-cover">
                                     @else
                                         <flux:icon.trophy class="size-4" />
                                     @endif
@@ -136,8 +136,8 @@
             <article wire:key="achievement-card-{{ $achievement->id }}" class="admin-mobile-card">
                 <div class="flex items-start gap-3">
                     <div class="admin-mobile-card__thumb">
-                        @if ($achievement->imageUrl())
-                            <img src="{{ $achievement->imageUrl() }}" alt="" class="size-full object-cover">
+                        @if ($achievement->imageUrl(preview: true))
+                            <img src="{{ $achievement->imageUrl(preview: true) }}" alt="" class="size-full object-cover">
                         @else
                             <flux:icon.trophy class="size-5" />
                         @endif
@@ -208,7 +208,7 @@
                     <div class="admin-upload-panel__header">
                         <div>
                             <h3>Portada principal</h3>
-                            <p>Imagen representativa del logro, máximo 3 MB.</p>
+                            <p>Imagen representativa del logro, máximo 10 MB. Se convierte automáticamente a WebP optimizado.</p>
                         </div>
                         <flux:input wire:model="image" type="file" accept="image/jpeg,image/png,image/webp" aria-label="Seleccionar portada" />
                     </div>
@@ -217,7 +217,7 @@
                         <p class="mt-3 text-xs text-slate-500 dark:text-slate-400">Nueva imagen: {{ $image->getClientOriginalName() }}</p>
                     @elseif ($editingAchievement?->image_path && ! $removeCurrentImage)
                         <div class="mt-4 flex items-center gap-3">
-                            <img src="{{ $editingAchievement->imageUrl() }}" alt="Imagen actual" class="h-20 w-32 rounded-lg object-cover ring-1 ring-slate-900/10 dark:ring-white/10">
+                            <img src="{{ $editingAchievement->imageUrl(preview: true) }}" alt="Imagen actual" class="h-20 w-32 rounded-lg object-cover ring-1 ring-slate-900/10 dark:ring-white/10">
                             <x-admin.button type="button" size="sm" variant="danger-ghost" wire:click="markImageForRemoval">Quitar portada</x-admin.button>
                         </div>
                     @elseif ($removeCurrentImage)
@@ -231,7 +231,7 @@
                     :uploads="$galleryImages"
                     :limit="$galleryLimit"
                     title="Fotos del logro"
-                    description="Guarda varias fotos de la hackathon, el equipo, la premiación o el certificado."
+                    description="Hasta 12 fotos de 10 MB; se optimizan a WebP para la hackathon, el equipo o la premiación."
                     empty-text="Añade fotos que ayuden a contar qué ocurrió y cuál fue el resultado."
                 />
 

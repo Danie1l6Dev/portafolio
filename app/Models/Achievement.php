@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\AchievementType;
+use App\Services\ImageService;
 use Database\Factories\AchievementFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -100,17 +101,17 @@ final class Achievement extends Model
             ->orderBy('id');
     }
 
-    public function imageUrl(): ?string
+    public function imageUrl(bool $preview = false): ?string
     {
         if ($this->image_path) {
-            return Storage::disk('public')->url($this->image_path);
+            return ImageService::url($this->image_path, $preview);
         }
 
         $firstImage = $this->relationLoaded('media')
             ? $this->media->first(fn (Media $media): bool => $media->is_image)
             : $this->media()->where('mime_type', 'like', 'image/%')->first();
 
-        return $firstImage?->url;
+        return $preview ? $firstImage?->preview_url : $firstImage?->url;
     }
 
     public function certificateUrl(): ?string
