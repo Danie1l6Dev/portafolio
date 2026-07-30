@@ -1515,7 +1515,33 @@
     justify-content: space-between;
     gap: 1rem;
     border-bottom: 1px solid var(--admin-border-soft);
-    padding: 1rem 1.5rem;
+    padding: 1.25rem 1.5rem 1.1rem;
+    background: linear-gradient(135deg, var(--admin-surface) 0%, var(--admin-surface-soft) 100%);
+}
+
+.admin-form-modal__heading {
+    display: flex;
+    min-width: 0;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.admin-form-modal__icon {
+    display: grid;
+    width: 2.25rem;
+    height: 2.25rem;
+    flex: none;
+    place-items: center;
+    border: 1px solid var(--admin-accent-border);
+    border-radius: 0.75rem;
+    background: var(--admin-accent-soft);
+    color: var(--admin-accent);
+}
+
+.admin-form-modal--danger .admin-form-modal__icon {
+    border-color: color-mix(in srgb, var(--admin-danger) 28%, transparent);
+    background: var(--admin-danger-soft);
+    color: var(--admin-danger);
 }
 
 .admin-form-modal__title {
@@ -1553,14 +1579,56 @@
 }
 
 .admin-form-modal__body {
-    max-height: calc(90vh - 5.25rem);
-    overflow-y: auto;
-    padding: 1.25rem 1.5rem 1.5rem;
+    max-height: none;
+    overflow: visible;
+    padding: 1.5rem;
+    background: var(--admin-surface);
 }
 
-dialog.admin-form-modal {
-    overflow: hidden !important;
+.admin-shell dialog.admin-form-modal {
+    width: min(92vw, 32rem);
+    max-width: 32rem !important;
+    overflow: hidden;
     padding: 0 !important;
+    border: 1px solid color-mix(in srgb, var(--admin-border) 90%, var(--admin-accent));
+    border-radius: 1.25rem;
+    background: var(--admin-surface);
+    box-shadow: var(--admin-shadow-modal);
+}
+
+.admin-shell dialog.admin-form-modal--size-sm {
+    width: min(92vw, 24rem);
+    max-width: 24rem !important;
+}
+
+.admin-shell dialog.admin-form-modal--size-lg {
+    width: min(92vw, 42rem);
+    max-width: 42rem !important;
+}
+
+.admin-shell dialog.admin-form-modal--size-xl {
+    width: min(92vw, 48rem);
+    max-width: 48rem !important;
+}
+
+.admin-shell dialog.admin-form-modal--scrollable {
+    display: flex;
+    max-height: 88dvh;
+    height: min(88dvh, 54rem);
+    flex-direction: column;
+    overflow: hidden !important;
+}
+
+.admin-shell dialog.admin-form-modal--scrollable .admin-form-modal__header {
+    flex: none;
+}
+
+.admin-shell dialog.admin-form-modal--scrollable .admin-form-modal__body {
+    min-height: 0;
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
 }
 
 /* Flux adopta los mismos materiales del panel sin alterar su comportamiento. */
@@ -1618,16 +1686,16 @@ dialog.admin-form-modal {
 .admin-shell [data-flux-modal] > dialog {
     max-height: min(90vh, 54rem);
     overflow-y: auto;
-    border: 1px solid var(--admin-border);
-    border-radius: 1rem;
+    border: 1px solid color-mix(in srgb, var(--admin-border) 90%, var(--admin-accent));
+    border-radius: 1.25rem;
     background: var(--admin-surface);
     color: var(--admin-ink);
     box-shadow: var(--admin-shadow-modal);
 }
 
 .admin-shell [data-flux-modal] > dialog::backdrop {
-    background: rgb(2 6 23 / 0.56);
-    backdrop-filter: blur(4px);
+    background: rgb(2 6 23 / 0.64);
+    backdrop-filter: blur(7px) saturate(0.85);
 }
 
 .admin-shell [data-flux-modal-content] {
