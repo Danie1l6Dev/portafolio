@@ -78,7 +78,6 @@ class HomeController extends Controller
                     '@id' => $personId,
                     'name' => config('portfolio.name'),
                     'jobTitle' => config('portfolio.role'),
-                    'email' => 'mailto:'.config('portfolio.email'),
                     'url' => $profileUrl,
                     'image' => asset(config('portfolio.seo.default_image')),
                     'sameAs' => array_column($socials, 'url'),

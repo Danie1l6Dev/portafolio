@@ -398,3 +398,50 @@ const initializeRevealAnimations = () => {
 
 document.addEventListener('DOMContentLoaded', initializeRevealAnimations);
 document.addEventListener('livewire:navigated', initializeRevealAnimations);
+
+document.addEventListener('alpine:init', () => {
+    window.Alpine.data('copyEmail', (url) => ({
+        loading: false,
+        label: 'Copiar correo',
+        status: '',
+        revealed: null,
+        resetTimer: null,
+
+        async copy() {
+            this.loading = true;
+
+            try {
+                const response = await fetch(url, { headers: { Accept: 'application/json' } });
+
+                if (!response.ok) {
+                    throw new Error('request-failed');
+                }
+
+                const { email } = await response.json();
+
+                try {
+                    await navigator.clipboard.writeText(email);
+                    this.announce('¡Correo copiado!');
+                } catch (_) {
+                    this.revealed = email;
+                    this.announce('Copia el correo de aquí');
+                }
+            } catch (_) {
+                this.announce('No se pudo obtener el correo. Usa el formulario.');
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        announce(message) {
+            this.label = message;
+            this.status = message;
+
+            clearTimeout(this.resetTimer);
+            this.resetTimer = setTimeout(() => {
+                this.label = 'Copiar correo';
+                this.status = '';
+            }, 2500);
+        },
+    }));
+});

@@ -242,10 +242,21 @@
                 <p class="mt-6 max-w-xl text-pretty text-base leading-8 text-ink-600 dark:text-white/60">{{ config('portfolio.availability') }} {{ config('portfolio.response_time') }}</p>
 
                 <div class="mt-10 space-y-3">
-                    <a href="mailto:{{ config('portfolio.email') }}" class="inline-flex min-h-11 items-center gap-3 text-sm font-medium text-ink-700 transition-colors hover:text-ink-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-400 dark:text-white/75 dark:hover:text-white">
-                        <span class="grid size-9 place-items-center rounded-xl border border-ink-950/12 dark:border-white/12" aria-hidden="true">@</span>
-                        {{ config('portfolio.email') }}
-                    </a>
+                    <div x-data="copyEmail({{ Js::from(route('portfolio.contact.email')) }})" class="flex flex-wrap items-center gap-3">
+                        <button
+                            type="button"
+                            x-on:click="copy()"
+                            x-bind:disabled="loading"
+                            class="inline-flex min-h-11 cursor-pointer items-center gap-3 text-sm font-medium text-ink-700 transition-colors hover:text-ink-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-400 disabled:cursor-wait disabled:opacity-60 dark:text-white/75 dark:hover:text-white"
+                        >
+                            <span class="grid size-9 place-items-center rounded-xl border border-ink-950/12 dark:border-white/12" aria-hidden="true">@</span>
+                            <span x-text="label">Copiar correo</span>
+                        </button>
+                        <template x-if="revealed">
+                            <span class="select-all text-sm text-ink-700 dark:text-white/75" x-text="revealed"></span>
+                        </template>
+                        <span class="sr-only" role="status" aria-live="polite" x-text="status"></span>
+                    </div>
                     <div class="flex flex-wrap gap-2 pt-2">
                         @foreach (config('portfolio.socials') as $social)
                             <a href="{{ $social['url'] }}" target="_blank" rel="noopener noreferrer" aria-label="Abrir {{ $social['name'] }} en una pestaña nueva" class="grid size-11 place-items-center rounded-xl border border-ink-950/12 text-ink-500 transition-[color,border-color,transform] hover:-translate-y-0.5 hover:border-ink-950/25 hover:text-ink-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-400 dark:border-white/12 dark:text-white/55 dark:hover:border-white/25 dark:hover:text-white">

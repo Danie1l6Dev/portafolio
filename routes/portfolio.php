@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\ExperienceController;
 use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\SkillController;
+use App\Http\Controllers\ContactEmailController;
 use App\Http\Controllers\ProjectPageController;
 use App\Http\Controllers\SitemapController;
 use App\Livewire\Portfolio\ProjectBrowser;
@@ -18,6 +19,10 @@ Route::middleware('throttle:portfolio-public')->group(function (): void {
     Route::get('categories', [CategoryController::class, 'index'])->name('backend.categories.index');
     Route::get('experiences', [ExperienceController::class, 'index'])->name('backend.experiences.index');
 });
+
+Route::get('contacto/correo', ContactEmailController::class)
+    ->name('portfolio.contact.email')
+    ->middleware('throttle:contact');
 
 Route::post('contact', [MessageController::class, 'store'])
     ->name('backend.contact')
