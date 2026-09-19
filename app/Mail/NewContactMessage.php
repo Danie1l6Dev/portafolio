@@ -22,6 +22,9 @@ class NewContactMessage extends Mailable
 
     public function content(): Content
     {
-        return new Content(text: 'emails.new-contact-message');
+        return new Content(
+            html: 'emails.new-contact-message-html',
+            text: 'emails.new-contact-message',
+        );
     }
 }

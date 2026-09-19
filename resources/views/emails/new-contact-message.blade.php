@@ -1,10 +1,13 @@
-Has recibido un nuevo mensaje desde tu portafolio.
+NUEVO MENSAJE EN TU PORTAFOLIO
+==============================
 
-Nombre: {{ $contactMessage->name }}
-Correo: {{ $contactMessage->email }}
-Asunto: {{ $contactMessage->subject }}
+De:      {{ $contactMessage->name }} <{{ $contactMessage->email }}>
+Asunto:  {{ $contactMessage->subject }}
 
+Mensaje:
+--------
 {{ $contactMessage->body }}
 
-—
-Puedes responder directamente a este correo. También lo encuentras en el panel: {{ route('panel.messages') }}
+--------
+Responder: {{ $contactMessage->email }} (también puedes responder a este correo)
+Ver en el panel: {{ route('panel.messages') }}

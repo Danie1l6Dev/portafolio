@@ -3,6 +3,7 @@
 use App\Actions\StoreContactMessage;
 use App\Livewire\Portfolio\ContactForm;
 use App\Mail\NewContactMessage;
+use App\Models\Message;
 use Illuminate\Support\Defer\DeferredCallbackCollection;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
@@ -150,4 +151,23 @@ it('keeps the message stored when the notification email fails', function (): vo
     app(DeferredCallbackCollection::class)->invoke();
 
     $this->assertDatabaseHas('messages', ['email' => 'ada@example.com']);
+});
+
+it('renders the notification email with the sender details in HTML and plain text', function (): void {
+    $message = Message::create([
+        'name' => 'Ada Lovelace',
+        'email' => 'ada@example.com',
+        'subject' => 'Nuevo proyecto',
+        'body' => "Primera línea\n<script>alert(1)</script>",
+    ]);
+
+    $mail = new NewContactMessage($message);
+
+    $mail->assertSeeInHtml('Ada Lovelace')
+        ->assertSeeInHtml('mailto:ada@example.com')
+        ->assertSeeInHtml('Nuevo proyecto')
+        ->assertSeeInHtml('Primera línea<br />', false)
+        ->assertDontSeeInHtml('<script>', false)
+        ->assertSeeInText('ada@example.com')
+        ->assertSeeInText('Primera línea');
 });
