@@ -60,7 +60,7 @@
 
                 <aside class="education-mark lg:mb-1" aria-label="Formación académica">
                     <div class="education-mark__logo-shell" aria-hidden="true">
-                        <img src="{{ asset('images/education/uniguajira-logo.webp') }}" alt="" class="education-mark__logo">
+                        <img src="{{ asset('images/education/uniguajira-logo.webp') }}" alt="" width="240" height="192" loading="lazy" decoding="async" class="education-mark__logo">
                     </div>
                     <div class="min-w-0">
                     <span class="font-mono text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-signal-700 dark:text-signal-300">Formación actual</span>
@@ -80,11 +80,6 @@
                             {{ config('portfolio.about') }}
                         </p>
                         </div>
-
-                        <figure class="profile-portrait">
-                            <img src="{{ asset('images/profile/daniel-sierra.webp') }}" alt="Daniel Sierra, desarrollador de software" class="profile-portrait__image">
-                            <figcaption class="profile-portrait__tag">Daniel Sierra <span aria-hidden="true">·</span> Software</figcaption>
-                        </figure>
                     </div>
 
                     <div class="mt-10 border-t border-ink-950/8 pt-6 dark:border-white/10">
@@ -119,7 +114,17 @@
                 </div>
 
                 <figure class="profile-portrait profile-portrait--feature" aria-label="Daniel Sierra">
-                    <img src="{{ asset('images/profile/daniel-sierra.webp') }}" alt="Daniel Sierra, desarrollador de software" class="profile-portrait__image">
+                    <img
+                        src="{{ asset('images/profile/daniel-sierra.webp') }}"
+                        srcset="{{ asset('images/profile/daniel-sierra-sm.webp') }} 560w, {{ asset('images/profile/daniel-sierra.webp') }} 899w"
+                        sizes="(min-width: 640px) 416px, calc(100vw - 3rem)"
+                        alt="Daniel Sierra, desarrollador de software"
+                        width="899"
+                        height="1124"
+                        fetchpriority="high"
+                        decoding="async"
+                        class="profile-portrait__image"
+                    >
                     <figcaption class="profile-portrait__tag">Daniel Sierra <span aria-hidden="true">·</span> Software</figcaption>
                 </figure>
 
