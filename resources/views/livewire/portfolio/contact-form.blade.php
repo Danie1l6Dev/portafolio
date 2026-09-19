@@ -117,7 +117,7 @@
             ></textarea>
             <div class="mt-2 flex items-start justify-between gap-4">
                 <p id="contact-body-help" class="text-xs leading-5 text-slate-500 dark:text-slate-400">Entre 10 y 3000 caracteres.</p>
-                <span class="text-xs text-slate-400 dark:text-slate-500" aria-hidden="true">Máx. 3000</span>
+                <span class="text-xs text-slate-400 dark:text-slate-400" aria-hidden="true">Máx. 3000</span>
             </div>
             @error('body')
                 <p id="contact-body-error" class="mt-2 text-sm text-rose-700 dark:text-rose-300" role="alert">{{ $message }}</p>

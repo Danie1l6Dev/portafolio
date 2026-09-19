@@ -17,7 +17,7 @@
                     </a>
                 @endforeach
             </div>
-            <p class="font-mono text-[0.7rem] uppercase tracking-[0.18em] text-ink-500 dark:text-white/40">© {{ now()->year }} · Hecho con Laravel</p>
+            <p class="font-mono text-[0.7rem] uppercase tracking-[0.18em] text-ink-500 dark:text-white/50">© {{ now()->year }} · Hecho con Laravel</p>
         </div>
     </div>
 </footer>

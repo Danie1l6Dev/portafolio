@@ -57,7 +57,7 @@
                     En curso
                 </span>
             @elseif ($startedYear)
-                <span class="px-1 text-slate-400 dark:text-slate-500">
+                <span class="px-1 text-slate-400 dark:text-slate-400">
                     {{ $startedYear }}{{ $finishedYear && $finishedYear !== $startedYear ? '—'.$finishedYear : '' }}
                 </span>
             @endif
@@ -82,7 +82,7 @@
                 @endforeach
 
                 @if ($project->skills->count() > 4)
-                    <li class="rounded-lg bg-slate-50 px-2.5 py-1.5 font-mono text-[0.68rem] font-medium text-slate-400 dark:bg-white/[.04] dark:text-slate-500">
+                    <li class="rounded-lg bg-slate-50 px-2.5 py-1.5 font-mono text-[0.68rem] font-medium text-slate-400 dark:bg-white/[.04] dark:text-slate-400">
                         +{{ $project->skills->count() - 4 }}
                         <span class="sr-only">tecnologías más</span>
                     </li>

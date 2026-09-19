@@ -14,7 +14,7 @@
                     </p>
                 </div>
                 <div class="border-l-2 border-sky-500 pl-5">
-                    <p class="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">Índice activo</p>
+                    <p class="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-slate-400 dark:text-slate-400">Índice activo</p>
                     <p class="mt-2 text-3xl font-semibold tabular-nums text-slate-950 dark:text-white">{{ str_pad((string) $projects->total(), 2, '0', STR_PAD_LEFT) }}</p>
                     <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ $projects->total() === 1 ? 'proyecto publicado' : 'proyectos publicados' }}</p>
                 </div>

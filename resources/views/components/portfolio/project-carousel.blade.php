@@ -109,10 +109,10 @@
                                         {{ $project->category->name }}
                                     </span>
                                 @else
-                                    <span class="font-mono text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-ink-400 dark:text-slate-500">Proyecto</span>
+                                    <span class="font-mono text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-ink-400 dark:text-slate-400">Proyecto</span>
                                 @endif
 
-                                <span class="font-mono text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-ink-400 dark:text-slate-500">
+                                <span class="font-mono text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-ink-400 dark:text-slate-400">
                                     0{{ $loop->iteration }} / {{ str_pad((string) $projectCount, 2, '0', STR_PAD_LEFT) }}
                                 </span>
                             </div>
@@ -135,7 +135,7 @@
                                     @endforeach
 
                                     @if ($project->skills->count() > 5)
-                                        <li class="rounded-lg bg-paper-50 px-2.5 py-1.5 font-mono text-[0.68rem] font-medium text-ink-400 ring-1 ring-inset ring-ink-950/5 dark:bg-white/[.04] dark:text-slate-500 dark:ring-white/10">
+                                        <li class="rounded-lg bg-paper-50 px-2.5 py-1.5 font-mono text-[0.68rem] font-medium text-ink-400 ring-1 ring-inset ring-ink-950/5 dark:bg-white/[.04] dark:text-slate-400 dark:ring-white/10">
                                             +{{ $project->skills->count() - 5 }}
                                             <span class="sr-only">habilidades más</span>
                                         </li>
@@ -194,7 +194,7 @@
                 ></button>
             @endforeach
         @else
-            <span class="font-mono text-xs tabular-nums text-ink-400 dark:text-slate-500" x-text="`${activeIndex + 1} / ${total}`"></span>
+            <span class="font-mono text-xs tabular-nums text-ink-400 dark:text-slate-400" x-text="`${activeIndex + 1} / ${total}`"></span>
         @endif
     </div>
 

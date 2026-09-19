@@ -52,7 +52,7 @@
 
         @if ($achievement->role)
             <div class="mt-5 border-l-2 border-signal-500 pl-4">
-                <span class="font-mono text-[0.6rem] font-semibold uppercase tracking-[0.16em] text-ink-400 dark:text-slate-500">Mi aporte</span>
+                <span class="font-mono text-[0.6rem] font-semibold uppercase tracking-[0.16em] text-ink-400 dark:text-slate-400">Mi aporte</span>
                 <p class="mt-1 text-sm font-medium text-ink-800 dark:text-slate-200">{{ $achievement->role }}</p>
             </div>
         @endif

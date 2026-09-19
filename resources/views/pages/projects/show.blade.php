@@ -12,7 +12,7 @@
     <div class="min-h-screen bg-slate-50 text-slate-950 transition-colors dark:bg-[#07111f] dark:text-slate-100">
         <div class="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
             <nav class="mb-10" aria-label="Ruta de navegación">
-                <ol class="flex flex-wrap items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500">
+                <ol class="flex flex-wrap items-center gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-400 dark:text-slate-400">
                     <li>
                         <a href="{{ route('home') }}" class="transition-colors hover:text-sky-700 focus-visible:rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 dark:hover:text-sky-300">Inicio</a>
                     </li>
@@ -81,7 +81,7 @@
                                 href="{{ $project->demo_url }}"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                class="inline-flex min-h-12 items-center gap-2 rounded-2xl bg-slate-950 px-5 text-sm font-semibold text-white transition hover:bg-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 dark:bg-signal-600 dark:text-white dark:hover:bg-signal-500 dark:focus-visible:ring-offset-[#07111f]"
+                                class="inline-flex min-h-12 items-center gap-2 rounded-2xl bg-slate-950 px-5 text-sm font-semibold text-white transition hover:bg-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 dark:bg-signal-700 dark:text-white dark:hover:bg-signal-600 dark:focus-visible:ring-offset-[#07111f]"
                             >
                                 Abrir demostración <span aria-hidden="true">↗</span>
                                 <span class="sr-only">en una pestaña nueva</span>

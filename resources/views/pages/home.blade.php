@@ -66,7 +66,7 @@
                     <span class="font-mono text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-signal-700 dark:text-signal-300">Formación actual</span>
                     <h3 class="mt-2 text-lg font-semibold tracking-tight text-ink-950 dark:text-white">{{ config('portfolio.education.program') }}</h3>
                     <p class="mt-1 text-sm leading-6 text-ink-600 dark:text-slate-300">{{ config('portfolio.education.institution') }}</p>
-                    <p class="mt-2 font-mono text-[0.68rem] uppercase tracking-[0.12em] text-ink-400 dark:text-slate-500">{{ config('portfolio.education.period') }} · {{ config('portfolio.education.location') }}</p>
+                    <p class="mt-2 font-mono text-[0.68rem] uppercase tracking-[0.12em] text-ink-400 dark:text-slate-400">{{ config('portfolio.education.period') }} · {{ config('portfolio.education.location') }}</p>
                     </div>
                 </aside>
             </div>
@@ -85,7 +85,7 @@
                     <div class="mt-10 border-t border-ink-950/8 pt-6 dark:border-white/10">
                         <div class="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
                             <div>
-                                <p class="font-mono text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-ink-400 dark:text-slate-500">De la necesidad al producto</p>
+                                <p class="font-mono text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-ink-400 dark:text-slate-400">De la necesidad al producto</p>
                                 <div class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-ink-600 dark:text-slate-300" aria-label="Proceso de trabajo">
                                     <span>Entender</span>
                                     <span class="text-signal-600 dark:text-signal-400" aria-hidden="true">→</span>
@@ -184,7 +184,7 @@
                     <section class="portfolio-skill-group" data-reveal aria-labelledby="skill-group-{{ Str::slug($group) }}">
                         <div class="mb-5 flex items-center justify-between gap-4">
                             <h3 id="skill-group-{{ Str::slug($group) }}" class="text-lg font-semibold tracking-tight text-ink-950 dark:text-white">{{ $group }}</h3>
-                            <span class="font-mono text-xs text-ink-400 dark:text-slate-500">{{ str_pad((string) $groupSkills->count(), 2, '0', STR_PAD_LEFT) }}</span>
+                            <span class="font-mono text-xs text-ink-400 dark:text-slate-400">{{ str_pad((string) $groupSkills->count(), 2, '0', STR_PAD_LEFT) }}</span>
                         </div>
                         <div class="grid gap-2 sm:grid-cols-2">
                             @foreach ($groupSkills as $skill)
@@ -241,7 +241,7 @@
                 <div class="mb-5 flex items-center gap-3">
                     <span class="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-signal-300">{{ $contactSectionIndex }}</span>
                     <span class="h-px w-8 bg-signal-400" aria-hidden="true"></span>
-                    <span class="font-mono text-[0.68rem] uppercase tracking-[0.2em] text-ink-500 dark:text-white/45">Contacto</span>
+                    <span class="font-mono text-[0.68rem] uppercase tracking-[0.2em] text-ink-500 dark:text-white/55">Contacto</span>
                 </div>
                 <h2 class="max-w-xl text-balance text-4xl font-semibold tracking-[-0.045em] sm:text-5xl lg:text-6xl">Convirtamos una necesidad en un producto útil.</h2>
                 <p class="mt-6 max-w-xl text-pretty text-base leading-8 text-ink-600 dark:text-white/60">{{ config('portfolio.availability') }} {{ config('portfolio.response_time') }}</p>

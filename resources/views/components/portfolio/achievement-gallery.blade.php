@@ -24,8 +24,8 @@
         }"
     >
         <div class="mb-3 flex items-center justify-between gap-4">
-            <p class="font-mono text-[0.6rem] font-semibold uppercase tracking-[0.16em] text-ink-400 dark:text-slate-500">Archivo visual</p>
-            <p class="font-mono text-[0.62rem] tabular-nums text-ink-400 dark:text-slate-500">{{ str_pad((string) $images->count(), 2, '0', STR_PAD_LEFT) }} fotos</p>
+            <p class="font-mono text-[0.6rem] font-semibold uppercase tracking-[0.16em] text-ink-400 dark:text-slate-400">Archivo visual</p>
+            <p class="font-mono text-[0.62rem] tabular-nums text-ink-400 dark:text-slate-400">{{ str_pad((string) $images->count(), 2, '0', STR_PAD_LEFT) }} fotos</p>
         </div>
 
         <div class="flex snap-x gap-2 overflow-x-auto pb-2">
