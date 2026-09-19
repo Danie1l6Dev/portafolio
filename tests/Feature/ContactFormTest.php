@@ -2,6 +2,9 @@
 
 use App\Actions\StoreContactMessage;
 use App\Livewire\Portfolio\ContactForm;
+use App\Mail\NewContactMessage;
+use Illuminate\Support\Defer\DeferredCallbackCollection;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Livewire;
 
@@ -114,4 +117,37 @@ it('clears a stale field error as soon as that field is corrected', function ():
         ->set('email', 'ada@example.com')
         ->assertHasNoErrors(['email'])
         ->assertSeeHtml('aria-invalid="false"');
+});
+
+it('notifies the owner by email when a contact message is stored', function (): void {
+    Mail::fake();
+
+    Livewire::test(ContactForm::class)
+        ->set('name', 'Ada Lovelace')
+        ->set('email', 'ada@example.com')
+        ->set('subject', 'Nuevo proyecto')
+        ->set('body', 'Quiero conversar sobre una nueva plataforma web.')
+        ->call('submit')
+        ->assertHasNoErrors();
+
+    app(DeferredCallbackCollection::class)->invoke();
+
+    Mail::assertSent(NewContactMessage::class, fn (NewContactMessage $mail): bool => $mail->hasTo(config('portfolio.contact_notification_email'))
+        && $mail->hasReplyTo('ada@example.com'));
+});
+
+it('keeps the message stored when the notification email fails', function (): void {
+    Mail::shouldReceive('to')->andThrow(new RuntimeException('SMTP caído'));
+
+    Livewire::test(ContactForm::class)
+        ->set('name', 'Ada Lovelace')
+        ->set('email', 'ada@example.com')
+        ->set('subject', 'Nuevo proyecto')
+        ->set('body', 'Quiero conversar sobre una nueva plataforma web.')
+        ->call('submit')
+        ->assertHasNoErrors();
+
+    app(DeferredCallbackCollection::class)->invoke();
+
+    $this->assertDatabaseHas('messages', ['email' => 'ada@example.com']);
 });

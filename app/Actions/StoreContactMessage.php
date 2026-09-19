@@ -2,7 +2,9 @@
 
 namespace App\Actions;
 
+use App\Mail\NewContactMessage;
 use App\Models\Message;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
 use InvalidArgumentException;
 use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
@@ -52,7 +54,30 @@ final class StoreContactMessage
             );
         }
 
+        $this->notifyOwner($message);
+
         return $message;
+    }
+
+    /**
+     * Avisa por correo después de responder al visitante. Un fallo del correo
+     * nunca debe impedir que el mensaje quede guardado.
+     */
+    private function notifyOwner(Message $message): void
+    {
+        $recipient = config('portfolio.contact_notification_email');
+
+        if (blank($recipient)) {
+            return;
+        }
+
+        defer(function () use ($recipient, $message): void {
+            try {
+                Mail::to($recipient)->send(new NewContactMessage($message));
+            } catch (\Throwable $exception) {
+                report($exception);
+            }
+        });
     }
 
     public static function rateLimitKey(?string $ipAddress): string

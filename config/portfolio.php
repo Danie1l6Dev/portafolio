@@ -4,6 +4,7 @@ return [
     'name' => env('PORTFOLIO_NAME', 'Daniel Sierra'),
     'initials' => env('PORTFOLIO_INITIALS', 'DS'),
     'email' => env('PORTFOLIO_EMAIL', 'danielsierra103@gmail.com'),
+    'contact_notification_email' => env('PORTFOLIO_NOTIFY_EMAIL', env('PORTFOLIO_EMAIL', 'danielsierra103@gmail.com')),
     'role' => env('PORTFOLIO_ROLE', 'Desarrollador de software · Ingeniería de Sistemas en formación'),
     'description' => env(
         'PORTFOLIO_DESCRIPTION',
