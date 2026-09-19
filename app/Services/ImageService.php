@@ -13,7 +13,6 @@ use RuntimeException;
 
 class ImageService
 {
-    /** @var array<string, callable(string): GdImage|false> */
     private const DECODERS = [
         'image/jpeg' => 'imagecreatefromjpeg',
         'image/png' => 'imagecreatefrompng',
@@ -145,13 +144,24 @@ class ImageService
     {
         $sourceWidth = imagesx($source);
         $sourceHeight = imagesy($source);
-        $targetWidth = min($sourceWidth, $maxWidth);
-        $targetHeight = max(1, (int) round(($sourceHeight / $sourceWidth) * $targetWidth));
+        $targetWidth = max(1, min($sourceWidth, $maxWidth));
+        $targetHeight = max(1, (int) round(($sourceHeight / max(1, $sourceWidth)) * $targetWidth));
         $canvas = imagecreatetruecolor($targetWidth, $targetHeight);
+
+        if ($canvas === false) {
+            throw new RuntimeException('No se pudo preparar la imagen optimizada.');
+        }
 
         imagealphablending($canvas, false);
         imagesavealpha($canvas, true);
         $transparent = imagecolorallocatealpha($canvas, 0, 0, 0, 127);
+
+        if ($transparent === false) {
+            imagedestroy($canvas);
+
+            throw new RuntimeException('No se pudo preparar la imagen optimizada.');
+        }
+
         imagefilledrectangle($canvas, 0, 0, $targetWidth, $targetHeight, $transparent);
         imagecopyresampled($canvas, $source, 0, 0, 0, 0, $targetWidth, $targetHeight, $sourceWidth, $sourceHeight);
 
