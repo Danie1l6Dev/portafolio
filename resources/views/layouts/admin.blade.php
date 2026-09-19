@@ -17,6 +17,7 @@
                 ['label' => 'Habilidades', 'route' => 'panel.skills', 'icon' => 'code-bracket'],
                 ['label' => 'Experiencias', 'route' => 'panel.experiences', 'icon' => 'briefcase'],
                 ['label' => 'Logros', 'route' => 'panel.achievements', 'icon' => 'trophy'],
+                ['label' => 'Hoja de vida', 'route' => 'panel.resume', 'icon' => 'document-text'],
                 ['label' => 'Mensajes', 'route' => 'panel.messages', 'icon' => 'inbox'],
             ];
         @endphp

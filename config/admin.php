@@ -13,6 +13,10 @@ return [
         'preview_webp_quality' => 76,
     ],
 
+    'resume' => [
+        'max_file_kilobytes' => 5_120,
+    ],
+
     'galleries' => [
         'projects' => [
             'max_items' => 8,

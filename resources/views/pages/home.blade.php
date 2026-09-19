@@ -103,7 +103,7 @@
                             </div>
 
                             <a
-                                href="{{ asset(config('portfolio.resume.path')) }}"
+                                href="{{ app(\App\Services\ResumeService::class)->url() }}"
                                 download="{{ config('portfolio.resume.download_name') }}"
                                 type="application/pdf"
                                 class="portfolio-button portfolio-button--secondary portfolio-button--small shrink-0"

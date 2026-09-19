@@ -43,6 +43,11 @@ Route::prefix('admin')
             'title' => 'Logros y reconocimientos',
         ])->name('achievements');
 
+        Route::view('hoja-de-vida', 'admin.page', [
+            'livewireComponent' => 'admin.resume-manager',
+            'title' => 'Hoja de vida',
+        ])->name('resume');
+
         Route::view('mensajes', 'admin.page', [
             'livewireComponent' => 'admin.message-inbox',
             'title' => 'Mensajes',
