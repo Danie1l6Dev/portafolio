@@ -330,11 +330,24 @@
         @apply right-1 sm:right-3;
     }
 
+    /*
+     * El botón en sí mide 24x24px (objetivo táctil accesible); el punto
+     * visible que se ve es más pequeño y vive en el ::before, centrado.
+     */
     .featured-project-carousel__dot {
-        @apply h-1.5 w-1.5 rounded-full bg-ink-300 transition-[width,background-color] duration-300 hover:bg-ink-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-500 focus-visible:ring-offset-3 focus-visible:ring-offset-paper-50 dark:bg-slate-600 dark:hover:bg-slate-400 dark:focus-visible:ring-offset-[#07111f];
+        @apply grid size-6 shrink-0 place-items-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-500 focus-visible:ring-offset-3 focus-visible:ring-offset-paper-50 dark:focus-visible:ring-offset-[#07111f];
     }
 
-    .featured-project-carousel__dot[data-active='true'] {
+    .featured-project-carousel__dot::before {
+        content: '';
+        @apply h-1.5 w-1.5 rounded-full bg-ink-300 transition-[width,background-color] duration-300 dark:bg-slate-600;
+    }
+
+    .featured-project-carousel__dot:hover::before {
+        @apply bg-ink-400 dark:bg-slate-400;
+    }
+
+    .featured-project-carousel__dot[data-active='true']::before {
         @apply w-7 bg-signal-600 dark:bg-signal-600;
     }
 

@@ -50,7 +50,6 @@
                     x-bind:tabindex="isActive({{ $slideIndex }}) ? 0 : -1"
                     x-on:click="handleSlideClick($event, {{ $slideIndex }})"
                     x-on:keydown.space.prevent="handleSlideAction($event, {{ $slideIndex }})"
-                    aria-label="Ver detalle del proyecto {{ $project->title }}"
                 >
                     <article class="featured-project-carousel__card">
                         <div class="featured-project-carousel__media">
