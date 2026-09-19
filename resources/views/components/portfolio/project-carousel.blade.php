@@ -28,6 +28,7 @@
         @foreach ($projects as $project)
             @php
                 $coverUrl = $project->coverUrl(preview: true);
+                $coverSrcset = $project->coverSrcset();
                 $detailUrl = route('portfolio.projects.show', ['project' => $project->slug]);
                 $slideIndex = $loop->index;
             @endphp
@@ -56,6 +57,10 @@
                             @if ($coverUrl)
                                 <img
                                     src="{{ $coverUrl }}"
+                                    @if ($coverSrcset)
+                                        srcset="{{ $coverSrcset }}"
+                                        sizes="min(84vw, 640px)"
+                                    @endif
                                     alt="Portada del proyecto {{ $project->title }}"
                                     width="1280"
                                     height="720"

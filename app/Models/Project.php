@@ -126,4 +126,9 @@ class Project extends Model
     {
         return ImageService::url($this->cover_image, $preview);
     }
+
+    public function coverSrcset(): ?string
+    {
+        return ImageService::srcset($this->cover_image);
+    }
 }

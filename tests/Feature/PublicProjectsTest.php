@@ -5,7 +5,10 @@ use App\Livewire\Portfolio\ProjectBrowser;
 use App\Models\Category;
 use App\Models\Project;
 use App\Models\Skill;
+use App\Services\ImageService;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -225,6 +228,41 @@ test('las rutas públicas de listado y detalle renderizan las vistas Laravel com
         ->assertSee('Capturas del proyecto')
         ->assertSee('Captura renderizada')
         ->assertSee('Volver al archivo de proyectos');
+});
+
+test('las imágenes optimizadas ofrecen un srcset con la versión ligera y la detallada', function (): void {
+    Storage::fake('public');
+
+    $coverPath = app(ImageService::class)->store(UploadedFile::fake()->image('portada.png', 2400, 1600), 'projects');
+    $galleryPath = app(ImageService::class)->store(UploadedFile::fake()->image('galeria.png', 2400, 1600), 'projects');
+
+    $project = createPublicProject([
+        'title' => 'Proyecto con imágenes optimizadas',
+        'slug' => 'proyecto-imagenes-optimizadas',
+        'cover_image' => $coverPath,
+    ]);
+    $project->media()->create([
+        'collection' => 'gallery',
+        'disk' => 'public',
+        'path' => $galleryPath,
+        'filename' => 'galeria.webp',
+        'mime_type' => 'image/webp',
+        'size' => 2048,
+        'alt' => 'Vista de la galería',
+        'sort_order' => 1,
+    ]);
+
+    $coverSrcset = ImageService::url($coverPath, true).' 960w, '.ImageService::url($coverPath, false).' 1920w';
+    $gallerySrcset = ImageService::url($galleryPath, true).' 960w, '.ImageService::url($galleryPath, false).' 1920w';
+
+    $this->get(route('portfolio.projects.index'))
+        ->assertOk()
+        ->assertSee('srcset="'.$coverSrcset.'"', false);
+
+    $this->get(route('portfolio.projects.show', ['project' => $project->slug]))
+        ->assertOk()
+        ->assertSee('srcset="'.$coverSrcset.'"', false)
+        ->assertSee('srcset="'.$gallerySrcset.'"', false);
 });
 
 test('los datos estructurados neutralizan contenido HTML almacenado', function (): void {

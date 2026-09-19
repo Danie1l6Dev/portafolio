@@ -107,11 +107,23 @@ final class Achievement extends Model
             return ImageService::url($this->image_path, $preview);
         }
 
-        $firstImage = $this->relationLoaded('media')
+        return $preview ? $this->firstMediaImage()?->preview_url : $this->firstMediaImage()?->url;
+    }
+
+    public function imageSrcset(): ?string
+    {
+        if ($this->image_path) {
+            return ImageService::srcset($this->image_path);
+        }
+
+        return ImageService::srcset($this->firstMediaImage()?->path);
+    }
+
+    private function firstMediaImage(): ?Media
+    {
+        return $this->relationLoaded('media')
             ? $this->media->first(fn (Media $media): bool => $media->is_image)
             : $this->media()->where('mime_type', 'like', 'image/%')->first();
-
-        return $preview ? $firstImage?->preview_url : $firstImage?->url;
     }
 
     public function certificateUrl(): ?string

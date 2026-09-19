@@ -38,6 +38,7 @@
                 @php
                     $imageUrl = $image->url;
                     $previewUrl = $image->preview_url;
+                    $imageSrcset = $image->srcset;
                     $imageAlt = $image->alt ?: 'Captura de '.$project->title;
                 @endphp
 
@@ -49,6 +50,10 @@
                 >
                     <img
                         src="{{ $previewUrl }}"
+                        @if ($imageSrcset)
+                            srcset="{{ $imageSrcset }}"
+                            sizes="(min-width: 640px) 50vw, 100vw"
+                        @endif
                         alt="{{ $imageAlt }}"
                         width="1200"
                         height="675"

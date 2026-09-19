@@ -39,3 +39,21 @@ it('converts an uploaded image into optimized WebP detail and preview variants',
     Storage::disk('public')->assertMissing($path);
     Storage::disk('public')->assertMissing($previewPath);
 });
+
+it('builds a srcset with the preview and detail variants for optimized images', function (): void {
+    Storage::fake('public');
+
+    $path = app(ImageService::class)->store(UploadedFile::fake()->image('captura.png', 2400, 1600), 'projects');
+
+    $srcset = ImageService::srcset($path);
+
+    expect($srcset)
+        ->toContain(ImageService::url($path, true).' 960w')
+        ->toContain(ImageService::url($path, false).' 1920w');
+});
+
+it('returns no srcset for external urls, legacy paths, or missing images', function (): void {
+    expect(ImageService::srcset(null))->toBeNull()
+        ->and(ImageService::srcset('https://example.com/imagen.jpg'))->toBeNull()
+        ->and(ImageService::srcset('images/historico/foto.jpg'))->toBeNull();
+});

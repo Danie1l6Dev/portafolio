@@ -2,6 +2,7 @@
 
 @php
     $coverUrl = $project->coverUrl(preview: true);
+    $coverSrcset = $project->coverSrcset();
     $detailUrl = route('portfolio.projects.show', ['project' => $project->slug]);
     $startedYear = $project->started_at?->format('Y');
     $finishedYear = $project->finished_at?->format('Y');
@@ -16,6 +17,10 @@
         @if ($coverUrl)
             <img
                 src="{{ $coverUrl }}"
+                @if ($coverSrcset)
+                    srcset="{{ $coverSrcset }}"
+                    sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
+                @endif
                 alt="Portada del proyecto {{ $project->title }}"
                 width="1280"
                 height="800"

@@ -105,6 +105,10 @@
                     @if ($coverUrl)
                         <img
                             src="{{ $coverUrl }}"
+                            @if ($coverSrcset = $project->coverSrcset())
+                                srcset="{{ $coverSrcset }}"
+                                sizes="(min-width: 1200px) 1120px, 100vw"
+                            @endif
                             alt="Portada del proyecto {{ $project->title }}"
                             width="1600"
                             height="1000"

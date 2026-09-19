@@ -50,6 +50,14 @@ final class Media extends Model
         );
     }
 
+    /** @return Attribute<?string, never> */
+    protected function srcset(): Attribute
+    {
+        return Attribute::make(
+            get: fn (): ?string => ImageService::srcset($this->path),
+        );
+    }
+
     /** @return Attribute<bool, never> */
     protected function isImage(): Attribute
     {

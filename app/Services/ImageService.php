@@ -87,6 +87,37 @@ class ImageService
         return Storage::disk('public')->url($publicPath);
     }
 
+    /**
+     * Atributo `srcset` con las dos variantes generadas al subir la imagen,
+     * para que el navegador elija la que mejor encaje según el `sizes` del <img>.
+     * Devuelve null para imágenes externas o sin variantes optimizadas: ahí
+     * solo existe la versión original y srcset no aporta nada.
+     */
+    public static function srcset(?string $path): ?string
+    {
+        if (blank($path)) {
+            return null;
+        }
+
+        $normalizedPath = ltrim((string) $path, '/');
+
+        if (! self::hasOptimizedVariants($normalizedPath)) {
+            return null;
+        }
+
+        $previewUrl = self::url($path, true);
+        $detailUrl = self::url($path, false);
+
+        if (blank($previewUrl) || blank($detailUrl)) {
+            return null;
+        }
+
+        $previewWidth = (int) config('admin.images.preview_max_width', 960);
+        $detailWidth = (int) config('admin.images.detail_max_width', 1920);
+
+        return "{$previewUrl} {$previewWidth}w, {$detailUrl} {$detailWidth}w";
+    }
+
     /** Borra una imagen optimizada y, cuando existe, su variante ligera. */
     public function delete(?string $path): void
     {
