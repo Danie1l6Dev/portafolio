@@ -204,6 +204,8 @@ it('seeds the verified academic tutoring experience idempotently', function (): 
 });
 
 it('offers the public resume as a downloadable pdf', function (): void {
+    Storage::fake('public');
+
     $resumePath = 'documents/hoja-de-vida-daniel-sierra.pdf';
 
     expect(file_exists(public_path($resumePath)))->toBeTrue()
